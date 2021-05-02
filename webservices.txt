@@ -1,0 +1,13 @@
+/api/version
+/api/firmware/version
+/api/saves
+/api/shaders/ryujinx
+/api/shaders/yuzu
+/api/shaders/ryujinx/count
+
+D /api/keys
+D /api/firmware
+D /api/shaders/yuzu?type=info&id=0100000000010000
+D /api/saves?id=010034500641A000
+D /api/shaders/ryujinx?type=zip&id=010028600EBDA000
+D /api/shaders/ryujinx?type=info&id=010028600EBDA000
