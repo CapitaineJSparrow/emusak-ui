@@ -9,6 +9,16 @@ Requirements :
 * NodeJS v14+
 * Yarn `npm i -g yarn`
 
+Features:
+
+* Add one or multiple Ryujinx folders (where `Ryujinx.exe` is located)
+* List your game library
+* Display your local shaders count & emusak shaders count (to download them if you have fewer shaders)
+* Update firmware
+* Update production keys
+* Download save for specific game
+* Download shaders for specific game
+
 Todo :
 
 - [ ] Download shaders
