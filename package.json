@@ -11,7 +11,8 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts .",
-    "dump-games": "ts-node ./dump.ts"
+    "dump-games": "ts-node ./dump.ts",
+    "make-icons": "electron-icon-builder --input=.\\icons\\icon.png"
   },
   "keywords": [],
   "author": {
@@ -21,7 +22,9 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "./icons/win/icon.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -98,6 +101,7 @@
     "adm-zip": "^0.5.5",
     "copy-webpack-plugin": "6",
     "cross-env": "^7.0.3",
+    "electron-icon-builder": "^2.0.1",
     "electron-squirrel-startup": "^1.0.0",
     "isomorphic-fetch": "^3.0.0",
     "react": "^17.0.2",
