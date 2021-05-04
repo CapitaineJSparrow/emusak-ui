@@ -21,7 +21,7 @@ Requirements :
 
 Features:
 
-* Add one or multiple Ryujinx folders (where `Ryujinx.exe` is located)
+* Add one or multiple Ryujinx folders (where `Ryujinx.exe` is located) to manage mainline, portable and LDN build if any
 * List your game library
 * Display your local shaders count & emusak shaders count (to download them if you have fewer shaders)
 * Update firmware
