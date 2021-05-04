@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 
 import {
   countShaderForGame,
+  downloadFirmwareWithProgress,
   downloadInfo,
   downloadKeys, downloadShaders,
   IryujinxLocalShaderConfig,
@@ -20,7 +21,7 @@ import eshopData from "../../../assets/test.json";
 import custom_database from "../../../assets/custom_database.json"
 import { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
-  downloadFirmwareWithProgress, getEmusakFirmwareVersion,
+  getEmusakFirmwareVersion,
   getEmusakSaves,
   getEmusakShadersCount,
   IEmusakSaves,
@@ -110,14 +111,26 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       if (p >= 100) {
         // Download finished
         setModalOpen(false)
+        setProgressValue(0);
       }
     })
   }
 
   const triggerShadersDownload = async (titleID: string) => {
+    const { value } = await Swal.fire({
+      title: 'Are you sure ?',
+      text: 'Emusak will replace your previous shaders and you will not be able to retrive them',
+      showCancelButton: true,
+      confirmButtonText: `Save`,
+    });
+
+    if (!value) {
+      return false;
+    }
+
     setModalOpen(true);
     setProgressValue(0);
-    await downloadInfo(config, titleID, (p: number) => setProgressValue(p))
+    await downloadInfo(config, titleID)
 
     await downloadShaders(config, titleID, (p: number) => {
       if (p !== progressValue) {
@@ -127,6 +140,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       if (p >= 100) {
         // Download finished
         setModalOpen(false)
+        setProgressValue(value);
       }
     })
 
@@ -141,6 +155,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
         onClose={() => setModalOpen(false)}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
+        disableBackdropClick
       >
         <div className={classes.modal}>
           <h2 id="simple-modal-title">Downloading ...</h2>

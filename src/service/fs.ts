@@ -13,3 +13,8 @@ export const listDirectories = async (dirPath: string): Promise<string[]> => {
   const results = await readDir(dirPath);
   return results.filter(dirent => dirent.isDirectory()).map(dirent => dirent.name)
 }
+
+export const listFiles = async (dirPath: string): Promise<string[]> => {
+  const results = await readDir(dirPath);
+  return results.filter(dirent => dirent.isFile()).map(dirent => dirent.name)
+}

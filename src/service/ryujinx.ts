@@ -57,7 +57,7 @@ export const downloadKeys = async (config: IRyujinxConfig): Promise<any> => {
   return Swal.fire('Job done !', `Created or replaced keys at : ${prodKeysPath}`)
 }
 
-export const downloadInfo = async (config: IRyujinxConfig, titleID: string, progressCallback?: Function): Promise<any> => {
+export const downloadInfo = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
   let shaderInfoPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program');
 
   const exists = await fs.access(shaderInfoPath).then(() => true).catch(() => false);
@@ -67,7 +67,6 @@ export const downloadInfo = async (config: IRyujinxConfig, titleID: string, prog
   }
 
   return downloadFileWithProgress({
-    progressCallback,
     filePath: path.resolve(shaderInfoPath, 'cache.info'),
     url: `${PATHS.INFO_DOWNLOAD}&id=${titleID.toUpperCase()}`
   });
@@ -81,4 +80,16 @@ export const downloadShaders = async (config: IRyujinxConfig, titleID: string, p
     filePath: shaderZipPath,
     url: `${PATHS.ZIP_DOWNLOAD}&id=${titleID.toUpperCase()}`
   });
+}
+
+export const downloadFirmwareWithProgress = async (progressCallback: Function): Promise<void> => {
+  const filename = 'firmware.zip';
+  const firmwarePath = path.resolve((electron.app || electron.remote.app).getPath('documents'), filename);
+  await downloadFileWithProgress({
+    progressCallback,
+    filePath: firmwarePath,
+    url: PATHS.FIRMWARE_DOWNLOAD
+  });
+  await Swal.fire('Job done !', 'EmuSAK will now open the downloaded firmware location. Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file')
+  electron.shell.showItemInFolder(firmwarePath);
 }
