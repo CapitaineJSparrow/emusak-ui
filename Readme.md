@@ -14,6 +14,8 @@ Just go to [releases](https://github.com/stromcon/emusak-ui/releases) page and d
 * On Windows, install the software just by executing the `.exe` file. You can remove the software like any program on your computer then
 * On linux : `sudo dpkg -i ./emusak-ui-X.Y_amd64.deb`
 
+### Contributing
+
 Requirements :
 
 * NodeJS v14+
@@ -48,3 +50,9 @@ yarn install
 yarn dump-games
 yarn dev
 ```
+
+### Thanks 
+
+* Sin for creating a nice community and init the ideas
+* Niwu for testing, suggestions and help me to match switch title IDs to game name
+* Joshi to update the backend to create a nice software
