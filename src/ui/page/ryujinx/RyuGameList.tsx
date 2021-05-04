@@ -7,8 +7,15 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Swal from 'sweetalert2';
 
-import {countShaderForGame, downloadKeys, IryujinxLocalShaderConfig, readGameList} from "../../../service/ryujinx";
+import {
+  countShaderForGame,
+  downloadInfo,
+  downloadKeys, downloadShaders,
+  IryujinxLocalShaderConfig,
+  readGameList
+} from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
 import custom_database from "../../../assets/custom_database.json"
 import { IRyujinxConfig } from "../../../model/RyujinxModel";
@@ -49,11 +56,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
   const [emusakSaves, setEmusakSaves]: [IEmusakSaves, Function] = useState({});
   const [emusakFirmwareVersion, setEmusakFirmwareVersion]: [string, Function] = useState('');
 
-  /**
-   * @constructor
-   * On page load, fetch emusak shaders count and local game library
-   */
-  useEffect(() => {
+  const initPage = () => {
     readGameList(config).then(g => setGames(g));
     getEmusakShadersCount().then(d => {
       const loweredKeysObject: any = {};
@@ -63,6 +66,14 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     });
     getEmusakSaves().then(s => setEmusakSaves(s));
     getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
+  }
+
+  /**
+   * @constructor
+   * On page load, fetch emusak shaders count and local game library
+   */
+  useEffect(() => {
+    initPage();
   }, []);
 
   /**
@@ -92,9 +103,35 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     setModalOpen(true);
     setProgressValue(0);
     downloadFirmwareWithProgress((p: number) => {
-      if (p !== progressValue) setProgressValue(p)
-      if (p >= 100) setModalOpen(false) // Download finished
+      if (p !== progressValue) {
+        setProgressValue(p)
+      }
+
+      if (p >= 100) {
+        // Download finished
+        setModalOpen(false)
+      }
     })
+  }
+
+  const triggerShadersDownload = async (titleID: string) => {
+    setModalOpen(true);
+    setProgressValue(0);
+    await downloadInfo(config, titleID, (p: number) => setProgressValue(p))
+
+    await downloadShaders(config, titleID, (p: number) => {
+      if (p !== progressValue) {
+        setProgressValue(p)
+      }
+
+      if (p >= 100) {
+        // Download finished
+        setModalOpen(false)
+      }
+    })
+
+    initPage();
+    await Swal.fire('Successfully downloaded shaders');
   }
 
   return (
@@ -145,7 +182,11 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                     {
                       games.map((g) => (
                         <TableRow key={`${g}-${config.path}`}>
-                          <TableCell>{extractNameFromID(g)}</TableCell>
+                          <TableCell>
+                            <span>{extractNameFromID(g)}</span>
+                            <br />
+                            <span><small>{g}</small></span>
+                          </TableCell>
                           <TableCell>{emusakShadersCount[g] || 'No remote shaders'}</TableCell>
                           <TableCell>{extractLocalShaderCount(g)}</TableCell>
                           <TableCell>
@@ -161,7 +202,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                             &nbsp;
                             <Button
                               disabled={!emusakShadersCount[g]}
-                              onClick={() => comingSoon()}
+                              onClick={() => triggerShadersDownload(g)}
                               variant="contained"
                               color="primary"
                             >
