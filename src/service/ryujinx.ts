@@ -37,8 +37,10 @@ export const countShaderForGame = async (config: IRyujinxConfig, titleID: string
   let count = 0;
 
   if (exists) { // To get shaders count, we just have to count files in zip archive
-    const archive = new zip(shaderZipPath);
-    count = archive.getEntries().length;
+    try {
+      const archive = new zip(shaderZipPath);
+      count = archive.getEntries().length;
+    } catch(e) {}
   }
 
   return {
@@ -67,7 +69,7 @@ export const downloadInfo = async (config: IRyujinxConfig, titleID: string, prog
   return downloadFileWithProgress({
     progressCallback,
     filePath: path.resolve(shaderInfoPath, 'cache.info'),
-    url: `${PATHS.INFO_DOWNLOAD}&id=${titleID}`
+    url: `${PATHS.INFO_DOWNLOAD}&id=${titleID.toUpperCase()}`
   });
 }
 
@@ -77,6 +79,6 @@ export const downloadShaders = async (config: IRyujinxConfig, titleID: string, p
   return downloadFileWithProgress({
     progressCallback,
     filePath: shaderZipPath,
-    url: `${PATHS.ZIP_DOWNLOAD}&id=${titleID}`
+    url: `${PATHS.ZIP_DOWNLOAD}&id=${titleID.toUpperCase()}`
   });
 }
