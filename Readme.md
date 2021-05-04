@@ -11,7 +11,7 @@ Emusak-ui is a graphical mod for [Emusak](https://github.com/sinscove/EmuSAK). T
 
 Just go to [releases](https://github.com/stromcon/emusak-ui/releases) page and download latest build
 
-* On Windows, install the software just by execute the `.exe` file. You can remove the software like any program on your computer then
+* On Windows, install the software just by executing the `.exe` file. You can remove the software like any program on your computer then
 * On linux : `sudo dpkg -i ./emusak-ui-X.Y_amd64.deb`
 
 Requirements :
