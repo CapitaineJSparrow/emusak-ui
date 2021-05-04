@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import {Button, Grid} from "@material-ui/core";
-import { listDirectories } from "../../../service/fs"
+import {listDirectories, listFiles} from "../../../service/fs"
 import RyujinxModel, { IRyujinxConfig } from "../../../model/RyujinxModel";
 import ryu_logo from "../../../assets/ryu_logo.png"
 import RyuGameList from "./RyuGameList";
 import { pickOneFolder } from "../../../service/ui";
 import Alert from '@material-ui/lab/Alert';
+import Swal from "sweetalert2";
 
 const RyujinxHome = () => {
   const [directories, setDirectories]: [IRyujinxConfig[], Function] = useState(RyujinxModel.getDirectories());
@@ -20,8 +21,19 @@ const RyujinxHome = () => {
 
     if (path) { // User did not cancel operation
       const isPortable = (await listDirectories(path)).includes("portable");
-      RyujinxModel.addDirectory({ isPortable, path });
-      setDirectories(RyujinxModel.getDirectories()) // Refresh list
+      const isValidRyuDir = (await listFiles(path)).includes('Ryujinx.exe');
+
+
+      if (!isValidRyuDir) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Emusak cannot find "Ryujinx.exe" in this folder, please retry with a valid ryujinx directory',
+        })
+      } else {
+        RyujinxModel.addDirectory({ isPortable, path });
+        setDirectories(RyujinxModel.getDirectories()) // Refresh list
+      }
     }
   }
 

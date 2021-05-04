@@ -14,14 +14,7 @@ Just go to [releases](https://github.com/stromcon/emusak-ui/releases) page and d
 * On Windows, install the software just by executing the `.exe` file. You can remove the software like any program on your computer then
 * On linux : `sudo dpkg -i ./emusak-ui-X.Y_amd64.deb`
 
-### Contributing
-
-Requirements :
-
-* NodeJS v14+
-* Yarn `npm i -g yarn`
-
-Features:
+### Features
 
 * Add one or multiple Ryujinx folders (where `Ryujinx.exe` is located) to manage mainline, portable and LDN build if any
 * List your game library
@@ -35,6 +28,13 @@ Todo :
 
 - [ ] Download saves
 - [ ] Add yuzu support
+
+### Contributing
+
+Requirements :
+
+* NodeJS v14+
+* Yarn `npm i -g yarn`
 
 Set a valid EmuSAK backend URL in a variable :
 
