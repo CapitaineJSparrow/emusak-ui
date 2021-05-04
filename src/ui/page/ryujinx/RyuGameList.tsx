@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 
 import {
   countShaderForGame,
+  downloadFirmwareWithProgress,
   downloadInfo,
   downloadKeys, downloadShaders,
   IryujinxLocalShaderConfig,
@@ -20,7 +21,7 @@ import eshopData from "../../../assets/test.json";
 import custom_database from "../../../assets/custom_database.json"
 import { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
-  downloadFirmwareWithProgress, getEmusakFirmwareVersion,
+  getEmusakFirmwareVersion,
   getEmusakSaves,
   getEmusakShadersCount,
   IEmusakSaves,
@@ -110,6 +111,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       if (p >= 100) {
         // Download finished
         setModalOpen(false)
+        setProgressValue(0);
       }
     })
   }
@@ -138,6 +140,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       if (p >= 100) {
         // Download finished
         setModalOpen(false)
+        setProgressValue(value);
       }
     })
 

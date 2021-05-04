@@ -81,3 +81,15 @@ export const downloadShaders = async (config: IRyujinxConfig, titleID: string, p
     url: `${PATHS.ZIP_DOWNLOAD}&id=${titleID.toUpperCase()}`
   });
 }
+
+export const downloadFirmwareWithProgress = async (progressCallback: Function): Promise<void> => {
+  const filename = 'firmware.zip';
+  const firmwarePath = path.resolve((electron.app || electron.remote.app).getPath('documents'), filename);
+  await downloadFileWithProgress({
+    progressCallback,
+    filePath: firmwarePath,
+    url: PATHS.FIRMWARE_DOWNLOAD
+  });
+  await Swal.fire('Job done !', 'EmuSAK will now open the downloaded firmware location. Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file')
+  electron.shell.showItemInFolder(firmwarePath);
+}
