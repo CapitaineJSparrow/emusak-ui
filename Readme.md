@@ -6,7 +6,7 @@ Emusak-ui is a graphical mod for [Emusak](https://github.com/sinscove/EmuSAK). T
 
 Just go to [releases](https://github.com/stromcon/emusak-ui/releases) page and download latest build
 
-![Screenshot](https://github.com/stromcon/emusak-ui/blob/main/screenshot.jpg?raw=true)
+![Screenshot](https://github.com/stromcon/emusak-ui/blob/main/screenshot.png?raw=true)
 
 Requirements :
 
