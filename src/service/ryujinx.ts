@@ -57,7 +57,7 @@ export const downloadKeys = async (config: IRyujinxConfig): Promise<any> => {
   return Swal.fire('Job done !', `Created or replaced keys at : ${prodKeysPath}`)
 }
 
-export const downloadInfo = async (config: IRyujinxConfig, titleID: string, progressCallback?: Function): Promise<any> => {
+export const downloadInfo = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
   let shaderInfoPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program');
 
   const exists = await fs.access(shaderInfoPath).then(() => true).catch(() => false);
@@ -67,7 +67,6 @@ export const downloadInfo = async (config: IRyujinxConfig, titleID: string, prog
   }
 
   return downloadFileWithProgress({
-    progressCallback,
     filePath: path.resolve(shaderInfoPath, 'cache.info'),
     url: `${PATHS.INFO_DOWNLOAD}&id=${titleID.toUpperCase()}`
   });

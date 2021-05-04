@@ -115,9 +115,20 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
   }
 
   const triggerShadersDownload = async (titleID: string) => {
+    const { value } = await Swal.fire({
+      title: 'Are you sure ?',
+      text: 'Emusak will replace your previous shaders and you will not be able to retrive them',
+      showCancelButton: true,
+      confirmButtonText: `Save`,
+    });
+
+    if (!value) {
+      return false;
+    }
+
     setModalOpen(true);
     setProgressValue(0);
-    await downloadInfo(config, titleID, (p: number) => setProgressValue(p))
+    await downloadInfo(config, titleID)
 
     await downloadShaders(config, titleID, (p: number) => {
       if (p !== progressValue) {
@@ -141,6 +152,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
         onClose={() => setModalOpen(false)}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
+        disableBackdropClick
       >
         <div className={classes.modal}>
           <h2 id="simple-modal-title">Downloading ...</h2>

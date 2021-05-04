@@ -23,7 +23,6 @@ const RyujinxHome = () => {
       const isPortable = (await listDirectories(path)).includes("portable");
       const isValidRyuDir = (await listFiles(path)).includes('Ryujinx.exe');
 
-
       if (!isValidRyuDir) {
         Swal.fire({
           icon: 'error',

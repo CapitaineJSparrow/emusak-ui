@@ -28,10 +28,15 @@ export const downloadFileWithProgress = async ({
     chunks.push(value);
     receivedLength += value.length;
 
-    progressCallback(parseFloat((receivedLength / contentLength).toFixed(2)) * 100)
+    if (progressCallback) {
+      progressCallback(parseFloat((receivedLength / contentLength).toFixed(2)) * 100)
+    }
   }
 
-  progressCallback(100);
+  if (progressCallback) {
+    progressCallback(100);
+  }
+
   let chunksAll = new Uint8Array(receivedLength);
   let position = 0;
   for (let chunk of chunks) {
