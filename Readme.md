@@ -25,7 +25,6 @@ Features:
 
 Todo :
 
-- [ ] Download shaders
 - [ ] Download saves
 - [ ] Add yuzu support
 
