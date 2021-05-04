@@ -6,9 +6,10 @@ Emusak-ui is a graphical mod for [Emusak](https://github.com/sinscove/EmuSAK). T
 
 Just go to [releases](https://github.com/stromcon/emusak-ui/releases) page and download latest build
 
-<div style="width: 80%; margin: 0 auto">
-  <img alt="screenshot" src="https://raw.githubusercontent.com/stromcon/emusak-ui/main/screenshot.jpg?raw=true" />
-</div>
+<p align="center">
+  <img width="80%" alt="screenshot" src="https://raw.githubusercontent.com/stromcon/emusak-ui/main/screenshot.jpg?raw=true" />
+</p>
+
 
 Requirements :
 
