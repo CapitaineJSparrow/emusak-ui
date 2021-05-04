@@ -119,7 +119,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
   const triggerShadersDownload = async (titleID: string) => {
     const { value } = await Swal.fire({
       title: 'Are you sure ?',
-      text: 'Emusak will replace your previous shaders and you will not be able to retrive them',
+      text: 'Emusak will replace your previous shaders and you will not be able to retrieve them',
       showCancelButton: true,
       confirmButtonText: `Save`,
     });
