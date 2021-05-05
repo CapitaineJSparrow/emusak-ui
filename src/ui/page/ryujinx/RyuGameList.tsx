@@ -175,7 +175,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
           <Button onClick={() => downloadKeys(config)} color="primary" variant="contained" fullWidth>Download keys</Button>
         </Grid>
         <Grid item xs={2}>
-          <span style={{ lineHeight: '36px', textAlign: 'right', display: 'block' }}>Is portable: <Chip label={config.isPortable ? 'yes': 'no'} color="primary" /></span>
+          <span style={{ lineHeight: '36px', textAlign: 'right', display: 'block' }}>Is portable : <Chip label={config.isPortable ? 'yes': 'no'} color="primary" /></span>
         </Grid>
       </Grid>
 
