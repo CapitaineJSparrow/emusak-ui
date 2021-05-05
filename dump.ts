@@ -8,5 +8,6 @@ fetch('http://nswdb.com/xml.php')
     text = text.replace(/\[Rev 1.0.0]/gi, '');
     text = text.replace(/<\/name>/gi, '');
     let json = await parseNswXML(text)
+    json = json.map(item => ({ ...item, ...{ id: item.id.split(' ')[0] } }))
     fs.writeFileSync('./src/assets/test.json', JSON.stringify(json), 'utf-8')
   })
