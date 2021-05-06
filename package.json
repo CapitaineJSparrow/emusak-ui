@@ -1,7 +1,7 @@
 {
   "name": "emusak",
   "productName": "emusak",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "My Electron application description",
   "main": ".webpack/main",
   "repository": "https://github.com/stromcon/emusak-ui.git",
@@ -17,8 +17,8 @@
   },
   "keywords": [],
   "author": {
-    "name": "Thibault Walle",
-    "email": "walle.t@sfeir.com"
+    "name": "stromcom",
+    "email": "donotdisurb@exemple.com"
   },
   "license": "MIT",
   "config": {
