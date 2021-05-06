@@ -17,15 +17,14 @@
   },
   "keywords": [],
   "author": {
-    "name": "Thibault Walle",
+    "name": "stromcon",
     "email": "contact+github@thibaultwalle.com"
   },
   "license": "MIT",
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon": "./icons/win/icon.ico",
-        "asar": true
+        "icon": "./icons/win/icon.ico"
       },
       "publishers": [
         {
@@ -97,7 +96,6 @@
     "@typescript-eslint/parser": "^4.0.1",
     "css-loader": "^4.2.1",
     "electron": "12.0.6",
-    "electron-prebuilt-compile": "^8.2.0",
     "eslint": "^7.6.0",
     "eslint-plugin-import": "^2.20.0",
     "file-loader": "^6.2.0",
