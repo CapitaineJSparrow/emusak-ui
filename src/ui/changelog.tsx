@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LS_KEY = "changelog-1022";
+const LS_KEY = `changelog-${electron.remote.app.getVersion()}`;
 
 const Changelog = () => {
   const classes = useStyles();
@@ -34,11 +34,10 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Changed wording in this popup</li>
-          <li>Added emusak version in the titlebar</li>
-          <li>Do not warn about data erase when downloading shaders if you do not have any shaders locally</li>
-          <li>Added a search to filter games</li>
-          <li>Added missing title id for <code>Crash Bandicoot 4: It's About Time</code></li>
+          <li>Improved search behavior (you can now search anywhere in the game title instead only at start)</li>
+          <li>Thanks to <code>Niwu</code>, title ID for <code>Mystic Fate</code> is now correctly matched</li>
+          <li>Fixed a bug where opening 2 instances of emusak locked the local database, causing the 2nd instance to have an empty configuration. Now, only one instance is allowed</li>
+          <li>Minor code improvements</li>
         </ul>
         <br/>
         <p>

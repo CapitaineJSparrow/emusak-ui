@@ -209,7 +209,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                         const shadersCount = extractLocalShaderCount(g);
                         const name = extractNameFromID(g);
 
-                        if (filter && name.toLowerCase().search(filter.toLowerCase())) {
+                        if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
                           return null;
                         }
 
