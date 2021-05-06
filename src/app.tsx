@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import * as electron from "electron";
 import "@sweetalert2/themes/dark/dark.min.css"
+import Changelog from "./ui/changelog";
 
 const theme = createMuiTheme({
   palette: {
@@ -50,6 +51,7 @@ const App = () => {
         </AppBar>
 
         <AppRouter />
+        <Changelog />
       </CssBaseline>
     </ThemeProvider>
   )
