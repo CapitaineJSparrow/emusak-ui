@@ -10,10 +10,13 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 autoUpdater()
 
 app.commandLine.appendSwitch ("disable-http-cache");
+const gotTheLock = app.requestSingleInstanceLock()
+let mainWindow: BrowserWindow;
 
 const createWindow = (): void => {
+
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     height: 960,
     width: 1280,
     resizable: false,
@@ -26,6 +29,7 @@ const createWindow = (): void => {
     }
   });
 
+
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
@@ -34,10 +38,22 @@ const createWindow = (): void => {
   })
 };
 
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
+  })
+
+  app.on('ready', createWindow);
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
