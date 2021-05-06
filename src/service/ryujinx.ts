@@ -2,7 +2,7 @@ import path from "path";
 import {IRyujinxConfig} from "../model/RyujinxModel";
 import {listDirectories} from "./fs";
 import * as electron from "electron";
-import * as fs from "fs/promises";
+import * as fs from "fs";
 import zip from "adm-zip";
 import {getEmusakProdKeys, PATHS} from "../api/emusak";
 import Swal from "sweetalert2";
@@ -33,7 +33,7 @@ export const readGameList = async (config: IRyujinxConfig) => {
 export const countShaderForGame = async (config: IRyujinxConfig, titleID: string): Promise<IryujinxLocalShaderConfig> => {
   let shaderZipPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.zip');
 
-  const exists = await fs.access(shaderZipPath).then(() => true).catch(() => false);
+  const exists = await fs.promises.access(shaderZipPath).then(() => true).catch(() => false);
   let count = 0;
 
   if (exists) { // To get shaders count, we just have to count files in zip archive
@@ -53,17 +53,17 @@ export const downloadKeys = async (config: IRyujinxConfig): Promise<any> => {
   const file = await getEmusakProdKeys();
   let prodKeysPath = getRyujinxPath(config, 'system', 'prod.keys');
 
-  await fs.writeFile(prodKeysPath, file, 'utf-8');
+  await fs.promises.writeFile(prodKeysPath, file, 'utf-8');
   return Swal.fire('Job done !', `Created or replaced keys at : ${prodKeysPath}`)
 }
 
 export const downloadInfo = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
   let shaderInfoPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program');
 
-  const exists = await fs.access(shaderInfoPath).then(() => true).catch(() => false);
+  const exists = await fs.promises.access(shaderInfoPath).then(() => true).catch(() => false);
 
   if (!exists) {
-    await fs.mkdir(shaderInfoPath, { recursive: true });
+    await fs.promises.mkdir(shaderInfoPath, { recursive: true });
   }
 
   return downloadFileWithProgress({

@@ -1,4 +1,4 @@
-import * as fs from 'fs/promises';
+import * as fs from 'fs';
 import path from "path";
 
 interface Dirent {
@@ -7,7 +7,7 @@ interface Dirent {
   name: string;
 }
 
-const readDir = async (dirPath: string): Promise<Dirent[]> => fs.readdir(path.resolve(dirPath), { withFileTypes: true })
+const readDir = async (dirPath: string): Promise<Dirent[]> => fs.promises.readdir(path.resolve(dirPath), { withFileTypes: true })
 
 export const listDirectories = async (dirPath: string): Promise<string[]> => {
   const results = await readDir(dirPath);

@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import fs from "fs";
 import Swal from "sweetalert2";
 
 interface IProgress {
@@ -44,7 +44,7 @@ export const downloadFileWithProgress = async ({
     position += chunk.length;
   }
 
-  await fs.writeFile(filePath, chunksAll).catch(e => {
+  await fs.promises.writeFile(filePath, chunksAll).catch(e => {
     Swal.fire({
       icon: 'error',
       title: 'Something went wrong ...',
