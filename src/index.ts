@@ -1,6 +1,5 @@
 import { app, BrowserWindow } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
-const isWin = process.platform === "win32";
 import autoUpdater from "update-electron-app"
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
