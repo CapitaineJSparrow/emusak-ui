@@ -8,7 +8,8 @@ import IconButton from '@material-ui/core/IconButton';
 import discord_logo from "./assets/discord_logo.png"
 import {
   createMuiTheme,
-  CssBaseline, makeStyles,
+  CssBaseline,
+  makeStyles,
   ThemeProvider
 } from "@material-ui/core";
 import * as electron from "electron";
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const classes = useStyles();
+  document.querySelector("title").innerText = `Emusak v${electron.remote.app.getVersion()}`
 
   return (
     <ThemeProvider theme={theme}>
