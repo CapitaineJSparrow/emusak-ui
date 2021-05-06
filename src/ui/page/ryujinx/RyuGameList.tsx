@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Chip, Grid, LinearProgress, makeStyles, Modal} from "@material-ui/core";
+import {Button, Chip, Grid, Input, LinearProgress, makeStyles, Modal, TextField} from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -49,6 +49,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
   const [games, setGames]: [string[], Function] = useState([]);
   const [gamesData]: [{id: string, title: string}[], Function] = useState(eshopData);
   const [localShadersCount, setLocalShadersCount]: [IryujinxLocalShaderConfig[], Function] = useState([]);
+  const [filter, setFilter]: [string|null, Function] = useState(null);
 
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
@@ -93,9 +94,9 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     return gameDate ? gameDate.title : ((custom_database as ({ [key: string]: string}))[id] || id);
   }
 
-  const extractLocalShaderCount = (titleID: string): string|number => {
+  const extractLocalShaderCount = (titleID: string): number => {
     const counter = localShadersCount.find((counter: any) => counter.titleID === titleID);
-    return counter && counter.count > 0 ? counter.count : 'No local shaders';
+    return counter && counter.count > 0 ? counter.count : 0;
   }
 
   const comingSoon = () => alert('coming soon');
@@ -116,16 +117,18 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     })
   }
 
-  const triggerShadersDownload = async (titleID: string) => {
-    const { value } = await Swal.fire({
-      title: 'Are you sure ?',
-      text: 'Emusak will replace your previous shaders and you will not be able to retrieve them',
-      showCancelButton: true,
-      confirmButtonText: `Save`,
-    });
+  const triggerShadersDownload = async (titleID: string, shadersCount: number) => {
+    if (shadersCount > 0) {
+      const { value } = await Swal.fire({
+        title: 'Are you sure ?',
+        text: 'Emusak will replace your previous shaders and you will not be able to retrieve them',
+        showCancelButton: true,
+        confirmButtonText: `Save`,
+      });
 
-    if (!value) {
-      return false;
+      if (!value) {
+        return false;
+      }
     }
 
     setModalOpen(true);
@@ -140,7 +143,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       if (p >= 100) {
         // Download finished
         setModalOpen(false)
-        setProgressValue(value);
+        setProgressValue(0);
       }
     })
 
@@ -175,7 +178,13 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
           <Button onClick={() => downloadKeys(config)} color="primary" variant="contained" fullWidth>Download keys</Button>
         </Grid>
         <Grid item xs={2}>
-          <span style={{ lineHeight: '36px', textAlign: 'right', display: 'block' }}>Is portable: <Chip label={config.isPortable ? 'yes': 'no'} color="primary" /></span>
+          <span style={{ lineHeight: '36px', textAlign: 'right', display: 'block' }}>Is portable : <Chip label={config.isPortable ? 'yes': 'no'} color="primary" /></span>
+        </Grid>
+      </Grid>
+
+      <Grid container>
+        <Grid item xs={3}>
+          <TextField onChange={e => setFilter(e.target.value)} fullWidth placeholder="Filter games" />
         </Grid>
       </Grid>
 
@@ -185,7 +194,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Game ({games.length})</TableCell>
+                  <TableCell style={{ width: 495 }}>Game ({games.length})</TableCell>
                   <TableCell>EmuSAK Shaders count</TableCell>
                   <TableCell>Local Shaders count</TableCell>
                   <TableCell style={{ width: 380 }} align="right">Actions</TableCell>
@@ -195,37 +204,47 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                 (gamesData.length > 0 && emusakShadersCount && Object.keys(emusakSaves).length > 0) && (
                   <TableBody>
                     {
-                      games.map((g) => (
-                        <TableRow key={`${g}-${config.path}`}>
-                          <TableCell>
-                            <span>{extractNameFromID(g)}</span>
-                            <br />
-                            <span><small>{g}</small></span>
-                          </TableCell>
-                          <TableCell>{emusakShadersCount[g] || 'No remote shaders'}</TableCell>
-                          <TableCell>{extractLocalShaderCount(g)}</TableCell>
-                          <TableCell>
-                            <Button
-                              onClick={() => comingSoon()}
-                              variant="contained"
-                              color="primary"
-                              disabled={!emusakSaves[g]}
-                            >
-                              Download save
-                            </Button>
-                            &nbsp;
-                            &nbsp;
-                            <Button
-                              disabled={!emusakShadersCount[g]}
-                              onClick={() => triggerShadersDownload(g)}
-                              variant="contained"
-                              color="primary"
-                            >
-                              Download shaders
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))
+                      games
+                        .map((g) => {
+                        const shadersCount = extractLocalShaderCount(g);
+                        const name = extractNameFromID(g);
+
+                        if (filter && name.toLowerCase().search(filter.toLowerCase())) {
+                          return null;
+                        }
+
+                        return (
+                          <TableRow key={`${g}-${config.path}`}>
+                            <TableCell>
+                              <span>{name}</span>
+                              <br />
+                              <span><small>{g}</small></span>
+                            </TableCell>
+                            <TableCell>{emusakShadersCount[g] || 'No remote shaders'}</TableCell>
+                            <TableCell>{shadersCount === 0 ? 'No local shaders': shadersCount}</TableCell>
+                            <TableCell>
+                              <Button
+                                onClick={() => comingSoon()}
+                                variant="contained"
+                                color="primary"
+                                disabled={!emusakSaves[g]}
+                              >
+                                Download save
+                              </Button>
+                              &nbsp;
+                              &nbsp;
+                              <Button
+                                disabled={!emusakShadersCount[g]}
+                                onClick={() => triggerShadersDownload(g, shadersCount)}
+                                variant="contained"
+                                color="primary"
+                              >
+                                Download shaders
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })
                     }
                   </TableBody>
                 )
