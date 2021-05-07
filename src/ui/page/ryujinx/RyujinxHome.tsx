@@ -62,7 +62,7 @@ const RyujinxHome = () => {
           isAlertDisplayed && (
             <Grid item xs={12}>
               <br />
-              <Alert severity="info" onClose={() => onAlertClose()}>Please note you have to launch a game 1 time to see it in the list below</Alert>
+              <Alert action={<Button onClick={() => onAlertClose()} color="inherit" size="small">dismiss</Button>} severity="info">Please note you have to launch a game 1 time to see it in the list below</Alert>
             </Grid>
           )
         }
