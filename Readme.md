@@ -15,7 +15,7 @@ Just go to [releases](https://github.com/stromcon/emusak-ui/releases) page and d
 
 install the software just by executing the `.exe` file. You can remove the software like any program on your computer then. **Only on windows** There is an auto update feature
 
-### Linux
+#### Linux
 
 Download deb file from [releases](https://github.com/stromcon/emusak-ui/releases) `sudo dpkg -i ./emusak-ui-X.Y_amd64.deb` I'll create a ppa and aur package for linux users soon
 
