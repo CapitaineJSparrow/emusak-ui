@@ -34,10 +34,9 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Improved search behavior (you can now search anywhere in the game title instead only at start)</li>
-          <li>Thanks to <code>Niwu</code>, title ID for <code>Mystic Fate</code> is now correctly matched</li>
-          <li>Fixed a bug where opening 2 instances of emusak locked the local database, causing the 2nd instance to have an empty configuration. Now, only one instance is allowed</li>
-          <li>Minor code improvements</li>
+          <li>Some code updates</li>
+          <li>Warn linux users there is a new update if available, since there is no auto update feature on linux</li>
+          <li>Change label on alert</li>
         </ul>
         <br/>
         <p>
