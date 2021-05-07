@@ -34,9 +34,8 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Update auto updater to be more robust</li>
-          <li>The next update, you'll see a message to know an update is downloading and a popup to ask you if you want to restart or not</li>
-          <li>I'm preparing PPA for linux users, and aur package for archlinux</li>
+          <li>Fixed a specific bug on linux preventing to add Ryujinx folders</li>
+          <li>Added an <code>AppImage</code> artifact to emusak (a generic way to distribute apps on linux on multiple linux distros)</li>
         </ul>
         <br/>
         <p>
