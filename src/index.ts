@@ -1,13 +1,16 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, autoUpdater } from 'electron';
+import isDev from "electron-is-dev";
+import * as electron from "electron";
+
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
-import autoUpdater from "update-electron-app"
+
+const feed = `https://update.electronjs.org/stromcon/emusak-ui/${process.platform}-${process.arch}/${app.getVersion()}`
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
 
-autoUpdater()
 
 app.commandLine.appendSwitch ("disable-http-cache");
 const gotTheLock = app.requestSingleInstanceLock()
@@ -35,6 +38,23 @@ const createWindow = (): void => {
 
   mainWindow.webContents.on('did-finish-load', function () {
     mainWindow.show()  // show the window now since everything is ready
+
+    if (!isDev && process.platform === "win32") {
+      autoUpdater.setFeedURL({
+        url: feed
+      });
+
+      // Check updates every 10mn, and at startup
+      setInterval(() => {
+        autoUpdater.checkForUpdates()
+      }, 10 * 60 * 1000)
+
+      autoUpdater.checkForUpdates();
+
+      autoUpdater.on('update-downloaded', () => mainWindow.webContents.send('update-downloaded'))
+      autoUpdater.on('update-available', () => mainWindow.webContents.send('update-available'))
+      electron.ipcMain.on('reboot-after-download', () => autoUpdater.quitAndInstall())
+    }
   })
 };
 
