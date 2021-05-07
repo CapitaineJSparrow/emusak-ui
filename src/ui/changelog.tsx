@@ -34,8 +34,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Fixed a specific bug on linux preventing to add Ryujinx folders</li>
-          <li>Added an <code>AppImage</code> artifact to emusak (a generic way to distribute apps on linux on multiple linux distros)</li>
+          <li>This update contains only backend related changes, saves & mods support is coming soon !</li>
         </ul>
         <br/>
         <p>
