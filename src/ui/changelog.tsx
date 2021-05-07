@@ -34,9 +34,9 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Some code updates</li>
-          <li>Warn linux users there is a new update if available, since there is no auto update feature on linux</li>
-          <li>Change label on alert</li>
+          <li>Update auto updater to be more robust</li>
+          <li>The next update, you'll see a message to know an update is downloading and a popup to ask you if you want to restart or not</li>
+          <li>I'm preparing PPA for linux users, and aur package for archlinux</li>
         </ul>
         <br/>
         <p>
