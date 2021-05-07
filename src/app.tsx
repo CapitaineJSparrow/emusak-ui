@@ -17,6 +17,8 @@ import "@sweetalert2/themes/dark/dark.min.css"
 import Changelog from "./ui/changelog";
 import {Alert} from "@material-ui/lab";
 import {useState} from "react";
+import Swal from "sweetalert2";
+import ipcRenderer = Electron.Renderer.ipcRenderer;
 
 const theme = createMuiTheme({
   palette: {
@@ -40,6 +42,7 @@ const App = () => {
   const classes = useStyles();
   const version = electron.remote.app.getVersion();
   const [latestRelease, setLatestRelease]: [string|null, Function] = useState(null);
+  const [downloadingUpdate, setDownloadingUpdate]: [boolean, Function] = useState(false);
   document.querySelector("title").innerText = `Emusak v${version}`
 
   React.useEffect(() => {
@@ -49,6 +52,21 @@ const App = () => {
         setLatestRelease(release.tag_name.replace('v', ''));
       })
   }, [])
+
+  electron.ipcRenderer.on('update-available', () => setDownloadingUpdate(true));
+  electron.ipcRenderer.on('update-downloaded', async () => {
+    const { value } = await Swal.fire({
+      title: 'Update complete !',
+      text: 'Do you want to reboot to apply emusak update ?',
+      showCancelButton: true,
+      confirmButtonText: `Restart`,
+      cancelButtonText: 'Later'
+    });
+
+    if (value) {
+      electron.ipcRenderer.send('reboot-after-download');
+    }
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -68,6 +86,14 @@ const App = () => {
           (version !== latestRelease && latestRelease && process.platform !== "win32") && (
             <div style={{ padding: 20 }}>
               <Alert severity="info">You have version v{version}, please consider update to latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (v{latestRelease})</Alert>
+            </div>
+          )
+        }
+
+        {
+          (downloadingUpdate) && (
+            <div style={{ padding: 20 }}>
+              <Alert severity="info">A new emusak version is downloading in background ! Please do not close application until it is complete</Alert>
             </div>
           )
         }
