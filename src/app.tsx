@@ -15,6 +15,8 @@ import {
 import * as electron from "electron";
 import "@sweetalert2/themes/dark/dark.min.css"
 import Changelog from "./ui/changelog";
+import {Alert} from "@material-ui/lab";
+import {useState} from "react";
 
 const theme = createMuiTheme({
   palette: {
@@ -36,7 +38,17 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const classes = useStyles();
-  document.querySelector("title").innerText = `Emusak v${electron.remote.app.getVersion()}`
+  const version = electron.remote.app.getVersion();
+  const [latestRelease, setLatestRelease]: [string|null, Function] = useState(null);
+  document.querySelector("title").innerText = `Emusak v${version}`
+
+  React.useEffect(() => {
+    fetch('https://api.github.com/repos/stromcon/emusak-ui/releases/latest')
+      .then(r => r.json())
+      .then((release: any) => {
+        setLatestRelease(release.tag_name.replace('v', ''));
+      })
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>
@@ -51,6 +63,14 @@ const App = () => {
             </IconButton>
           </Toolbar>
         </AppBar>
+
+        {
+          (version !== latestRelease && latestRelease && process.platform !== "win32") && (
+            <div style={{ padding: 20 }}>
+              <Alert severity="info">You have version v{version}, please consider update to latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (v{latestRelease})</Alert>
+            </div>
+          )
+        }
 
         <AppRouter />
         <Changelog />
