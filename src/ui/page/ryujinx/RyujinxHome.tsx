@@ -13,7 +13,7 @@ const RyujinxHome = () => {
   const [isAlertDisplayed, setIsAlertDisplayed] = useState(localStorage.getItem('ryu-alert') !== 'true');
 
   /**
-   * When user pick a ryujinx folder, ensure it is valid (has Ryujinx.exe file) and check if it is portable mode or not
+   * When user pick a ryujinx folder, ensure it is valid (has Ryujinx file) and check if it is portable mode or not
    * Then add this new configuration to database
    */
   const onRyuFolderSelect = async () => {
@@ -21,13 +21,14 @@ const RyujinxHome = () => {
 
     if (path) { // User did not cancel operation
       const isPortable = (await listDirectories(path)).includes("portable");
-      const isValidRyuDir = (await listFiles(path)).includes('Ryujinx.exe');
+      const files = await listFiles(path)
+      const isValidRyuDir = files.includes('Ryujinx.exe') || files.includes('Ryujinx');
 
       if (!isValidRyuDir) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Emusak cannot find "Ryujinx.exe" in this folder, please retry with a valid ryujinx directory',
+          text: 'Emusak cannot find "Ryujinx.exe" or "Ryujinx" (on linux) in this folder, please retry with a valid ryujinx directory',
         })
       } else {
         RyujinxModel.addDirectory({ isPortable, path });
