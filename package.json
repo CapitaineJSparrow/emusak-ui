@@ -57,6 +57,11 @@
         {
           "name": "@electron-forge/maker-rpm",
           "config": {}
+        },
+        {
+          "name": "electron-forge-maker-appimage",
+          "platforms": ["linux"],
+          "config": {}
         }
       ],
       "plugins": [
@@ -96,6 +101,7 @@
     "@typescript-eslint/parser": "^4.0.1",
     "css-loader": "^4.2.1",
     "electron": "12.0.6",
+    "electron-forge-maker-appimage": "https://github.com/Marcus10110/electron-forge-maker-appimage.git",
     "eslint": "^7.6.0",
     "eslint-plugin-import": "^2.20.0",
     "file-loader": "^6.2.0",
