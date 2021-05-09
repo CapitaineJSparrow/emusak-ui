@@ -34,7 +34,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>This update contains only backend related changes, and fix firmware download</li>
+          <li>Disable SSL certificate validity check, there were issues when download was sometimes broken</li>
         </ul>
         <br/>
         <p>
