@@ -205,37 +205,37 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                   <TableBody>
                     {
                       games
-                        .map((g) => {
-                        const shadersCount = extractLocalShaderCount(g);
-                        const name = extractNameFromID(g);
+                        .map((titleID) => {
+                        const shadersCount = extractLocalShaderCount(titleID);
+                        const name = extractNameFromID(titleID);
 
                         if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
                           return null;
                         }
 
                         return (
-                          <TableRow key={`${g}-${config.path}`}>
+                          <TableRow key={`${titleID}-${config.path}`}>
                             <TableCell>
                               <span>{name}</span>
                               <br />
-                              <span><small>{g}</small></span>
+                              <span><small>{titleID.toUpperCase()}</small></span>
                             </TableCell>
-                            <TableCell>{emusakShadersCount[g] || 'No remote shaders'}</TableCell>
+                            <TableCell>{emusakShadersCount[titleID] || 'No remote shaders'}</TableCell>
                             <TableCell>{shadersCount === 0 ? 'No local shaders': shadersCount}</TableCell>
                             <TableCell>
                               <Button
                                 onClick={() => comingSoon()}
                                 variant="contained"
                                 color="primary"
-                                disabled={!emusakSaves[g]}
+                                disabled={!emusakSaves[titleID]}
                               >
                                 Download save
                               </Button>
                               &nbsp;
                               &nbsp;
                               <Button
-                                disabled={!emusakShadersCount[g]}
-                                onClick={() => triggerShadersDownload(g, shadersCount)}
+                                disabled={!emusakShadersCount[titleID]}
+                                onClick={() => triggerShadersDownload(titleID, shadersCount)}
                                 variant="contained"
                                 color="primary"
                               >

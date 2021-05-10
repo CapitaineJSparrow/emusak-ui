@@ -72,7 +72,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline>
         <AppBar position="static">
-          <Toolbar>
+          <Toolbar variant="dense">
             <Typography variant="h6" className={classes.title}>
               EmuSAK
             </Typography>
