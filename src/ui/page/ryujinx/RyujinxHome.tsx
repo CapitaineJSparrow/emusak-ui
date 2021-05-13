@@ -17,6 +17,7 @@ const RyujinxHome = () => {
    * Then add this new configuration to database
    */
   const onRyuFolderSelect = async () => {
+    await Swal.fire('Notice', `You must pick a valid Ryujinx folder where "Ryujinx.exe" or "Ryujinx" (for linux users) is located. If you are using portable mode, you can add multiple Ryujinx instances by clicking again this button`)
     const path = await pickOneFolder();
 
     if (path) { // User did not cancel operation

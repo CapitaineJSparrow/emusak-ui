@@ -34,7 +34,8 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Disable SSL certificate validity check, there were issues when download was sometimes broken</li>
+          <li>Thanks to <code>Niwu</code>, more games are correctly displayed in the game list. Some technical refactoring was done during the process</li>
+          <li>Add a notice when you click the "Add Ryujinx folder" button</li>
         </ul>
         <br/>
         <p>
