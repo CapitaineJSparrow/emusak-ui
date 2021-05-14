@@ -13,6 +13,10 @@ export interface IryujinxLocalShaderConfig {
   count: number;
 }
 
+const asyncZipWrite = (archive: zip, path: string): Promise<void> => new Promise((resolve) => {
+  archive.writeZip(path, () => resolve());
+});
+
 const getRyujinxPath = (config: IRyujinxConfig, ...paths: string[]): string => {
   let dir;
 
@@ -40,7 +44,8 @@ export const countShaderForGame = async (config: IRyujinxConfig, titleID: string
     try {
       const archive = new zip(shaderZipPath);
       count = archive.getEntries().length;
-    } catch(e) {}
+    } catch (e) {
+    }
   }
 
   return {
@@ -63,7 +68,7 @@ export const downloadInfo = async (config: IRyujinxConfig, titleID: string): Pro
   const exists = await fs.promises.access(shaderInfoPath).then(() => true).catch(() => false);
 
   if (!exists) {
-    await fs.promises.mkdir(shaderInfoPath, { recursive: true });
+    await fs.promises.mkdir(shaderInfoPath, {recursive: true});
   }
 
   return downloadFileWithProgress({
@@ -92,4 +97,17 @@ export const downloadFirmwareWithProgress = async (progressCallback: Function): 
   });
   await Swal.fire('Job done !', 'EmuSAK will now open the downloaded firmware location. Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file')
   electron.shell.showItemInFolder(firmwarePath);
+}
+
+export const shareShaders = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
+  const shaderZipPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  const shaderInfoPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.info');
+  const archive = new zip();
+  archive.addLocalFile(shaderZipPath);
+  archive.addLocalFile(shaderInfoPath);
+
+  const zipPath = path.resolve(shaderInfoPath, '..', 'upload.zip');
+  await asyncZipWrite(archive, zipPath);
+
+  return zipPath;
 }
