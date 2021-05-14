@@ -266,7 +266,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                               &nbsp;
                               &nbsp;
                               <Button
-                                // disabled={!localShadersCount || !emusakShadersCount[titleId] || localShadersCount <= emusakShadersCount[titleId]}
+                                disabled={!localShadersCount || !emusakShadersCount[titleId] || localShadersCount <= emusakShadersCount[titleId]}
                                 onClick={() => triggerShadersShare(titleId, name, localShadersCount, emusakShadersCount[titleId])}
                                 variant="contained"
                                 color="primary"
