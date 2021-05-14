@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const paths: string[] = [];
+
 const RyuGameList = ({ config }: IRyuGameListProps) => {
   const classes = useStyles();
   const [games, setGames]: [string[], Function] = useState([]);
@@ -158,7 +160,8 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       return;
     }
 
-    if (localStorage.getItem(`ryu-share-${titleID}-${localCount}`)) {
+    const key = `ryu-share-${titleID}-${localCount}`;
+    if (localStorage.getItem(key)) {
       Swal.fire('error', 'You already shared those shaders, thanks !');
       return false;
     }
@@ -168,6 +171,12 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     electron.ipcRenderer.send('shadersBuffer', path);
     electron.ipcRenderer.on('uploaded', async (_, body) => {
       setUploading(false);
+
+      if (paths.includes(key)) {
+        return false;
+      }
+      paths.push(key);
+
       const json = JSON.parse(body);
       const response = await fetch(`${process.env.EMUSAK_URL}/api/submit`, {
         method: 'POST',
@@ -180,7 +189,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       })
 
       if (response.status === 200) {
-        localStorage.setItem(`ryu-share-${titleID}-${localCount}`, 'true')
+        localStorage.setItem(key, 'true')
         await fs.promises.unlink(path);
         Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
       } else {
