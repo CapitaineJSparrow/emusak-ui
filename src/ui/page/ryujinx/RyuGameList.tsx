@@ -158,6 +158,11 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       return;
     }
 
+    if (localStorage.getItem(`ryu-share-${titleID}-${localCount}`)) {
+      Swal.fire('error', 'You already shared those shaders, thanks !');
+      return false;
+    }
+
     setUploading(true);
     const path = await packShaders(config, titleID);
     electron.ipcRenderer.send('shadersBuffer', path);
@@ -173,6 +178,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
           message: `Hey there, I'm sharing my shaders using emusak for **${GameName}** (${titleID}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``
         })
       })
+      localStorage.setItem(`ryu-share-${titleID}-${localCount}`, 'true')
       await fs.promises.unlink(path);
       Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
     });
@@ -266,7 +272,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                               &nbsp;
                               &nbsp;
                               <Button
-                                disabled={!localShadersCount || !emusakShadersCount[titleId] || localShadersCount <= emusakShadersCount[titleId]}
+                                disabled={!localShadersCount || localShadersCount <= emusakShadersCount[titleId]}
                                 onClick={() => triggerShadersShare(titleId, name, localShadersCount, emusakShadersCount[titleId])}
                                 variant="contained"
                                 color="primary"

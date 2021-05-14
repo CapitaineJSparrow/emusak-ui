@@ -99,7 +99,9 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 
 electron.ipcMain.once('shadersBuffer', async(event, zipPath: string) => {
+  console.log('HEY')
   const r = request.post('https://api.anonfiles.com/upload', (err, httpResponse, body) => {
+    console.log({ err, httpResponse, body })
     if (!err) {
       event.reply('uploaded', body);
     } else {
