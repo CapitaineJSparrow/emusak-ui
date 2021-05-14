@@ -34,8 +34,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Thanks to <code>Niwu</code>, more games are correctly displayed in the game list. Some technical refactoring was done during the process</li>
-          <li>Add a notice when you click the "Add Ryujinx folder" button</li>
+          <li>Share shaders feature is finally here ! If you have more shaders than emusack, you can now share it in one click. A message will be posted in discord, once validated it will be shared to anyone 👍</li>
         </ul>
         <br/>
         <p>
