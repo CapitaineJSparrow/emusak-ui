@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Swal from 'sweetalert2';
 import * as electron from "electron";
+import * as fs from "fs";
 
 import {
   countShaderForGame,
@@ -54,6 +55,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
 
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
+  const [uploading, setUploading] = React.useState(false);
 
   const [emusakShadersCount, setEmusakShadersCount]: [IEmusakShadersCount, Function] = useState(null);
   const [emusakSaves, setEmusakSaves]: [IEmusakSaves, Function] = useState({});
@@ -99,8 +101,6 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     const counter = localShadersCount.find((counter: any) => counter.titleID === titleID);
     return counter && counter.count > 0 ? counter.count : 0;
   }
-
-  const comingSoon = () => alert('coming soon');
 
   const triggerFirmwareDownload = () => {
     setModalOpen(true);
@@ -152,12 +152,18 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     await Swal.fire('Successfully downloaded shaders');
   }
 
-  const triggerShadersShare = async (titleID: string, GameName: string, localCount: number, emusakCount: number) => {
+  const triggerShadersShare = async (titleID: string, GameName: string, localCount: number, emusakCount: number = 0) => {
+
+    if (uploading) {
+      return;
+    }
+
+    setUploading(true);
     const path = await packShaders(config, titleID);
     electron.ipcRenderer.send('shadersBuffer', path);
-    electron.ipcRenderer.on('uploaded', async (_, body) => {
+    electron.ipcRenderer.once('uploaded', async (_, body) => {
+      setUploading(false);
       const json = JSON.parse(body);
-      console.log(json);
       await fetch(`${process.env.EMUSAK_URL}/api/submit`, {
         method: 'POST',
         headers: {
@@ -167,8 +173,14 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
           message: `Hey there, I'm sharing my shaders using emusak for **${GameName}** (${titleID}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``
         })
       })
+      await fs.promises.unlink(path);
       Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
     });
+
+    electron.ipcRenderer.once('uploaded-fail', () => {
+      setUploading(false);
+      Swal.fire('error', 'An error occured during the upload process :\'( please retry a bit later');
+    })
   }
 
   return (
