@@ -34,7 +34,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Share shaders feature is finally here ! If you have more shaders than emusack, you can now share it in one click. A message will be posted in discord, once validated it will be shared to anyone 👍</li>
+          <li>Share shaders feature is finally here ! If you have more shaders than emusack, you can now share it in one click. A message will be posted in discord, once validated it will be shared to anyone 👍. At the moment, there is a limit at 5 shares per hour to avoid spamming</li>
         </ul>
         <br/>
         <p>
