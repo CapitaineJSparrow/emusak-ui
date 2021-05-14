@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const paths: string[] = [];
+
 const RyuGameList = ({ config }: IRyuGameListProps) => {
   const classes = useStyles();
   const [games, setGames]: [string[], Function] = useState([]);
@@ -158,13 +160,25 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
       return;
     }
 
+    const key = `ryu-share-${titleID}-${localCount}`;
+    if (localStorage.getItem(key)) {
+      Swal.fire('error', 'You already shared those shaders, thanks !');
+      return false;
+    }
+
     setUploading(true);
     const path = await packShaders(config, titleID);
     electron.ipcRenderer.send('shadersBuffer', path);
-    electron.ipcRenderer.once('uploaded', async (_, body) => {
+    electron.ipcRenderer.on('uploaded', async (_, body) => {
       setUploading(false);
+
+      if (paths.includes(key)) {
+        return false;
+      }
+      paths.push(key);
+
       const json = JSON.parse(body);
-      await fetch(`${process.env.EMUSAK_URL}/api/submit`, {
+      const response = await fetch(`${process.env.EMUSAK_URL}/api/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain'
@@ -173,11 +187,17 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
           message: `Hey there, I'm sharing my shaders using emusak for **${GameName}** (${titleID}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``
         })
       })
-      await fs.promises.unlink(path);
-      Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
+
+      if (response.status === 200) {
+        localStorage.setItem(key, 'true')
+        await fs.promises.unlink(path);
+        Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
+      } else {
+        Swal.fire('error', 'You shared too many shaders !');
+      }
     });
 
-    electron.ipcRenderer.once('uploaded-fail', () => {
+    electron.ipcRenderer.on('uploaded-fail', () => {
       setUploading(false);
       Swal.fire('error', 'An error occured during the upload process :\'( please retry a bit later');
     })
@@ -266,7 +286,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                               &nbsp;
                               &nbsp;
                               <Button
-                                disabled={!localShadersCount || !emusakShadersCount[titleId] || localShadersCount <= emusakShadersCount[titleId]}
+                                disabled={!localShadersCount || localShadersCount <= emusakShadersCount[titleId]}
                                 onClick={() => triggerShadersShare(titleId, name, localShadersCount, emusakShadersCount[titleId])}
                                 variant="contained"
                                 color="primary"
