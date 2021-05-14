@@ -1,6 +1,8 @@
 import { app, BrowserWindow, autoUpdater } from 'electron';
 import isDev from "electron-is-dev";
 import * as electron from "electron";
+import * as fs from "fs";
+import request from "request";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
@@ -29,7 +31,8 @@ const createWindow = (): void => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      webSecurity: false
     }
   });
 
@@ -94,3 +97,15 @@ app.on('activate', () => {
 });
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+electron.ipcMain.once('shadersBuffer', async(event, zipPath: string) => {
+  const r = request.post('https://api.anonfiles.com/upload', (err, httpResponse, body) => {
+    if (!err) {
+      event.reply('uploaded', body);
+    } else {
+      event.reply('uploaded-fail');
+    }
+  })
+  const form = r.form();
+  form.append('file', fs.createReadStream(zipPath))
+})

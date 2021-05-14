@@ -11,4 +11,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json']
   },
+  externals: {
+    'node-fetch': 'commonjs2 node-fetch',
+  }
 };
