@@ -166,10 +166,10 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     setUploading(true);
     const path = await packShaders(config, titleID);
     electron.ipcRenderer.send('shadersBuffer', path);
-    electron.ipcRenderer.once('uploaded', async (_, body) => {
+    electron.ipcRenderer.on('uploaded', async (_, body) => {
       setUploading(false);
       const json = JSON.parse(body);
-      await fetch(`${process.env.EMUSAK_URL}/api/submit`, {
+      const response = await fetch(`${process.env.EMUSAK_URL}/api/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'text/plain'
@@ -178,12 +178,17 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
           message: `Hey there, I'm sharing my shaders using emusak for **${GameName}** (${titleID}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``
         })
       })
-      localStorage.setItem(`ryu-share-${titleID}-${localCount}`, 'true')
-      await fs.promises.unlink(path);
-      Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
+
+      if (response.status === 200) {
+        localStorage.setItem(`ryu-share-${titleID}-${localCount}`, 'true')
+        await fs.promises.unlink(path);
+        Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
+      } else {
+        Swal.fire('error', 'You shared too many shaders !');
+      }
     });
 
-    electron.ipcRenderer.once('uploaded-fail', () => {
+    electron.ipcRenderer.on('uploaded-fail', () => {
       setUploading(false);
       Swal.fire('error', 'An error occured during the upload process :\'( please retry a bit later');
     })

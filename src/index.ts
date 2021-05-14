@@ -98,10 +98,16 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-electron.ipcMain.once('shadersBuffer', async(event, zipPath: string) => {
-  console.log('HEY')
+let paths: string[] = [];
+
+electron.ipcMain.on('shadersBuffer', async(event, zipPath: string) => {
+
+  if (paths.includes(zipPath)) {
+    return;
+  }
+
+  paths.push(zipPath);
   const r = request.post('https://api.anonfiles.com/upload', (err, httpResponse, body) => {
-    console.log({ err, httpResponse, body })
     if (!err) {
       event.reply('uploaded', body);
     } else {
