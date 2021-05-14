@@ -1,7 +1,6 @@
 import { app, BrowserWindow, autoUpdater } from 'electron';
 import isDev from "electron-is-dev";
 import * as electron from "electron";
-import FormData from "form-data";
 import * as fs from "fs";
 import request from "request";
 
@@ -99,9 +98,11 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-electron.ipcMain.on('shadersBuffer', async(_, zipPath: string) => {
+electron.ipcMain.on('shadersBuffer', async(event, zipPath: string) => {
   const r = request.post('https://api.anonfiles.com/upload', (err, httpResponse, body) => {
-    console.log(err, httpResponse, body)
+    if (!err) {
+      event.reply('uploaded', body);
+    }
   })
   const form = r.form();
   form.append('file', fs.createReadStream(zipPath))

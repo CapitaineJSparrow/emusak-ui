@@ -99,7 +99,7 @@ export const downloadFirmwareWithProgress = async (progressCallback: Function): 
   electron.shell.showItemInFolder(firmwarePath);
 }
 
-export const shareShaders = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
+export const packShaders = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
   const shaderZipPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.zip');
   const shaderInfoPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.info');
   const archive = new zip();

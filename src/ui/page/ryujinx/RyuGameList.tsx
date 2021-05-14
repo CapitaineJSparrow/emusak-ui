@@ -16,7 +16,7 @@ import {
   downloadInfo,
   downloadKeys, downloadShaders,
   IryujinxLocalShaderConfig,
-  readGameList, shareShaders
+  readGameList, packShaders
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
 import custom_database from "../../../assets/custom_database.json"
@@ -152,9 +152,23 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     await Swal.fire('Successfully downloaded shaders');
   }
 
-  const triggerShadersShare = async (titleID: string) => {
-    const path = await shareShaders(config, titleID);
+  const triggerShadersShare = async (titleID: string, GameName: string, localCount: number, emusakCount: number) => {
+    const path = await packShaders(config, titleID);
     electron.ipcRenderer.send('shadersBuffer', path);
+    electron.ipcRenderer.on('uploaded', async (_, body) => {
+      const json = JSON.parse(body);
+      console.log(json);
+      await fetch(`${process.env.EMUSAK_URL}/api/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: JSON.stringify({
+          message: `Hey there, I'm sharing my shaders using emusak for **${GameName}** (${titleID}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``
+        })
+      })
+      Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
+    });
   }
 
   return (
@@ -241,7 +255,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                               &nbsp;
                               <Button
                                 // disabled={!localShadersCount || !emusakShadersCount[titleId] || localShadersCount <= emusakShadersCount[titleId]}
-                                onClick={() => triggerShadersShare(titleId)}
+                                onClick={() => triggerShadersShare(titleId, name, localShadersCount, emusakShadersCount[titleId])}
                                 variant="contained"
                                 color="primary"
                               >
