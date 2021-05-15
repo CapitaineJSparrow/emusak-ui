@@ -34,11 +34,11 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Share shaders feature is finally here ! If you have more shaders than emusack, you can now share it in one click. A message will be posted in discord, once validated it will be shared to anyone 👍. At the moment, there is a limit at 5 shares per hour to avoid spamming</li>
+          <li>Thanks to the community, more titles display correctly their name instead the title id. I personally would like to thanks <code>Niwu</code> since check your submissions and upload them to emusak take a lot of time</li>
         </ul>
         <br/>
         <p>
-          As always, thanks for testing this software. If you have more shaders than Emusak, please post them in <code style={{ display: 'inline' }}>#ryu-shaders</code> or <code style={{ display: 'inline' }}>#yuzu-shaders</code> in discord server linked on top right. If you have any suggestion or issues, please hang me <code style={{ display: 'inline' }}>Capitaine J. Sparrow#0096</code> on discord, or feel free to create an issue on <a
+          As always, thanks for testing this software. If you have more shaders than Emusak, please share them using the button. If you have any suggestion or issues, please hang me <code style={{ display: 'inline' }}>Capitaine J. Sparrow#0096</code> on discord, or feel free to create an issue on <a
           href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (or create a pull request !)
         </p>
       </div>
