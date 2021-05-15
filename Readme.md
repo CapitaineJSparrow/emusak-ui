@@ -34,6 +34,7 @@ There is also an `AppImage`,  I'll create a ppa and aur package for linux users 
 * Update production keys
 * Download save for specific game
 * Download shaders for specific game
+* You can share shaders in just one click if you have more shaders than emusak
 
 Todo :
 
