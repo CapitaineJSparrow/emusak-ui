@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Chip, Grid, Input, LinearProgress, makeStyles, Modal, TextField} from "@material-ui/core";
+import {Button, Chip, Grid, LinearProgress, makeStyles, Modal, TextField} from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,8 +8,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Swal from 'sweetalert2';
-import * as electron from "electron";
-import * as fs from "fs";
 
 import {
   countShaderForGame,
@@ -17,7 +15,7 @@ import {
   downloadInfo,
   downloadKeys, downloadShaders,
   IryujinxLocalShaderConfig,
-  readGameList, packShaders
+  readGameList, shareShader
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
 import custom_database from "../../../assets/custom_database.json"
@@ -46,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const paths: string[] = [];
 
 const RyuGameList = ({ config }: IRyuGameListProps) => {
   const classes = useStyles();
@@ -54,10 +51,10 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
   const [gamesData]: [{id: string, title: string}[], Function] = useState(eshopData);
   const [localShadersCount, setLocalShadersCount]: [IryujinxLocalShaderConfig[], Function] = useState([]);
   const [filter, setFilter]: [string|null, Function] = useState(null);
+  const [threshold, setThreshold] : [number, Function] = useState(0);
 
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
-  const [uploading, setUploading] = React.useState(false);
 
   const [emusakShadersCount, setEmusakShadersCount]: [IEmusakShadersCount, Function] = useState(null);
   const [emusakSaves, setEmusakSaves]: [IEmusakSaves, Function] = useState({});
@@ -73,6 +70,10 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     });
     getEmusakSaves().then(s => setEmusakSaves(s));
     getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
+
+    fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt')
+      .then(r => r.text())
+      .then(t => setThreshold(parseInt(t)))
   }
 
   /**
@@ -154,55 +155,6 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     await Swal.fire('Successfully downloaded shaders');
   }
 
-  const triggerShadersShare = async (titleID: string, GameName: string, localCount: number, emusakCount: number = 0) => {
-
-    if (uploading) {
-      return;
-    }
-
-    const key = `ryu-share-${titleID}-${localCount}`;
-    if (localStorage.getItem(key)) {
-      Swal.fire('error', 'You already shared those shaders, thanks !');
-      return false;
-    }
-
-    setUploading(true);
-    const path = await packShaders(config, titleID);
-    electron.ipcRenderer.send('shadersBuffer', path);
-    electron.ipcRenderer.on('uploaded', async (_, body) => {
-      setUploading(false);
-
-      if (paths.includes(key)) {
-        return false;
-      }
-      paths.push(key);
-
-      const json = JSON.parse(body);
-      const response = await fetch(`${process.env.EMUSAK_URL}/api/submit`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain'
-        },
-        body: JSON.stringify({
-          message: `Hey there, I'm sharing my shaders using emusak for **${GameName}** (${titleID}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``
-        })
-      })
-
-      if (response.status === 200) {
-        localStorage.setItem(key, 'true')
-        await fs.promises.unlink(path);
-        Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
-      } else {
-        Swal.fire('error', 'You shared too many shaders !');
-      }
-    });
-
-    electron.ipcRenderer.on('uploaded-fail', () => {
-      setUploading(false);
-      Swal.fire('error', 'An error occured during the upload process :\'( please retry a bit later');
-    })
-  }
-
   return (
     <>
       <Modal
@@ -258,44 +210,44 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                     {
                       games
                         .map((titleId) => {
-                        const localShadersCount = extractLocalShaderCount(titleId);
-                        const name = extractNameFromID(titleId);
+                          const localShadersCount = extractLocalShaderCount(titleId);
+                          const name = extractNameFromID(titleId);
+                          const emusakCount: number = emusakShadersCount[titleId] || 0;
 
-                        if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
-                          return null;
-                        }
+                          if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
+                            return null;
+                          }
 
-                        return (
-                          <TableRow key={`${titleId}-${config.path}`}>
-                            <TableCell>
-                              <span>{name}</span>
-                              <br />
-                              <span><small>{titleId}</small></span>
-                            </TableCell>
-                            <TableCell>{emusakShadersCount[titleId] || 'No remote shaders'}</TableCell>
-                            <TableCell>{localShadersCount === 0 ? 'No local shaders': localShadersCount}</TableCell>
-                            <TableCell>
-                              <Button
-                                disabled={!emusakShadersCount[titleId]}
-                                onClick={() => triggerShadersDownload(titleId, localShadersCount)}
-                                variant="contained"
-                                color="primary"
-                              >
-                                Download shaders
-                              </Button>
-                              &nbsp;
-                              &nbsp;
-                              <Button
-                                disabled={!localShadersCount || localShadersCount <= emusakShadersCount[titleId]}
-                                onClick={() => triggerShadersShare(titleId, name, localShadersCount, emusakShadersCount[titleId])}
-                                variant="contained"
-                                color="primary"
-                              >
-                                Share shaders
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        )
+                          return (
+                            <TableRow key={`${titleId}-${config.path}`}>
+                              <TableCell>
+                                <span>{name}</span>
+                                <br />
+                                <span><small>{titleId}</small></span>
+                              </TableCell>
+                              <TableCell>{emusakCount > 0 ? emusakCount : 'No remote shaders'}</TableCell>
+                              <TableCell>{localShadersCount === 0 ? 'No local shaders': localShadersCount}</TableCell>
+                              <TableCell>
+                                <Button
+                                  disabled={!emusakShadersCount[titleId]}
+                                  onClick={() => triggerShadersDownload(titleId, localShadersCount)}
+                                  variant="contained"
+                                  color="primary"
+                                >
+                                  Download shaders
+                                </Button>
+                                &nbsp;
+                                &nbsp;
+                                <Button
+                                  onClick={() => shareShader(config, titleId, name, localShadersCount, emusakCount)}
+                                  variant="contained"
+                                  color="primary"
+                                >
+                                  Share shaders
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          )
                       })
                     }
                   </TableBody>

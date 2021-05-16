@@ -14,7 +14,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LS_KEY = `changelog-${electron.remote.app.getVersion()}`;
+const version = electron.remote.app.getVersion();
+const LS_KEY = `changelog-${version}`;
 
 const Changelog = () => {
   const classes = useStyles();
@@ -31,10 +32,12 @@ const Changelog = () => {
       onClose={onModalClose}
     >
       <div className={classes.modal}>
-        <h1 style={{ textAlign: 'center' }}>What's new ? v{electron.remote.app.getVersion()}</h1>
+        <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Thanks to the community, more titles display correctly their name instead the title id. I personally would like to thanks <code>Niwu</code> since check your submissions and upload them to emusak take a lot of time</li>
+          <li>Added a threshold when to enable the share shaders button : Since we are getting a lot of submissions, it takes a lot of time to validate shaders because we are downloading them, testing in game before upload. <b>Share button will be disabled if you share less than 50 new shaders</b> than emusak</li>
+          <li>Add a notice first time you share shaders</li>
+          <li>Technical cleanup</li>
         </ul>
         <br/>
         <p>

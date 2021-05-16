@@ -4,7 +4,7 @@ import {listDirectories} from "./fs";
 import * as electron from "electron";
 import * as fs from "fs";
 import zip from "adm-zip";
-import {getEmusakProdKeys, PATHS} from "../api/emusak";
+import {getEmusakProdKeys, PATHS, postEmusakShaderShare} from "../api/emusak";
 import Swal from "sweetalert2";
 import {downloadFileWithProgress} from "./http";
 
@@ -12,6 +12,8 @@ export interface IryujinxLocalShaderConfig {
   titleID: string;
   count: number;
 }
+
+const paths: string[] = [];
 
 const asyncZipWrite = (archive: zip, path: string): Promise<void> => new Promise((resolve) => {
   archive.writeZip(path, () => resolve());
@@ -110,4 +112,55 @@ export const packShaders = async (config: IRyujinxConfig, titleID: string): Prom
   await asyncZipWrite(archive, zipPath);
 
   return zipPath;
+}
+
+export const shareShader = async (config: IRyujinxConfig, titleID: string, GameName: string, localCount: number = 0, emusakCount: number = 0) => {
+  const key = `ryu-share-${titleID}-${localCount}`;
+
+  if (localStorage.getItem(key)) {
+    Swal.fire('error', 'You already shared those shaders, thanks !');
+    return false;
+  }
+
+  if (!localStorage.getItem('shaders-share-warning')) {
+    await Swal.fire('notice', `
+      Please make sure to only share shaders that are working for you and do no "just click the button" if you are not 100% sure.
+      <br />
+      <br />
+      Remember it takes a lot of time to validate shaders since we are downloading them and testing ingame before upload to emusak, this goes to everyone
+      <br />
+      <br />
+      <b>Please do NOT merge two separate Shader caches (Files), this causes Shader cache corruption ~ Mid game crash. Using one as a base and adding more through playing is fine</b>
+    `)
+    localStorage.setItem('shaders-share-warning', 'true');
+  }
+
+  return;
+  const path = await packShaders(config, titleID);
+  electron.ipcRenderer.send('shadersBuffer', path);
+  electron.ipcRenderer.on('uploaded', async (_, body) => {
+
+    // IPC can trigger multiple time for same event, we just want to be sure it triggers only one time
+    if (paths.includes(key)) {
+      return false;
+    }
+
+    paths.push(key);
+
+    const json = JSON.parse(body);
+    const message = `Hey there, I'm sharing my shaders using emusak for **${GameName}** (${titleID.toUpperCase()}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
+    const response = await postEmusakShaderShare(message);
+
+    if (response.status === 200) {
+      localStorage.setItem(key, 'true')
+      await fs.promises.unlink(path);
+      Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
+    } else {
+      Swal.fire('error', 'You shared too many shaders !');
+    }
+  });
+
+  electron.ipcRenderer.on('uploaded-fail', () => {
+    Swal.fire('error', 'An error occured during the upload process :\'( please retry a bit later');
+  })
 }
