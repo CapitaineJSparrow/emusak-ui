@@ -123,7 +123,10 @@ export const shareShader = async (config: IRyujinxConfig, titleID: string, GameN
   }
 
   if (!localStorage.getItem('shaders-share-warning')) {
-    await Swal.fire('notice', `
+    const { value } = await Swal.fire({
+      title: 'Notice',
+      showCancelButton: true,
+      html: `
       Please make sure to only share shaders that are working for you and do no "just click the button" if you are not 100% sure.
       <br />
       <br />
@@ -131,7 +134,13 @@ export const shareShader = async (config: IRyujinxConfig, titleID: string, GameN
       <br />
       <br />
       <b>Please do NOT merge two separate Shader caches (Files), this causes Shader cache corruption ~ Mid game crash. Using one as a base and adding more through playing is fine</b>
-    `)
+    `,
+    });
+
+    if (!value) {
+      return false;
+    }
+
     localStorage.setItem('shaders-share-warning', 'true');
   }
 
