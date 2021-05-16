@@ -35,9 +35,8 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Added a threshold to enable the share shaders button : Since we are getting a lot of submissions, it takes a lot of time to validate shaders because we are downloading them, testing in game before upload. <b>Share button will be disabled if you share less than 50 new shaders</b> than emusak</li>
+          <li>Added a threshold to enable the share shaders button : Since we are getting a lot of submissions, it takes a lot of time to validate shaders because we are downloading them, testing in game before upload. <b>you are only able to upload Shaders which surpass the previous ones by at least 100 new ones for now</b></li>
           <li>Add a notice first time you share shaders</li>
-          <li>Technical cleanup</li>
         </ul>
         <br/>
         <p>

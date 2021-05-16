@@ -122,8 +122,7 @@ export const shareShader = async (config: IRyujinxConfig, titleID: string, GameN
     return false;
   }
 
-  if (true) {
-
+  if (!localStorage.getItem('shaders-share-warning')) {
     const { value } = await Swal.fire({
       title: 'Notice',
       showCancelButton: true,
