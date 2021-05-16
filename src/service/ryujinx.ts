@@ -135,7 +135,6 @@ export const shareShader = async (config: IRyujinxConfig, titleID: string, GameN
     localStorage.setItem('shaders-share-warning', 'true');
   }
 
-  return;
   const path = await packShaders(config, titleID);
   electron.ipcRenderer.send('shadersBuffer', path);
   electron.ipcRenderer.on('uploaded', async (_, body) => {
