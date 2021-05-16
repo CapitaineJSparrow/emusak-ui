@@ -239,6 +239,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                                 &nbsp;
                                 &nbsp;
                                 <Button
+                                  disabled={!localShadersCount || (localShadersCount <= (emusakCount + threshold))}
                                   onClick={() => shareShader(config, titleId, name, localShadersCount, emusakCount)}
                                   variant="contained"
                                   color="primary"
