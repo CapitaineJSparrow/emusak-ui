@@ -23,3 +23,13 @@ export const getEmusakSaves = async (): Promise<IEmusakSaves> => fetch(`${proces
 export const getEmusakFirmwareVersion = async (): Promise<string> => fetch(`${process.env.EMUSAK_URL}${PATHS.FIRMWARE_VERSION}`).then(r => r.text()).then(v => v);
 
 export const getEmusakProdKeys = async (): Promise<string> => fetch(`${process.env.EMUSAK_URL}${PATHS.PROD_KEYS}`).then(r => r.text()).then(v => v);
+
+export const postEmusakShaderShare = async (message: string): Promise<any> => fetch(`${process.env.EMUSAK_URL}/api/submit`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'text/plain'
+  },
+  body: JSON.stringify({
+    message
+  })
+})
