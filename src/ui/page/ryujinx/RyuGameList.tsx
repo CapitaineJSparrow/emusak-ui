@@ -18,7 +18,6 @@ import {
   readGameList, shareShader
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
-import custom_database from "../../../assets/custom_database.json"
 import { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
   getEmusakFirmwareVersion,
