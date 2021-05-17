@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Chip, Grid, LinearProgress, makeStyles, Modal, TextField} from "@material-ui/core";
+import {Button, Chip, CircularProgress, Grid, LinearProgress, makeStyles, Modal, TextField} from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -256,6 +256,16 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
               }
             </Table>
           </TableContainer>
+          {
+            (!emusakShadersCount || Object.keys(emusakSaves).length === 0) && (
+              <div style={{ textAlign: 'center' }}>
+                <br />
+                <h4>Loading data from emusak, if it does not load something is maybe wrong with your network or emusak is temporary offline</h4>
+                <br />
+                <CircularProgress />
+              </div>
+            )
+          }
         </Grid>
       </Grid>
     </>

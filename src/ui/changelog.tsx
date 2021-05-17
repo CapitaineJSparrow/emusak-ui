@@ -1,5 +1,5 @@
 import React from "react";
-import {makeStyles, Modal} from "@material-ui/core";
+import { makeStyles, Modal } from "@material-ui/core";
 import electron from "electron";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Some users reported Ryujinx can crash if you already builded shaders with a <code>Cache collision</code> error, you had to manually remove the "OpenGL" directory to fix this issue. Now this is done automatically by emusak</li>
+          <li>Added a loader and a notice to fetch data remotely (such as shaders count or firmware version). If loader never finish, it can indicates something is wrong with your network or emusak can be down</li>
         </ul>
         <br/>
         <p>
