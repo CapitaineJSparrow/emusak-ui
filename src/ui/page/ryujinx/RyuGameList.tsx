@@ -102,7 +102,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
 
   const extractNameFromID = (id: string) => {
     const gameData = eshopData.find(d => d.id.toLowerCase().includes(id.toLowerCase()))
-    return (customDatabase as ({ [key: string]: string}))[id] || (gameData?.title || id)
+    return (customDatabase as ({ [key: string]: string}))[id.toUpperCase()] || (gameData?.title || id)
   }
 
   const extractLocalShaderCount = (titleID: string): number => {
