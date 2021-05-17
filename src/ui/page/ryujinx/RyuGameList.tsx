@@ -18,7 +18,6 @@ import {
   readGameList, shareShader
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
-import custom_database from "../../../assets/custom_database.json"
 import { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
   getEmusakFirmwareVersion,
@@ -51,7 +50,9 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
   const [gamesData]: [{id: string, title: string}[], Function] = useState(eshopData);
   const [localShadersCount, setLocalShadersCount]: [IryujinxLocalShaderConfig[], Function] = useState([]);
   const [filter, setFilter]: [string|null, Function] = useState(null);
+
   const [threshold, setThreshold] : [number, Function] = useState(0);
+  const [customDatabase, setCustomDatabase] = useState({});
 
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
@@ -74,6 +75,10 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
     fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt')
       .then(r => r.text())
       .then(t => setThreshold(parseInt(t)))
+
+    fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/custom_database.json')
+      .then(r => r.json())
+      .then(d => setCustomDatabase(d))
   }
 
   /**
@@ -96,8 +101,8 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
   }, [games])
 
   const extractNameFromID = (id: string) => {
-    const gameDate = eshopData.find(d => d.id.toLowerCase().includes(id.toLowerCase()))
-    return gameDate ? gameDate.title : ((custom_database as ({ [key: string]: string}))[id] || id);
+    const gameData = eshopData.find(d => d.id.toLowerCase().includes(id.toLowerCase()))
+    return (customDatabase as ({ [key: string]: string}))[id] || (gameData?.title || id)
   }
 
   const extractLocalShaderCount = (titleID: string): number => {
@@ -209,6 +214,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                   <TableBody>
                     {
                       games
+                        .filter(titleId => titleId != '0000000000000000')
                         .map((titleId) => {
                           const localShadersCount = extractLocalShaderCount(titleId);
                           const name = extractNameFromID(titleId);
@@ -223,7 +229,7 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
                               <TableCell>
                                 <span>{name}</span>
                                 <br />
-                                <span><small>{titleId}</small></span>
+                                <span><small>{titleId.toUpperCase()}</small></span>
                               </TableCell>
                               <TableCell>{emusakCount > 0 ? emusakCount : 'No remote shaders'}</TableCell>
                               <TableCell>{localShadersCount === 0 ? 'No local shaders': localShadersCount}</TableCell>

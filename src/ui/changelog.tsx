@@ -35,7 +35,8 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Added a loader and a notice to fetch data remotely (such as shaders count or firmware version). If loader never finish, it can indicates something is wrong with your network or emusak can be down</li>
+          <li>Make custom database as remote : to match title ID to friendly game name, we are matching game ids to real name. Now this can be done remotely without any update on your side ;)</li>
+          <li>Technical cleanup</li>
         </ul>
         <br/>
         <p>
