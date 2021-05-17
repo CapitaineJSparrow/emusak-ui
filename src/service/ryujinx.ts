@@ -6,6 +6,7 @@ import * as fs from "fs";
 import zip from "adm-zip";
 import {getEmusakProdKeys, PATHS, postEmusakShaderShare} from "../api/emusak";
 import Swal from "sweetalert2";
+import rimraf from "rimraf";
 import {downloadFileWithProgress} from "./http";
 
 export interface IryujinxLocalShaderConfig {
@@ -81,6 +82,7 @@ export const downloadInfo = async (config: IRyujinxConfig, titleID: string): Pro
 
 export const downloadShaders = async (config: IRyujinxConfig, titleID: string, progressCallback?: Function): Promise<any> => {
   let shaderZipPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  rimraf(getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'opengl'), () => {});
 
   return downloadFileWithProgress({
     progressCallback,
@@ -158,6 +160,9 @@ export const shareShader = async (config: IRyujinxConfig, titleID: string, GameN
     const json = JSON.parse(body);
     const message = `Hey there, I'm sharing my shaders using emusak for **${GameName}** (${titleID.toUpperCase()}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
     const response = await postEmusakShaderShare(message);
+    try {
+      rimraf(path, () => {});
+    } catch(e) {}
 
     if (response.status === 200) {
       localStorage.setItem(key, 'true')
