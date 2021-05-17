@@ -35,8 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Added a threshold to enable the share shaders button : Since we are getting a lot of submissions, it takes a lot of time to validate shaders because we are downloading them, testing in game before upload. <b>you are only able to upload Shaders which surpass the previous ones by at least 100 new ones for now</b></li>
-          <li>Add a notice first time you share shaders</li>
+          <li>Some users reported Ryujinx can crash if you already builded shaders with a <code>Cache collision</code> error, you had to manually remove the "OpenGL" directory to fix this issue. Now this is done automatically by emusak</li>
         </ul>
         <br/>
         <p>
