@@ -6,7 +6,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import discord_logo from "./assets/discord_logo.png"
+import ryu_logo from "./assets/ryu_logo.png"
+import yuzu_logo from "./assets/yuzu.png"
 import {
+  Button,
   createMuiTheme,
   CssBaseline,
   makeStyles,
@@ -18,7 +21,6 @@ import Changelog from "./ui/changelog";
 import {Alert} from "@material-ui/lab";
 import {useState} from "react";
 import Swal from "sweetalert2";
-import ipcRenderer = Electron.Renderer.ipcRenderer;
 
 const theme = createMuiTheme({
   palette: {
@@ -28,13 +30,10 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    display: 'flex',
   },
   menuButton: {
     marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
   },
 }));
 
@@ -51,6 +50,8 @@ const App = () => {
       .then((release: any) => {
         setLatestRelease(release.tag_name.replace('v', ''));
       })
+
+    window.location.href = localStorage.getItem('default-tab') || '#';
   }, [])
 
   electron.ipcRenderer.on('update-available', () => setDownloadingUpdate(true));
@@ -68,17 +69,36 @@ const App = () => {
     }
   });
 
+  const onEmuTabChange = (emu: 'yuzu' | 'ryu') => {
+    if (emu === 'yuzu') {
+      localStorage.setItem('default-tab', '#yuzu');
+      window.location.href = '#yuzu';
+    } else {
+      localStorage.setItem('default-tab', '#');
+      window.location.href = '#';
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" style={{ flex: '0 0 80px' }}>
               EmuSAK
             </Typography>
-            <IconButton onClick={() => electron.shell.openExternal("https://discord.gg/nKstg6x")} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-              <img height={30} src={discord_logo} alt=""/>
-            </IconButton>
+            <div style={{ flex: 1 }}>
+              <p style={{ textAlign: 'center' }}>
+                <Button onClick={() => onEmuTabChange('ryu')} style={{ width: 130 }} variant="outlined"><img height={30} src={ryu_logo} alt=""/>&nbsp; Ryujinx</Button>
+                &nbsp;&nbsp;
+                <Button onClick={() => onEmuTabChange('yuzu')} style={{ width: 130 }} variant="outlined"><img height={30} src={yuzu_logo} alt=""/>&nbsp; Yuzu</Button>
+              </p>
+            </div>
+            <div style={{ flex: '0 0 50px' }}>
+              <IconButton onClick={() => electron.shell.openExternal("https://discord.gg/nKstg6x")} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                <img height={30} src={discord_logo} alt=""/>
+              </IconButton>
+            </div>
           </Toolbar>
         </AppBar>
 
