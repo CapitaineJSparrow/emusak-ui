@@ -18,7 +18,7 @@ import {
   readGameList, shareShader
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
-import { IRyujinxConfig } from "../../../model/RyujinxModel";
+import RyujinxModel, { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
   getEmusakFirmwareVersion,
   getEmusakSaves,
@@ -26,9 +26,12 @@ import {
   IEmusakSaves,
   IEmusakShadersCount
 } from "../../../api/emusak";
+import { DeleteOutline } from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
 
 interface IRyuGameListProps {
   config: IRyujinxConfig;
+  onConfigDelete: Function;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const RyuGameList = ({ config }: IRyuGameListProps) => {
+const RyuGameList = ({ config, onConfigDelete }: IRyuGameListProps) => {
   const classes = useStyles();
   const [games, setGames]: [string[], Function] = useState([]);
   const [gamesData]: [{id: string, title: string}[], Function] = useState(eshopData);
@@ -178,7 +181,18 @@ const RyuGameList = ({ config }: IRyuGameListProps) => {
 
       <Grid container spacing={2}>
         <Grid item xs={4}>
-          <h3 style={{ lineHeight: '36px' }} key={config.path}>{config.path}</h3>
+          <h3 style={{ lineHeight: '36px' }} key={config.path}>
+            <IconButton
+              size="small"
+              color="secondary"
+              component="span"
+              onClick={() => onConfigDelete(config)}
+            >
+              <DeleteOutline />
+            </IconButton>
+            &nbsp;
+            <small>{config.path}</small>
+          </h3>
         </Grid>
         <Grid item xs={3}>
           <Button onClick={() => triggerFirmwareDownload()} color="primary" variant="contained" fullWidth>Download firmware {emusakFirmwareVersion}</Button>

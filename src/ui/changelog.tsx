@@ -35,8 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Make custom database as remote : to match title ID to friendly game name, we are matching game ids to real name. Now this can be done remotely without any update on your side ;)</li>
-          <li>Technical cleanup</li>
+          <li>Added a button to remove a specific Ryujinx folder from emusak</li>
         </ul>
         <br/>
         <p>

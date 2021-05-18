@@ -21,4 +21,12 @@ export default class RyujinxModel {
 
     return true;
   }
+
+  static deleteDirectory(conf: IRyujinxConfig): boolean {
+    let directories = RyujinxModel.getDirectories();
+    directories = directories.filter(d => d.path !== conf.path);
+    localStorage.setItem(RyujinxModel.LS_DIRECTORIES, JSON.stringify(directories));
+
+    return true;
+  }
 }
