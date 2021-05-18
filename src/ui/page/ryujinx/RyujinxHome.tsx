@@ -43,6 +43,11 @@ const RyujinxHome = () => {
     setIsAlertDisplayed(false);
   }
 
+  const onConfigDelete = (config: IRyujinxConfig) => {
+    RyujinxModel.deleteDirectory(config);
+    setDirectories(RyujinxModel.getDirectories()) // Refresh list
+  }
+
   return (
     <div style={{ padding: 20 }}>
       <Grid container>
@@ -76,7 +81,13 @@ const RyujinxHome = () => {
             directories.map((config: IRyujinxConfig) => <RyuGameList
                 key={config.path}
                 config={config}
+                onConfigDelete={onConfigDelete}
               />
+            )
+          }
+          {
+            directories.length === 0 && (
+              <h3 style={{ textAlign: 'center' }}>Add a Ryujinx directory by clicking the button above</h3>
             )
           }
         </Grid>
