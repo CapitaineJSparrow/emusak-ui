@@ -257,7 +257,7 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
             </Table>
           </TableContainer>
           {
-            (!emusakShadersCount || Object.keys(emusakSaves).length === 0) && (
+            (!emusakShadersCount) && (
               <div style={{ textAlign: 'center' }}>
                 <br />
                 <h4>Loading data from emusak, if it does not load something is maybe wrong with your network or emusak is temporary offline</h4>
