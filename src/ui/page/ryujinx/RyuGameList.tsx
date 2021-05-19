@@ -18,11 +18,8 @@ import {
   readGameList, shareShader
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
-import RyujinxModel, { IRyujinxConfig } from "../../../model/RyujinxModel";
+import { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
-  getEmusakFirmwareVersion,
-  getEmusakSaves,
-  getEmusakShadersCount,
   IEmusakSaves,
   IEmusakShadersCount
 } from "../../../api/emusak";
@@ -32,6 +29,11 @@ import IconButton from "@material-ui/core/IconButton";
 interface IRyuGameListProps {
   config: IRyujinxConfig;
   onConfigDelete: Function;
+  threshold: number;
+  customDatabase: any;
+  emusakShadersCount: IEmusakShadersCount;
+  emusakSaves: IEmusakSaves;
+  emusakFirmwareVersion: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -47,41 +49,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const RyuGameList = ({ config, onConfigDelete }: IRyuGameListProps) => {
+const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusakShadersCount, emusakSaves, emusakFirmwareVersion }: IRyuGameListProps) => {
   const classes = useStyles();
   const [games, setGames]: [string[], Function] = useState([]);
   const [gamesData]: [{id: string, title: string}[], Function] = useState(eshopData);
   const [localShadersCount, setLocalShadersCount]: [IryujinxLocalShaderConfig[], Function] = useState([]);
   const [filter, setFilter]: [string|null, Function] = useState(null);
 
-  const [threshold, setThreshold] : [number, Function] = useState(0);
-  const [customDatabase, setCustomDatabase] = useState({});
-
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
 
-  const [emusakShadersCount, setEmusakShadersCount]: [IEmusakShadersCount, Function] = useState(null);
-  const [emusakSaves, setEmusakSaves]: [IEmusakSaves, Function] = useState({});
-  const [emusakFirmwareVersion, setEmusakFirmwareVersion]: [string, Function] = useState('');
-
   const initPage = () => {
     readGameList(config).then(g => setGames(g));
-    getEmusakShadersCount().then(d => {
-      const loweredKeysObject: any = {};
-      const titlesIDs = Object.keys(d);
-      titlesIDs.forEach(t => loweredKeysObject[t.toLowerCase()] = d[t])
-      setEmusakShadersCount(loweredKeysObject);
-    });
-    getEmusakSaves().then(s => setEmusakSaves(s));
-    getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
-
-    fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt')
-      .then(r => r.text())
-      .then(t => setThreshold(parseInt(t)))
-
-    fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/custom_database.json')
-      .then(r => r.json())
-      .then(d => setCustomDatabase(d))
   }
 
   /**
@@ -217,21 +196,22 @@ const RyuGameList = ({ config, onConfigDelete }: IRyuGameListProps) => {
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: 495 }}>Game ({games.length})</TableCell>
+                  <TableCell style={{ width: 495 }}>Games ({games.length})</TableCell>
                   <TableCell>EmuSAK Shaders count</TableCell>
                   <TableCell>Local Shaders count</TableCell>
                   <TableCell style={{ width: 380 }} align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               {
-                (gamesData.length > 0 && emusakShadersCount && Object.keys(emusakSaves).length > 0) && (
+                (gamesData.length > 0 && emusakShadersCount) && (
                   <TableBody>
                     {
                       games
                         .filter(titleId => titleId != '0000000000000000')
-                        .map((titleId) => {
+                        .map(titleId => ({ titleId, name: extractNameFromID(titleId) }))
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(({ titleId, name }) => {
                           const localShadersCount = extractLocalShaderCount(titleId);
-                          const name = extractNameFromID(titleId);
                           const emusakCount: number = emusakShadersCount[titleId] || 0;
 
                           if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
@@ -249,7 +229,7 @@ const RyuGameList = ({ config, onConfigDelete }: IRyuGameListProps) => {
                               <TableCell>{localShadersCount === 0 ? 'No local shaders': localShadersCount}</TableCell>
                               <TableCell>
                                 <Button
-                                  disabled={!emusakShadersCount[titleId]}
+                                  disabled={!emusakShadersCount[titleId] || (localShadersCount >= emusakCount)}
                                   onClick={() => triggerShadersDownload(titleId, localShadersCount)}
                                   variant="contained"
                                   color="primary"

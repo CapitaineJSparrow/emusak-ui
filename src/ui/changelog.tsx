@@ -35,7 +35,10 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Added a button to remove a specific Ryujinx folder from emusak</li>
+          <li>Game list is now sorted alphabetically</li>
+          <li>technical considerations to properly include yuzu support</li>
+          <li>Network optimisations when you have multiple ryujinx instances configured</li>
+          <li>Shaders download button is now disabled if you have more or same shaders count as emusak, so you can quickly see if you need to sync some shaders ;)</li>
         </ul>
         <br/>
         <p>
