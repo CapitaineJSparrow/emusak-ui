@@ -18,11 +18,8 @@ import {
   readGameList, shareShader
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
-import RyujinxModel, { IRyujinxConfig } from "../../../model/RyujinxModel";
+import { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
-  getEmusakFirmwareVersion,
-  getEmusakSaves,
-  getEmusakShadersCount,
   IEmusakSaves,
   IEmusakShadersCount
 } from "../../../api/emusak";
@@ -32,6 +29,11 @@ import IconButton from "@material-ui/core/IconButton";
 interface IRyuGameListProps {
   config: IRyujinxConfig;
   onConfigDelete: Function;
+  threshold: number;
+  customDatabase: any;
+  emusakShadersCount: IEmusakShadersCount;
+  emusakSaves: IEmusakSaves;
+  emusakFirmwareVersion: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -47,41 +49,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const RyuGameList = ({ config, onConfigDelete }: IRyuGameListProps) => {
+const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusakShadersCount, emusakSaves, emusakFirmwareVersion }: IRyuGameListProps) => {
   const classes = useStyles();
   const [games, setGames]: [string[], Function] = useState([]);
   const [gamesData]: [{id: string, title: string}[], Function] = useState(eshopData);
   const [localShadersCount, setLocalShadersCount]: [IryujinxLocalShaderConfig[], Function] = useState([]);
   const [filter, setFilter]: [string|null, Function] = useState(null);
 
-  const [threshold, setThreshold] : [number, Function] = useState(0);
-  const [customDatabase, setCustomDatabase] = useState({});
-
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
 
-  const [emusakShadersCount, setEmusakShadersCount]: [IEmusakShadersCount, Function] = useState(null);
-  const [emusakSaves, setEmusakSaves]: [IEmusakSaves, Function] = useState({});
-  const [emusakFirmwareVersion, setEmusakFirmwareVersion]: [string, Function] = useState('');
-
   const initPage = () => {
     readGameList(config).then(g => setGames(g));
-    getEmusakShadersCount().then(d => {
-      const loweredKeysObject: any = {};
-      const titlesIDs = Object.keys(d);
-      titlesIDs.forEach(t => loweredKeysObject[t.toLowerCase()] = d[t])
-      setEmusakShadersCount(loweredKeysObject);
-    });
-    getEmusakSaves().then(s => setEmusakSaves(s));
-    getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
-
-    fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt')
-      .then(r => r.text())
-      .then(t => setThreshold(parseInt(t)))
-
-    fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/custom_database.json')
-      .then(r => r.json())
-      .then(d => setCustomDatabase(d))
   }
 
   /**

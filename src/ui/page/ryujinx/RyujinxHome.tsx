@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Grid} from "@material-ui/core";
 import {listDirectories, listFiles} from "../../../service/fs"
 import RyujinxModel, { IRyujinxConfig } from "../../../model/RyujinxModel";
@@ -7,10 +7,22 @@ import RyuGameList from "./RyuGameList";
 import { pickOneFolder } from "../../../service/ui";
 import Alert from '@material-ui/lab/Alert';
 import Swal from "sweetalert2";
+import {
+  getEmusakFirmwareVersion,
+  getEmusakSaves,
+  getEmusakShadersCount,
+  IEmusakSaves,
+  IEmusakShadersCount
+} from "../../../api/emusak";
 
 const RyujinxHome = () => {
   const [directories, setDirectories]: [IRyujinxConfig[], Function] = useState(RyujinxModel.getDirectories());
   const [isAlertDisplayed, setIsAlertDisplayed] = useState(localStorage.getItem('ryu-alert') !== 'true');
+  const [threshold, setThreshold] : [number, Function] = useState(0);
+  const [customDatabase, setCustomDatabase] = useState({});
+  const [emusakShadersCount, setEmusakShadersCount]: [IEmusakShadersCount, Function] = useState(null);
+  const [emusakSaves, setEmusakSaves]: [IEmusakSaves, Function] = useState({});
+  const [emusakFirmwareVersion, setEmusakFirmwareVersion]: [string, Function] = useState('');
 
   /**
    * When user pick a ryujinx folder, ensure it is valid (has Ryujinx file) and check if it is portable mode or not
@@ -48,6 +60,26 @@ const RyujinxHome = () => {
     setDirectories(RyujinxModel.getDirectories()) // Refresh list
   }
 
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt')
+      .then(r => r.text())
+      .then(t => setThreshold(parseInt(t)))
+
+    fetch('https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/custom_database.json')
+      .then(r => r.json())
+      .then(d => setCustomDatabase(d))
+
+    getEmusakShadersCount().then(d => {
+      const loweredKeysObject: any = {};
+      const titlesIDs = Object.keys(d);
+      titlesIDs.forEach(t => loweredKeysObject[t.toLowerCase()] = d[t])
+      setEmusakShadersCount(loweredKeysObject);
+    });
+
+    getEmusakSaves().then(s => setEmusakSaves(s));
+    getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
+  }, []);
+
   return (
     <div style={{ padding: 20 }}>
       <Grid container>
@@ -82,6 +114,11 @@ const RyujinxHome = () => {
                 key={config.path}
                 config={config}
                 onConfigDelete={onConfigDelete}
+                threshold={threshold}
+                customDatabase={customDatabase}
+                emusakShadersCount={emusakShadersCount}
+                emusakSaves={emusakSaves}
+                emusakFirmwareVersion={emusakFirmwareVersion}
               />
             )
           }

@@ -35,9 +35,10 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Yuzu support is finally here ! Well ... In fact it is very limited you are only able to display your games. Downloads features (firmware, shaders and keys) are coming very soon it is more an alpha test to be sure it is working for everyone before continue</li>
+          <li>Yuzu support is finally here ! Well ... In fact it is very limited you are only able to display your games. Downloads features (firmware, shaders and keys) are coming very soon it is more an <b>alpha</b> test to be sure it is working for everyone before continue</li>
           <li>Game list is now sorted alphabetically</li>
           <li>technical considerations to properly include yuzu support</li>
+          <li>Network optimisations when you have multiple ryujinx instances configured</li>
           <li>Shaders download button is now disabled if you have more or same shaders count as emusak</li>
         </ul>
         <br/>
