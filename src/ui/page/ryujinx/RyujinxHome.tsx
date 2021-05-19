@@ -76,8 +76,9 @@ const RyujinxHome = () => {
       setEmusakShadersCount(loweredKeysObject);
     });
 
-    getEmusakSaves().then(s => setEmusakSaves(s));
-    getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
+    // getEmusakSaves().then(s => setEmusakSaves(s));
+    // getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
+    setEmusakFirmwareVersion('12.0.1'); // Avoid a request for now
   }, []);
 
   return (

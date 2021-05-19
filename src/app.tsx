@@ -90,8 +90,6 @@ const App = () => {
             <div style={{ flex: 1 }}>
               <p style={{ textAlign: 'center' }}>
                 <Button onClick={() => onEmuTabChange('ryu')} style={{ width: 130 }} variant="outlined"><img height={30} src={ryu_logo} alt=""/>&nbsp; Ryujinx</Button>
-                &nbsp;&nbsp;
-                <Button onClick={() => onEmuTabChange('yuzu')} style={{ width: 130 }} variant="outlined"><img height={30} src={yuzu_logo} alt=""/>&nbsp; Yuzu</Button>
               </p>
             </div>
             <div style={{ flex: '0 0 50px' }}>

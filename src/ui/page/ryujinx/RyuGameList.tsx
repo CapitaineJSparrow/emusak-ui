@@ -196,14 +196,14 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: 495 }}>Game ({games.length})</TableCell>
+                  <TableCell style={{ width: 495 }}>Games ({games.length})</TableCell>
                   <TableCell>EmuSAK Shaders count</TableCell>
                   <TableCell>Local Shaders count</TableCell>
                   <TableCell style={{ width: 380 }} align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               {
-                (gamesData.length > 0 && emusakShadersCount && Object.keys(emusakSaves).length > 0) && (
+                (gamesData.length > 0 && emusakShadersCount) && (
                   <TableBody>
                     {
                       games
