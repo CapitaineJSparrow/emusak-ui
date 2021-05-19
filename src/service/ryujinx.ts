@@ -76,7 +76,8 @@ export const downloadInfo = async (config: IRyujinxConfig, titleID: string): Pro
 
   return downloadFileWithProgress({
     filePath: path.resolve(shaderInfoPath, 'cache.info'),
-    url: `${PATHS.INFO_DOWNLOAD}&id=${titleID.toUpperCase()}`
+    url: `/ryu/${titleID.toUpperCase()}.info`,
+    fromCdn: true,
   });
 }
 
@@ -87,7 +88,7 @@ export const downloadShaders = async (config: IRyujinxConfig, titleID: string, p
   return downloadFileWithProgress({
     progressCallback,
     filePath: shaderZipPath,
-    url: `/${titleID.toUpperCase()}.zip`,
+    url: `/ryu/${titleID.toUpperCase()}.zip`,
     fromCdn: true
   });
 }
