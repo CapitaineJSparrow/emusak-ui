@@ -1,7 +1,7 @@
 {
   "name": "emusak",
   "productName": "emusak",
-  "version": "1.0.46",
+  "version": "1.0.47",
   "description": "Saves, shaders, firmwares and keys manager for switch emulators",
   "main": ".webpack/main",
   "repository": "https://github.com/stromcon/emusak-ui.git",
