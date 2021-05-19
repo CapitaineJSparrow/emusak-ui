@@ -6,6 +6,7 @@ interface IProgress {
   progressCallback?: Function;
   filePath: string;
   url: string;
+  fromCdn?: boolean;
 }
 
 export const fetchWithRetries = async (url: string, options: RequestInit = {}): Promise<true | Response> => {
@@ -33,9 +34,10 @@ export const fetchWithRetries = async (url: string, options: RequestInit = {}): 
 export const downloadFileWithProgress = async ({
   progressCallback,
   filePath,
-  url
+  url,
+  fromCdn = false
 }: IProgress) => {
-  let response = await fetch(`${process.env.EMUSAK_URL}${url}`);
+  let response = await fetch(`${fromCdn ? process.env.EMUSAK_CDN : process.env.EMUSAK_URL}${url}`);
   const reader = response.body.getReader();
   const contentLength = +response.headers.get('Content-Length');
   let receivedLength = 0;
