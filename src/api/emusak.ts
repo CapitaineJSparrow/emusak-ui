@@ -13,7 +13,7 @@ export const enum PATHS {
   LIST_SAVES = '/api/saves',
   FIRMWARE_VERSION = '/api/firmware/version',
   PROD_KEYS = '/api/keys',
-  FIRMWARE_DOWNLOAD = '/api/firmware',
+  FIRMWARE_DOWNLOAD = '/ryu/firmware.zip',
   INFO_DOWNLOAD = '/api/shaders/ryujinx?type=info',
   ZIP_DOWNLOAD = '/api/shaders/ryujinx?type=zip',
 }

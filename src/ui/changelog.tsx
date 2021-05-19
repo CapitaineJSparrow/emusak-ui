@@ -35,7 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Added a exponential backoff strategy to network requests, which means if emusak cannot fetch data from server, it will automatically retry up to 5 times</li>
+          <li>Added a CDN to serve static files, this should resolve all network issues for everyone</li>
         </ul>
         <br/>
         <p>
