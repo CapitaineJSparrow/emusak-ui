@@ -1,3 +1,5 @@
+import {fetchWithRetries} from "../service/http";
+
 export interface IEmusakShadersCount {
   [key: string]: number;
 }
@@ -16,7 +18,7 @@ export const enum PATHS {
   ZIP_DOWNLOAD = '/api/shaders/ryujinx?type=zip',
 }
 
-export const getEmusakShadersCount = async (): Promise<IEmusakShadersCount> => fetch(`${process.env.EMUSAK_URL}${PATHS.COUNT_SHADERS}`).then(r => r.json())
+export const getEmusakShadersCount = async (): Promise<IEmusakShadersCount> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.COUNT_SHADERS}`).then((r: Response) => r.json())
 
 export const getEmusakSaves = async (): Promise<IEmusakSaves> => fetch(`${process.env.EMUSAK_URL}${PATHS.LIST_SAVES}`).then(r => r.json())
 

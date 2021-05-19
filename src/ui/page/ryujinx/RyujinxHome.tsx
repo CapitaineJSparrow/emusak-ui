@@ -8,8 +8,6 @@ import { pickOneFolder } from "../../../service/ui";
 import Alert from '@material-ui/lab/Alert';
 import Swal from "sweetalert2";
 import {
-  getEmusakFirmwareVersion,
-  getEmusakSaves,
   getEmusakShadersCount,
   IEmusakSaves,
   IEmusakShadersCount
