@@ -229,9 +229,10 @@ const RyuGameList = ({ config, onConfigDelete }: IRyuGameListProps) => {
                     {
                       games
                         .filter(titleId => titleId != '0000000000000000')
-                        .map((titleId) => {
+                        .map(titleId => ({ titleId, name: extractNameFromID(titleId) }))
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(({ titleId, name }) => {
                           const localShadersCount = extractLocalShaderCount(titleId);
-                          const name = extractNameFromID(titleId);
                           const emusakCount: number = emusakShadersCount[titleId] || 0;
 
                           if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
@@ -249,7 +250,7 @@ const RyuGameList = ({ config, onConfigDelete }: IRyuGameListProps) => {
                               <TableCell>{localShadersCount === 0 ? 'No local shaders': localShadersCount}</TableCell>
                               <TableCell>
                                 <Button
-                                  disabled={!emusakShadersCount[titleId]}
+                                  disabled={!emusakShadersCount[titleId] || (localShadersCount >= emusakCount)}
                                   onClick={() => triggerShadersDownload(titleId, localShadersCount)}
                                   variant="contained"
                                   color="primary"
