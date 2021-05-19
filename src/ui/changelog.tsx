@@ -35,10 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Game list is now sorted alphabetically</li>
-          <li>technical considerations to properly include yuzu support</li>
-          <li>Network optimisations when you have multiple ryujinx instances configured</li>
-          <li>Shaders download button is now disabled if you have more or same shaders count as emusak, so you can quickly see if you need to sync some shaders ;)</li>
+          <li>Added a exponential backoff strategy to network requests, which means if emusak cannot fetch data from server, it will automatically retry up to 5 times</li>
         </ul>
         <br/>
         <p>

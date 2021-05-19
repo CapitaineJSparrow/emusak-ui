@@ -1,10 +1,33 @@
 import fs from "fs";
 import Swal from "sweetalert2";
+import pRetry from "p-retry";
 
 interface IProgress {
   progressCallback?: Function;
   filePath: string;
   url: string;
+}
+
+export const fetchWithRetries = async (url: string, options: RequestInit = {}): Promise<true | Response> => {
+  return pRetry(async () => {
+    const response = await fetch(url, options).catch(() => false);
+
+    if (!response) {
+      throw new Error('Failed to fetch');
+    }
+
+    if ((response as Response).status >= 400) {
+      // Does not retry if server working but does not allow request
+      throw new pRetry.AbortError((response as Response).statusText);
+    }
+
+    return response;
+  }, {
+    retries: 5,
+    onFailedAttempt: error => {
+      console.log(`Attempt ${error.attemptNumber} failed for ${url}. There are ${error.retriesLeft} retries left.`);
+    },
+  });
 }
 
 export const downloadFileWithProgress = async ({
@@ -19,7 +42,7 @@ export const downloadFileWithProgress = async ({
   let chunks = [];
 
   while (true) {
-    const {done, value} = await reader.read();
+    const { done, value } = await reader.read();
 
     if (done) {
       break;
