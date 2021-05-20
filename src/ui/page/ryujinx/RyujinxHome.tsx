@@ -32,7 +32,7 @@ const RyujinxHome = () => {
     const path = await pickOneFolder();
 
     if (path) { // User did not cancel operation
-      const isPortable = (await listDirectories(path)).includes("portable");
+      const isPortable = (await listDirectories(path)).map(p => p.toLowerCase()).includes("portable");
       const files = await listFiles(path)
       const isValidRyuDir = files.includes('Ryujinx.exe') || files.includes('Ryujinx');
 

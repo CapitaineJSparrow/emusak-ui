@@ -35,7 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Added a CDN to serve static files, this should resolve all network issues for everyone</li>
+          <li>Disable shaders share feature, anonfiles went down to another location but their API is not up yet.</li>
         </ul>
         <br/>
         <p>
