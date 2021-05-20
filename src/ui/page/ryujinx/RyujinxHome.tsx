@@ -8,6 +8,7 @@ import { pickOneFolder } from "../../../service/ui";
 import Alert from '@material-ui/lab/Alert';
 import Swal from "sweetalert2";
 import {
+  getEmusakSaves,
   getEmusakShadersCount,
   IEmusakSaves,
   IEmusakShadersCount
@@ -31,7 +32,7 @@ const RyujinxHome = () => {
     const path = await pickOneFolder();
 
     if (path) { // User did not cancel operation
-      const isPortable = (await listDirectories(path)).includes("portable");
+      const isPortable = (await listDirectories(path)).map(p => p.toLowerCase()).includes("portable");
       const files = await listFiles(path)
       const isValidRyuDir = files.includes('Ryujinx.exe') || files.includes('Ryujinx');
 
@@ -74,7 +75,10 @@ const RyujinxHome = () => {
       setEmusakShadersCount(loweredKeysObject);
     });
 
-    // getEmusakSaves().then(s => setEmusakSaves(s));
+    getEmusakSaves().then(s => {
+      setEmusakSaves(s)
+      console.log(s);
+    });
     // getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
     setEmusakFirmwareVersion('12.0.1'); // Avoid a request for now
   }, []);
