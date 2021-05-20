@@ -35,7 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li><b>Share shaders feature is still disabled</b> we keep monitoring situation with anonfiles API</li>
+          <li>Share shaders feature is now enabled again</li>
           <li>Emusak is so shiny now ! Save download feature is now here</li>
           <li>Add case insensitive check to know if a ryujinx instance is portable or not</li>
         </ul>

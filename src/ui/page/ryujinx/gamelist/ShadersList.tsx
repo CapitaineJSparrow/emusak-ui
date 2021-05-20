@@ -63,8 +63,7 @@ export default ({
                 &nbsp;
                 &nbsp;
                 <Button
-                  // disabled={!localShadersCount || (localShadersCount <= (emusakCount + threshold))}
-                  disabled={true}
+                  disabled={!localShadersCount || (localShadersCount <= (emusakCount + threshold))}
                   onClick={() => shareShader(config, titleId, name, localShadersCount, emusakCount)}
                   variant="contained"
                   color="primary"
