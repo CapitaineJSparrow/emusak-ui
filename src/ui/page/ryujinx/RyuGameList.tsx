@@ -11,7 +11,6 @@ import {
   TextField, Typography
 } from "@material-ui/core";
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
@@ -25,7 +24,7 @@ import {
   downloadInfo,
   downloadKeys, downloadShaders,
   IryujinxLocalShaderConfig,
-  readGameList, shareShader
+  readGameList
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
 import { IRyujinxConfig } from "../../../model/RyujinxModel";

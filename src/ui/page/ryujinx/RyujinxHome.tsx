@@ -8,6 +8,7 @@ import { pickOneFolder } from "../../../service/ui";
 import Alert from '@material-ui/lab/Alert';
 import Swal from "sweetalert2";
 import {
+  getEmusakSaves,
   getEmusakShadersCount,
   IEmusakSaves,
   IEmusakShadersCount
@@ -74,7 +75,7 @@ const RyujinxHome = () => {
       setEmusakShadersCount(loweredKeysObject);
     });
 
-    // getEmusakSaves().then(s => setEmusakSaves(s));
+    getEmusakSaves().then(s => setEmusakSaves(s));
     // getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
     setEmusakFirmwareVersion('12.0.1'); // Avoid a request for now
   }, []);
