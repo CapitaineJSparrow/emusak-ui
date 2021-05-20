@@ -38,7 +38,6 @@ There is also an `AppImage`,  I'll create a ppa and aur package for linux users 
 
 Todo :
 
-- [ ] Download saves
 - [ ] Add yuzu support
 
 ### Contributing
