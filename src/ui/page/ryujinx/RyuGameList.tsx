@@ -1,5 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {Button, Chip, CircularProgress, Grid, LinearProgress, makeStyles, Modal, TextField} from "@material-ui/core";
+import {
+  AppBar, Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Grid,
+  LinearProgress,
+  makeStyles,
+  Modal, Tab, Tabs,
+  TextField, Typography
+} from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -25,6 +35,8 @@ import {
 } from "../../../api/emusak";
 import { DeleteOutline } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
+import ShadersList from "./gamelist/ShadersList";
+import SaveList from "./gamelist/SaveList";
 
 interface IRyuGameListProps {
   config: IRyujinxConfig;
@@ -48,6 +60,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function TabPanel(props: any) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+
 
 const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusakShadersCount, emusakSaves, emusakFirmwareVersion }: IRyuGameListProps) => {
   const classes = useStyles();
@@ -55,6 +88,7 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
   const [gamesData]: [{id: string, title: string}[], Function] = useState(eshopData);
   const [localShadersCount, setLocalShadersCount]: [IryujinxLocalShaderConfig[], Function] = useState([]);
   const [filter, setFilter]: [string|null, Function] = useState(null);
+  const [tabIndex, setTabIndex] = React.useState(0);
 
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
@@ -142,6 +176,45 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
     await Swal.fire('Successfully downloaded shaders');
   }
 
+  const handleTabChange = (event: any, newValue: any) => {
+    setTabIndex(newValue);
+  };
+
+  const displayTable = (
+    games: string[],
+    extractNameFromID: Function,
+    extractLocalShaderCount: Function,
+    emusakShadersCount: IEmusakShadersCount,
+    filter: string,
+    config: IRyujinxConfig,
+    triggerShadersDownload: Function,
+    threshold: number
+  ) => {
+    switch (tabIndex) {
+      case 1:
+        return <SaveList
+          games={games}
+          extractNameFromID={extractNameFromID}
+          extractLocalShaderCount={extractLocalShaderCount}
+          emusakShadersCount={emusakShadersCount}
+          filter={filter}
+          config={config}
+          triggerShadersDownload={triggerShadersDownload}
+        />
+      default:
+        return <ShadersList
+          games={games}
+          extractNameFromID={extractNameFromID}
+          extractLocalShaderCount={extractLocalShaderCount}
+          emusakShadersCount={emusakShadersCount}
+          filter={filter}
+          config={config}
+          triggerShadersDownload={triggerShadersDownload}
+          threshold={threshold}
+        />
+    }
+  }
+
   return (
     <>
       <Modal
@@ -189,69 +262,49 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
           <TextField onChange={e => setFilter(e.target.value)} fullWidth placeholder="Filter games" />
         </Grid>
       </Grid>
+      <br/>
 
-      <Grid container style={{ margin: '20px 0' }}>
+      <AppBar position="static">
+        <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
+          <Tab label="Shaders" />
+          <Tab label="Saves" />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={`${tabIndex}`}>
+        Shaders
+      </TabPanel>
+      <TabPanel value={`${tabIndex}`}>
+        Saves
+      </TabPanel>
+
+      <Grid container style={{ margin: '0 0 20px 0' }}>
         <Grid item xs={12}>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ width: 495 }}>Games ({games.length})</TableCell>
-                  <TableCell>EmuSAK Shaders count</TableCell>
-                  <TableCell>Local Shaders count</TableCell>
-                  <TableCell style={{ width: 380 }} align="right">Actions</TableCell>
+                  <TableCell style={{ width: tabIndex === 0 ? 495 : undefined }}>Games ({games.length})</TableCell>
+                  {
+                    tabIndex === 0 && (
+                      <>
+                        <TableCell>EmuSAK Shaders count</TableCell>
+                        <TableCell>Local Shaders count</TableCell>
+                      </>
+                    )
+                  }
+                  <TableCell style={{ width: tabIndex === 0 ? 380 : 190 }} align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               {
-                (gamesData.length > 0 && emusakShadersCount) && (
-                  <TableBody>
-                    {
-                      games
-                        .filter(titleId => titleId != '0000000000000000')
-                        .map(titleId => ({ titleId, name: extractNameFromID(titleId) }))
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map(({ titleId, name }) => {
-                          const localShadersCount = extractLocalShaderCount(titleId);
-                          const emusakCount: number = emusakShadersCount[titleId] || 0;
-
-                          if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
-                            return null;
-                          }
-
-                          return (
-                            <TableRow key={`${titleId}-${config.path}`}>
-                              <TableCell>
-                                <span>{name}</span>
-                                <br />
-                                <span><small>{titleId.toUpperCase()}</small></span>
-                              </TableCell>
-                              <TableCell>{emusakCount > 0 ? emusakCount : 'No remote shaders'}</TableCell>
-                              <TableCell>{localShadersCount === 0 ? 'No local shaders': localShadersCount}</TableCell>
-                              <TableCell>
-                                <Button
-                                  disabled={!emusakShadersCount[titleId] || (localShadersCount >= emusakCount)}
-                                  onClick={() => triggerShadersDownload(titleId, localShadersCount)}
-                                  variant="contained"
-                                  color="primary"
-                                >
-                                  Download shaders
-                                </Button>
-                                &nbsp;
-                                &nbsp;
-                                <Button
-                                  disabled={!localShadersCount || (localShadersCount <= (emusakCount + threshold))}
-                                  onClick={() => shareShader(config, titleId, name, localShadersCount, emusakCount)}
-                                  variant="contained"
-                                  color="primary"
-                                >
-                                  Share shaders
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          )
-                      })
-                    }
-                  </TableBody>
+                (gamesData.length > 0 && emusakShadersCount) && displayTable(
+                  games,
+                  extractNameFromID,
+                  extractLocalShaderCount,
+                  emusakShadersCount,
+                  filter,
+                  config,
+                  triggerShadersDownload,
+                  threshold
                 )
               }
             </Table>
