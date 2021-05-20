@@ -139,8 +139,8 @@ export default ({
                 </TableCell>
                 <TableCell>
                   <Button
-                    disabled={!emusakSaves[titleId]}
-                    onClick={() => onSaveDownloadClick(titleId)}
+                    disabled={!emusakSaves[titleId.toUpperCase()]}
+                    onClick={() => onSaveDownloadClick(titleId.toUpperCase())}
                     variant="contained"
                     color="primary"
                   >
