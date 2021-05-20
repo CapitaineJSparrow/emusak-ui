@@ -106,6 +106,21 @@ export const downloadFirmwareWithProgress = async (progressCallback: Function): 
   electron.shell.showItemInFolder(firmwarePath);
 }
 
+export const downloadSaveWithProgress = async (progressCallback: Function, titleId: string, filename: string) : Promise<void> => {
+  const url = `/saves/${titleId}/${encodeURIComponent(filename)}`;
+  const savePath = path.resolve((electron.app || electron.remote.app).getPath('documents'), filename);
+
+  await downloadFileWithProgress({
+    progressCallback,
+    filePath: savePath,
+    url,
+    fromCdn: true
+  });
+
+  await Swal.fire('Job done !', 'EmuSAK will now open the downloaded save location. Go to ryujinx ⇾ Right click on the game ⇾ "Open User Save directory" and extract files here !')
+  electron.shell.showItemInFolder(savePath);
+}
+
 export const packShaders = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
   const shaderZipPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.zip');
   const shaderInfoPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.info');

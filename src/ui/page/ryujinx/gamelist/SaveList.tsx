@@ -1,11 +1,22 @@
 import React from "react";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import {Avatar, Button, Dialog, DialogTitle, List, ListItem, ListItemAvatar, ListItemText} from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogTitle, LinearProgress,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText, makeStyles,
+  Modal
+} from "@material-ui/core";
 import TableBody from "@material-ui/core/TableBody";
 import {IRyujinxConfig} from "../../../../model/RyujinxModel";
 import {IEmusakSaves, IEmusakShadersCount} from "../../../../api/emusak";
-import PersonIcon from '@material-ui/icons/Person';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import {downloadSaveWithProgress} from "../../../../service/ryujinx";
 
 interface TableProps {
   games: string[];
@@ -18,6 +29,18 @@ interface TableProps {
   emusakSaves: IEmusakSaves;
 }
 
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    backgroundColor: theme.palette.background.paper,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    padding: 20,
+    width: '50%'
+  },
+}));
+
 export default ({
   games,
   extractNameFromID,
@@ -28,28 +51,74 @@ export default ({
   triggerShadersDownload,
   emusakSaves
 }: TableProps) => {
-  const [selectedValue, setSelectedValue] = React.useState(null);
-  const [open, setOpen] = React.useState(true);
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [saves, setSaves]: [string[], Function] = React.useState([]);
+  const [selectedTitleId, setSelectedTitleId] = React.useState(null);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const onSaveDownloadClick = (titleId: string) => {
+    setSaves(emusakSaves[titleId]);
+    setSelectedTitleId(titleId);
+    setOpen(true);
+  }
+
+  const onSavePick = (filename: string) => {
+    setOpen(false);
+    setModalOpen(true);
+
+    downloadSaveWithProgress((p: number) => {
+      if (p !== progressValue) {
+        setProgressValue(p)
+      }
+
+      if (p >= 100) {
+        // Download finished
+        setModalOpen(false)
+        setProgressValue(0);
+      }
+    }, selectedTitleId, filename);
+  }
+
   return (
     <TableBody>
       <Dialog onClose={handleClose} aria-labelledby="save-dialog-ryu" open={open}>
-        <DialogTitle id="save-dialog-ryu">Choose a save</DialogTitle>
+        <DialogTitle id="save-dialog-ryu">Pick a file</DialogTitle>
         <List>
-          <ListItem button>
-            <ListItemAvatar>
-              <Avatar>
-                <PersonIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={"dsqdqs"} />
-          </ListItem>
+          {
+            saves.map(s => (
+              <ListItem onClick={() => onSavePick(s)} key={s} button>
+                <ListItemAvatar>
+                  <Avatar>
+                    <FileCopyIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={s} />
+              </ListItem>
+            ))
+          }
         </List>
       </Dialog>
+
+
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        disableBackdropClick
+      >
+        <div className={classes.modal}>
+          <h2 id="simple-modal-title">Downloading ...</h2>
+          <br />
+          <LinearProgress variant="buffer" value={progressValue} valueBuffer={0} />
+        </div>
+      </Modal>
 
       {
         games
@@ -57,9 +126,6 @@ export default ({
           .map(titleId => ({ titleId, name: extractNameFromID(titleId) }))
           .sort((a, b) => a.name.localeCompare(b.name))
           .map(({ titleId, name }) => {
-            const localShadersCount = extractLocalShaderCount(titleId);
-            const emusakCount: number = emusakShadersCount[titleId] || 0;
-
             if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
               return null;
             }
@@ -74,7 +140,7 @@ export default ({
                 <TableCell>
                   <Button
                     disabled={!emusakSaves[titleId]}
-                    onClick={() => triggerShadersDownload(titleId, localShadersCount)}
+                    onClick={() => onSaveDownloadClick(titleId)}
                     variant="contained"
                     color="primary"
                   >
