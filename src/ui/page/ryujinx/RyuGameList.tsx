@@ -199,6 +199,7 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
           filter={filter}
           config={config}
           triggerShadersDownload={triggerShadersDownload}
+          emusakSaves={emusakSaves}
         />
       default:
         return <ShadersList
