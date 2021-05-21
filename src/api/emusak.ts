@@ -13,18 +13,18 @@ export const enum PATHS {
   LIST_SAVES = '/api/saves',
   FIRMWARE_VERSION = '/api/firmware/version',
   PROD_KEYS = '/api/keys',
-  FIRMWARE_DOWNLOAD = '/ryu/firmware.zip',
+  FIRMWARE_DOWNLOAD = '/firmware/firmware.zip',
   INFO_DOWNLOAD = '/api/shaders/ryujinx?type=info',
   ZIP_DOWNLOAD = '/api/shaders/ryujinx?type=zip',
 }
 
 export const getEmusakShadersCount = async (): Promise<IEmusakShadersCount> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.COUNT_SHADERS}`).then((r: Response) => r.json())
 
-export const getEmusakSaves = async (): Promise<IEmusakSaves> => fetch(`${process.env.EMUSAK_URL}${PATHS.LIST_SAVES}`).then(r => r.json())
+export const getEmusakSaves = async (): Promise<IEmusakSaves> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.LIST_SAVES}`).then((r: Response) => r.json())
 
-export const getEmusakFirmwareVersion = async (): Promise<string> => fetch(`${process.env.EMUSAK_URL}${PATHS.FIRMWARE_VERSION}`).then(r => r.text()).then(v => v);
+export const getEmusakFirmwareVersion = async (): Promise<string> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.FIRMWARE_VERSION}`).then((r: Response) => r.text()).then(v => v);
 
-export const getEmusakProdKeys = async (): Promise<string> => fetch(`${process.env.EMUSAK_URL}${PATHS.PROD_KEYS}`).then(r => r.text()).then(v => v);
+export const getEmusakProdKeys = async (): Promise<string> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.PROD_KEYS}`).then((r: Response) => r.text()).then(v => v);
 
 export const postEmusakShaderShare = async (message: string): Promise<any> => fetch(`${process.env.EMUSAK_URL}/api/submit`, {
   method: 'POST',

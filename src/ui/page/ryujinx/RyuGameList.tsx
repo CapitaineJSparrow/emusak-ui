@@ -247,10 +247,18 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
           </h3>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => triggerFirmwareDownload()} color="primary" variant="contained" fullWidth>Download firmware {emusakFirmwareVersion}</Button>
+          <Button
+            onClick={() => triggerFirmwareDownload()}
+            color="primary"
+            variant="contained"
+            fullWidth
+            disabled={!emusakFirmwareVersion}
+          >
+            Download firmware {emusakFirmwareVersion}
+          </Button>
         </Grid>
         <Grid item xs={3}>
-          <Button onClick={() => downloadKeys(config)} color="primary" variant="contained" fullWidth>Download keys</Button>
+          <Button disabled={!emusakFirmwareVersion} onClick={() => downloadKeys(config)} color="primary" variant="contained" fullWidth>Download keys</Button>
         </Grid>
         <Grid item xs={2}>
           <span style={{ lineHeight: '36px', textAlign: 'right', display: 'block' }}>Is portable : <Chip label={config.isPortable ? 'yes': 'no'} color="primary" /></span>
@@ -310,7 +318,7 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
             </Table>
           </TableContainer>
           {
-            (!emusakShadersCount) && (
+            (!emusakShadersCount || !emusakFirmwareVersion || !emusakSaves) && (
               <div style={{ textAlign: 'center' }}>
                 <br />
                 <h4>Loading data from emusak, if it does not load something is maybe wrong with your network or emusak is temporary offline</h4>

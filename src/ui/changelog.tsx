@@ -35,9 +35,9 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Share shaders feature is now enabled again</li>
-          <li>Emusak is so shiny now ! Save download feature is now here</li>
-          <li>Add case insensitive check to know if a ryujinx instance is portable or not</li>
+          <li>Update firmware version</li>
+          <li>CDN updates to download firmware</li>
+          <li>Added an exponential backoff strategy when you fetch emusak saves state or download keys</li>
         </ul>
         <br/>
         <p>
