@@ -173,14 +173,6 @@ export const shareShader = async (
   onRyujinxClose: Function,
 ) => {
 
-  if (process.platform !== "win32") {
-    Swal.fire({
-      icon: 'error',
-      text: "This feature is not available for linux, i'll provide an update for you soon !"
-    })
-    return;
-  }
-
   const key = `ryu-share-${titleID}-${localCount}`;
 
   if (localStorage.getItem(key)) {
@@ -210,7 +202,12 @@ export const shareShader = async (
   ryujinxConfig['logging_enable_fs_access_log'] = true;
   await fs.promises.writeFile(ryuConfPath, JSON.stringify(ryujinxConfig, null, 2), 'utf-8');
 
-  const ryuBinary = path.resolve(config.path, 'Ryujinx.exe');
+  let ryuBinary = path.resolve(config.path, 'Ryujinx.exe');
+
+  if (process.platform !== "win32") {
+    ryuBinary = path.resolve(config.path, 'Ryujinx')
+  }
+
   onRyujinxOpen();
   const result = await asyncReadRyujinxProcess(ryuBinary).catch(() => false);
   onRyujinxClose();
@@ -223,7 +220,6 @@ export const shareShader = async (
     return;
   }
 
-  console.log({ result, titleID })
   if (result.ranTitleId !== titleID.toUpperCase()) {
     await Swal.fire({
       icon: 'error',
