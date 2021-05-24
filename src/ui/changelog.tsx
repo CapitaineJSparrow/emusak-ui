@@ -35,9 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Update firmware version</li>
-          <li>CDN updates to download firmware</li>
-          <li>Added an exponential backoff strategy when you fetch emusak saves state or download keys</li>
+          <li>When you click on the "Share Shaders" button, Emusak will now ask to open Ryujinx and open the game to read Ryujinx logs and be sure no errors occurred. This is designed to reduce workload on our side, because validation submissions is very time consuming</li>
         </ul>
         <br/>
         <p>
