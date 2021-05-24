@@ -251,8 +251,6 @@ export const shareShader = async (
 
     paths.push(key);
 
-    alert('Sending shaders to discord channel is disabled while debugging but submission is considered as valid')
-    return;
     const json = JSON.parse(body);
     const message = `Hey there, I'm sharing my shaders using emusak for **${gameName}** (${titleID.toUpperCase()}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
     const response = await postEmusakShaderShare(message);
