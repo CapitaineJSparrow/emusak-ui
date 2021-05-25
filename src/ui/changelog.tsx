@@ -35,6 +35,8 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
+          <li>Added a loader when you share shaders and upload is pending</li>
+          <li>Added a threshold indicator to explain when you can share shaders</li>
           <li>Make the new share shaders feature compatible for our linux users</li>
           <li>When you click on the "Share Shaders" button, Emusak will now ask to open Ryujinx and open the game to read Ryujinx logs and be sure no errors occurred. This is designed to reduce workload on our side, because validation submissions is very time consuming</li>
         </ul>
