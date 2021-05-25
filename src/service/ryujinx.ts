@@ -171,6 +171,7 @@ export const shareShader = async (
   emusakCount: number = 0,
   onRyujinxOpen: Function,
   onRyujinxClose: Function,
+  done: Function
 ) => {
 
   const key = `ryu-share-${titleID}-${localCount}`;
@@ -233,6 +234,7 @@ export const shareShader = async (
       icon: 'error',
       text: `You have ${localCount} on your cache but Ryujinx compiled ${result.compiledShadersCount}. That means some shaders are either corrupted or rejected. This probably not your fault, that maybe means you build shaders since a long time ago and Ryujinx choose to reject them because they changed something in the code and the game probably run fine. But because we share shaders to everyone, we choose to reject your submission to avoid any conflict because we are not sure at 100% this will not cause issue to anyone`
     })
+    done();
     return;
   }
 
@@ -254,6 +256,7 @@ export const shareShader = async (
       rimraf(shadersPath, () => {});
     } catch(e) {}
 
+    done();
     if (response.status === 200) {
       localStorage.setItem(key, 'true')
       await fs.promises.unlink(shadersPath);

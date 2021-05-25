@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
-  AppBar, Box,
+  AppBar, Backdrop, Box,
   Button,
   Chip,
   CircularProgress,
@@ -57,6 +57,10 @@ const useStyles = makeStyles((theme) => ({
     padding: 20,
     width: '50%'
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
 function TabPanel(props: any) {
@@ -90,6 +94,7 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
   const [filter, setFilter]: [string|null, Function] = useState(null);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [ryujinxLogsModalOpen, setRyujinxLogsModalOpen] = useState(false);
+  const [backdropOpen, setBackdropOpen] = useState(false);
 
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
@@ -228,7 +233,11 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
       localShadersCount,
       emusakCount,
       () => setRyujinxLogsModalOpen(true),
-      () => setRyujinxLogsModalOpen(false),
+      () => {
+        setRyujinxLogsModalOpen(false);
+        setBackdropOpen(true);
+      },
+      () => setBackdropOpen(false),
     );
   }
 
@@ -247,6 +256,11 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
           <LinearProgress variant="buffer" value={progressValue} valueBuffer={0} />
         </div>
       </Modal>
+
+      <Backdrop className={classes.backdrop} open={backdropOpen} onClick={() => {}}>
+        <CircularProgress color="secondary" /> <br />
+        <h3>&nbsp; Upload shaders to anonfiles, This can take up to few minutes, depending on shader size and anonfiles load</h3>
+      </Backdrop>
 
       <Modal
         open={ryujinxLogsModalOpen}

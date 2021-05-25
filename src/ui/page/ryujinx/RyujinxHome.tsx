@@ -88,7 +88,7 @@ const RyujinxHome = () => {
           <p>
             Shaders treshold : <code>{threshold >= 100000 ? 'Shaders submission temporary disabled': threshold}</code> <Tooltip placement="right" arrow title={
               <React.Fragment>
-                <span style={{ fontWeight: 'normal', fontSize: '1.2em' }}>That means you can share Shaders if your local Shader count surpasses EmuSAK's count by this value. This is based on how many submissions we already have and our workload. Reviewing your submissions is very time consuming and it is not worth our effort if the count is below the threshold variable</span>
+                <span style={{ fontWeight: 'normal', fontSize: '1.2em' }}>That means you can share Shaders if your local Shader count surpasses EmuSAK's count by this value. This is based on how many submissions we already have and our workload. Reviewing your submissions is very time consuming and it is not worth our effort if the count is below the threshold variable. Submission are limited to 1 per user per hour for now.</span>
               </React.Fragment>
             }>
             <IconButton color="primary" size="small">
