@@ -24,7 +24,7 @@ import {
   downloadInfo,
   downloadKeys, downloadShaders,
   IryujinxLocalShaderConfig,
-  readGameList
+  readGameList, shareShader
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
 import { IRyujinxConfig } from "../../../model/RyujinxModel";
@@ -83,11 +83,13 @@ function TabPanel(props: any) {
 
 const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusakShadersCount, emusakSaves, emusakFirmwareVersion }: IRyuGameListProps) => {
   const classes = useStyles();
+  const [currentGame, setCurrentGame] = useState('');
   const [games, setGames]: [string[], Function] = useState([]);
   const [gamesData]: [{id: string, title: string}[], Function] = useState(eshopData);
   const [localShadersCount, setLocalShadersCount]: [IryujinxLocalShaderConfig[], Function] = useState([]);
   const [filter, setFilter]: [string|null, Function] = useState(null);
   const [tabIndex, setTabIndex] = React.useState(0);
+  const [ryujinxLogsModalOpen, setRyujinxLogsModalOpen] = useState(false);
 
   const [modalOpen, setModalOpen]: [boolean, Function] = React.useState(false);
   const [progressValue, setProgressValue]: [number, Function] = React.useState(0);
@@ -187,7 +189,8 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
     filter: string,
     config: IRyujinxConfig,
     triggerShadersDownload: Function,
-    threshold: number
+    threshold: number,
+    onShareShaderButtonClick: Function
   ) => {
     switch (tabIndex) {
       case 1:
@@ -211,8 +214,22 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
           config={config}
           triggerShadersDownload={triggerShadersDownload}
           threshold={threshold}
+          onShareShaderButtonClick={onShareShaderButtonClick}
         />
     }
+  }
+
+  const onShareShaderButtonClick = (config: IRyujinxConfig, titleId: string, name: string, localShadersCount: number, emusakCount: number) => {
+    setCurrentGame(name);
+    shareShader(
+      config,
+      titleId,
+      name,
+      localShadersCount,
+      emusakCount,
+      () => setRyujinxLogsModalOpen(true),
+      () => setRyujinxLogsModalOpen(false),
+    );
   }
 
   return (
@@ -228,6 +245,32 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
           <h2 id="simple-modal-title">Downloading ...</h2>
           <br />
           <LinearProgress variant="buffer" value={progressValue} valueBuffer={0} />
+        </div>
+      </Modal>
+
+      <Modal
+        open={ryujinxLogsModalOpen}
+        onClose={() => {}}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <div className={classes.modal}>
+          <h2 style={{textAlign: 'center', fontWeight: 'normal'}}>Please run <b>{currentGame}</b> in Ryujinx !</h2>
+
+          <ul style={{listStyle: 'none'}}>
+            <li style={{ display: 'flex', alignItems: 'center' }}>
+              <span> <CircularProgress color="secondary" size={30} /></span>
+              &nbsp;
+              &nbsp;
+              <span> Waiting for <b>{currentGame}</b> to be run in ryujinx</span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'center' }}>
+              <span> <CircularProgress color="secondary" size={30} /></span>
+              &nbsp;
+              &nbsp;
+              <span> Waiting for shaders to be compiled</span>
+            </li>
+          </ul>
         </div>
       </Modal>
 
@@ -312,7 +355,8 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
                   filter,
                   config,
                   triggerShadersDownload,
-                  threshold
+                  threshold,
+                  onShareShaderButtonClick
                 )
               }
             </Table>
