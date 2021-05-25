@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid, IconButton, Tooltip} from "@material-ui/core";
 import {listDirectories, listFiles} from "../../../service/fs"
 import RyujinxModel, { IRyujinxConfig } from "../../../model/RyujinxModel";
-import ryu_logo from "../../../assets/ryu_logo.png"
 import RyuGameList from "./RyuGameList";
 import { pickOneFolder } from "../../../service/ui";
 import Alert from '@material-ui/lab/Alert';
 import Swal from "sweetalert2";
+import HelpIcon from '@material-ui/icons/Help';
+
 import {
   getEmusakFirmwareVersion,
   getEmusakSaves,
@@ -85,13 +86,16 @@ const RyujinxHome = () => {
       <Grid container>
         <Grid item xs={9} style={{ display: 'flex', alignItems: 'center' }}>
           <p>
-            <img src={ryu_logo} height={36} alt=""/>
+            Shaders treshold : <code>{threshold >= 100000 ? 'Shaders submission temporary disabled': threshold}</code> <Tooltip placement="right" arrow title={
+              <React.Fragment>
+                <span style={{ fontWeight: 'normal', fontSize: '1.2em' }}>That means you can share Shaders if your local Shader count surpasses EmuSAK's count by this value. This is based on how many submissions we already have and our workload. Reviewing your submissions is very time consuming and it is not worth our effort if the count is below the threshold variable</span>
+              </React.Fragment>
+            }>
+            <IconButton color="primary" size="small">
+              <HelpIcon />
+            </IconButton>
+          </Tooltip>
           </p>
-          &nbsp;
-          &nbsp;
-          <h2>
-            Ryujinx
-          </h2>
         </Grid>
         <Grid item xs={3}>
           <Button color="primary" variant="contained" fullWidth onClick={() => onRyuFolderSelect()}>Add ryujinx folder</Button>
