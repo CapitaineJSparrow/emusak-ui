@@ -35,6 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
+          <li>Some debug & add game version when you share shaders</li>
           <li>Added a loader when you share shaders and upload is pending</li>
           <li>Added a threshold indicator to explain when you can share shaders</li>
           <li>Make the new share shaders feature compatible for our linux users</li>
