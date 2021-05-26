@@ -29,6 +29,7 @@ import {
 import eshopData from "../../../assets/test.json";
 import { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
+  IEmusakMods,
   IEmusakSaves,
   IEmusakShadersCount
 } from "../../../api/emusak";
@@ -36,6 +37,7 @@ import { DeleteOutline } from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import ShadersList from "./gamelist/ShadersList";
 import SaveList from "./gamelist/SaveList";
+import ModsList from "./gamelist/ModsList";
 
 interface IRyuGameListProps {
   config: IRyujinxConfig;
@@ -45,6 +47,7 @@ interface IRyuGameListProps {
   emusakShadersCount: IEmusakShadersCount;
   emusakSaves: IEmusakSaves;
   emusakFirmwareVersion: string;
+  emusakMods: IEmusakMods;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -85,7 +88,7 @@ function TabPanel(props: any) {
 
 
 
-const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusakShadersCount, emusakSaves, emusakFirmwareVersion }: IRyuGameListProps) => {
+const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusakShadersCount, emusakSaves, emusakFirmwareVersion, emusakMods }: IRyuGameListProps) => {
   const classes = useStyles();
   const [currentGame, setCurrentGame] = useState('');
   const [games, setGames]: [string[], Function] = useState([]);
@@ -208,6 +211,14 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
           config={config}
           triggerShadersDownload={triggerShadersDownload}
           emusakSaves={emusakSaves}
+        />
+      case 2:
+        return <ModsList
+          games={games}
+          extractNameFromID={extractNameFromID}
+          emusakMods={emusakMods}
+          config={config}
+          filter={filter}
         />
       default:
         return <ShadersList
@@ -333,6 +344,7 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
         <Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
           <Tab label="Shaders" />
           <Tab label="Saves" />
+          <Tab label="Mods" />
         </Tabs>
       </AppBar>
       <TabPanel value={`${tabIndex}`}>
@@ -340,6 +352,9 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
       </TabPanel>
       <TabPanel value={`${tabIndex}`}>
         Saves
+      </TabPanel>
+      <TabPanel value={`${tabIndex}`}>
+        Mods
       </TabPanel>
 
       <Grid container style={{ margin: '0 0 20px 0' }}>

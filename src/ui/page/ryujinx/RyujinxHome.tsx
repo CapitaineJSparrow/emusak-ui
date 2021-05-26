@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import HelpIcon from '@material-ui/icons/Help';
 
 import {
-  getEmusakFirmwareVersion,
+  getEmusakFirmwareVersion, getEmusakMods,
   getEmusakSaves,
   getEmusakShadersCount,
   IEmusakSaves,
@@ -24,6 +24,7 @@ const RyujinxHome = () => {
   const [emusakShadersCount, setEmusakShadersCount]: [IEmusakShadersCount, Function] = useState(null);
   const [emusakSaves, setEmusakSaves]: [IEmusakSaves, Function] = useState({});
   const [emusakFirmwareVersion, setEmusakFirmwareVersion]: [string, Function] = useState('');
+  const [emusakMods, setEmusakMods] = useState([]);
 
   /**
    * When user pick a ryujinx folder, ensure it is valid (has Ryujinx file) and check if it is portable mode or not
@@ -79,6 +80,7 @@ const RyujinxHome = () => {
 
     getEmusakSaves().then(s => setEmusakSaves(s));
     getEmusakFirmwareVersion().then(v => setEmusakFirmwareVersion(v));
+    getEmusakMods().then(m => setEmusakMods(m));
   }, []);
 
   return (
@@ -123,6 +125,7 @@ const RyujinxHome = () => {
                 emusakShadersCount={emusakShadersCount}
                 emusakSaves={emusakSaves}
                 emusakFirmwareVersion={emusakFirmwareVersion}
+                emusakMods={emusakMods}
               />
             )
           }
