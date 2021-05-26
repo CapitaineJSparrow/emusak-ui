@@ -4,6 +4,8 @@
 /api/shaders/ryujinx
 /api/shaders/yuzu
 /api/shaders/ryujinx/count
+/api/ptchtxt
+/api/romfs
 
 D /api/keys
 D /api/firmware

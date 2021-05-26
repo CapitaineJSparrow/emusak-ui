@@ -308,3 +308,20 @@ export const shareShader = async (
     });
   })
 }
+
+export const installModToRyujinx = async (config: IRyujinxConfig, titleID: string, modName: string, modFileName: string, content: string) => {
+  let modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName, 'exefs');
+
+  const exists = await fs.promises.access(modPath).then(() => true).catch(() => false);
+
+  if (!exists) {
+    await fs.promises.mkdir(modPath, {recursive: true});
+  }
+
+  const filePath = path.resolve(modPath, modFileName);
+  await fs.promises.writeFile(filePath, content, 'utf-8');
+  await Swal.fire({
+    icon: 'success',
+    text: `${modName} successfully installed at ${filePath}`
+  })
+}
