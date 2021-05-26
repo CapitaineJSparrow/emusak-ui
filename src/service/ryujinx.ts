@@ -63,7 +63,11 @@ export const downloadKeys = async (config: IRyujinxConfig): Promise<any> => {
   let prodKeysPath = getRyujinxPath(config, 'system', 'prod.keys');
 
   await fs.promises.writeFile(prodKeysPath, file, 'utf-8');
-  return Swal.fire('Job done !', `Created or replaced keys at : ${prodKeysPath}`)
+  return Swal.fire({
+    icon: 'success',
+    title: 'Job done !',
+    text: `Created or replaced keys at : ${prodKeysPath}`
+  })
 }
 
 export const downloadInfo = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
@@ -103,7 +107,11 @@ export const downloadFirmwareWithProgress = async (progressCallback: Function): 
     url: PATHS.FIRMWARE_DOWNLOAD,
     fromCdn: true
   });
-  await Swal.fire('Job done !', 'EmuSAK will now open the downloaded firmware location. Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file')
+  await Swal.fire({
+    icon: 'success',
+    title: 'Job done !',
+    text: 'EmuSAK will now open the downloaded firmware location. Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file'
+  })
   electron.shell.showItemInFolder(firmwarePath);
 }
 
@@ -118,7 +126,11 @@ export const downloadSaveWithProgress = async (progressCallback: Function, title
     fromCdn: true
   });
 
-  await Swal.fire('Job done !', 'EmuSAK will now open the downloaded save location. Go to ryujinx ⇾ Right click on the game ⇾ "Open User Save directory" and extract files here !')
+  await Swal.fire({
+    icon: 'success',
+    title: 'Job done !',
+    text: 'EmuSAK will now open the downloaded save location. Go to ryujinx ⇾ Right click on the game ⇾ "Open User Save directory" and extract files here !'
+  })
   electron.shell.showItemInFolder(savePath);
 }
 
@@ -183,7 +195,11 @@ export const shareShader = async (
   const key = `ryu-share-${titleID}-${localCount}`;
 
   if (localStorage.getItem(key)) {
-    Swal.fire('error', 'You already shared those shaders, thanks !');
+    Swal.fire({
+      icon: 'error',
+      title: 'error',
+      text: 'You already shared those shaders, thanks !'
+    });
     return false;
   }
 
@@ -269,14 +285,26 @@ export const shareShader = async (
     if (response.status === 200) {
       localStorage.setItem(key, 'true')
       await fs.promises.unlink(shadersPath);
-      Swal.fire('success', 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !');
+      Swal.fire({
+        icon: 'success',
+        title: 'Success !',
+        text: 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !'
+      });
     } else {
-      Swal.fire('error', 'You shared too many shaders !');
+      Swal.fire({
+        icon: 'error',
+        title: 'rate limit',
+        text: 'You shared too many times shaders. Please retry a bit later we just want to avoid spam'
+      });
     }
   });
 
   electron.ipcRenderer.on('uploaded-fail', () => {
     done();
-    Swal.fire('error', 'An error occured during the upload process :\'( please retry a bit later');
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred during the upload process. Anonfiles is maybe down or not available in your country. Please retry a bit later'
+    });
   })
 }
