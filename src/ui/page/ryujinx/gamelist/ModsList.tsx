@@ -27,6 +27,7 @@ interface IModsListProps {
   extractNameFromID: Function;
   emusakMods: IEmusakMods;
   config: IRyujinxConfig;
+  filter: string;
 }
 
 export default ({
@@ -34,6 +35,7 @@ export default ({
   extractNameFromID,
   emusakMods,
   config,
+  filter,
 }: IModsListProps) => {
   const [dialogVersionOpen, setDialogVersionOpen] = React.useState(false);
   const [modsDialogOpen, setModsDialogOpen] = React.useState(false);
@@ -120,25 +122,32 @@ export default ({
           .filter(titleId => titleId != '0000000000000000')
           .map(titleId => ({titleId: titleId.toUpperCase(), name: extractNameFromID(titleId)}))
           .sort((a, b) => a.name.localeCompare(b.name))
-          .map(({titleId, name}) => (
-            <TableRow key={`ryu-mods-list-${titleId}`}>
-              <TableCell>
-                <span>{name}</span>
-                <br />
-                <span><small>{titleId.toUpperCase()}</small></span>
-              </TableCell>
-              <TableCell>
-                <Button
-                  onClick={() => handleVersionPick(titleId)}
-                  disabled={!emusakMods.find(m => m.name === titleId)}
-                  variant="contained"
-                  color="primary"
-                >
-                  Download mods
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))
+          .map(({titleId, name}) => {
+
+            if (filter && name.toLowerCase().search(filter.toLowerCase()) === -1) {
+              return null;
+            }
+
+            return (
+              <TableRow key={`ryu-mods-list-${titleId}`}>
+                <TableCell>
+                  <span>{name}</span>
+                  <br />
+                  <span><small>{titleId.toUpperCase()}</small></span>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    onClick={() => handleVersionPick(titleId)}
+                    disabled={!emusakMods.find(m => m.name === titleId)}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Download mods
+                  </Button>
+                </TableCell>
+              </TableRow>
+            )
+          })
       }
     </TableBody>
   )

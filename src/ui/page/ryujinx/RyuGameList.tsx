@@ -218,6 +218,7 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
           extractNameFromID={extractNameFromID}
           emusakMods={emusakMods}
           config={config}
+          filter={filter}
         />
       default:
         return <ShadersList
