@@ -140,12 +140,18 @@ const asyncReadRyujinxProcess = async (ryuBinPath: string): Promise<any> => new 
   let fullData = '';
   let ranTitleId: string;
   let compiledShadersCount: number;
+  let ranTitleVersion: string;
 
   child.on('exit', () => resolve(false));
   child.stdout.on('data', (data) => {
     fullData += data;
     const titleIdMatch = /for Title (.+)/gi.exec(fullData);
     const shaderCountMatch = /Shader cache loaded (\d+) entries/gi.exec(fullData);
+    const titleVersionMatch = /v([\d+\.]+) \[/.exec(fullData);
+
+    if (titleVersionMatch && titleVersionMatch.length >= 2) {
+      ranTitleVersion = titleVersionMatch[1];
+    }
 
     if (titleIdMatch && titleIdMatch.length >= 2) {
       ranTitleId = titleIdMatch[1].trim();
@@ -156,7 +162,7 @@ const asyncReadRyujinxProcess = async (ryuBinPath: string): Promise<any> => new 
     }
 
     if (ranTitleId && (compiledShadersCount || compiledShadersCount === 0)) {
-      resolve({ ranTitleId, compiledShadersCount });
+      resolve({ ranTitleId, compiledShadersCount, ranTitleVersion });
       child.kill();
     }
   });
@@ -214,6 +220,7 @@ export const shareShader = async (
   onRyujinxClose();
 
   if (!result) {
+    done();
     await Swal.fire({
       icon: 'error',
       text: 'You either closed Ryujinx before running the game or Ryujinx crashed'
@@ -222,6 +229,7 @@ export const shareShader = async (
   }
 
   if (result.ranTitleId !== titleID.toUpperCase()) {
+    done();
     await Swal.fire({
       icon: 'error',
       text: `You ran the wrong game ! You had to launch ${gameName}`
@@ -230,11 +238,11 @@ export const shareShader = async (
   }
 
   if (result.compiledShadersCount !== localCount) {
+    done();
     await Swal.fire({
       icon: 'error',
       text: `You have ${localCount} on your cache but Ryujinx compiled ${result.compiledShadersCount}. That means some shaders are either corrupted or rejected. This probably not your fault, that maybe means you build shaders since a long time ago and Ryujinx choose to reject them because they changed something in the code and the game probably run fine. But because we share shaders to everyone, we choose to reject your submission to avoid any conflict because we are not sure at 100% this will not cause issue to anyone`
     })
-    done();
     return;
   }
 
@@ -244,13 +252,14 @@ export const shareShader = async (
 
     // IPC can trigger multiple time for same event, we just want to be sure it triggers only one time
     if (paths.includes(key)) {
+      done();
       return false;
     }
 
     paths.push(key);
 
     const json = JSON.parse(body);
-    const message = `Hey there, I'm sharing my shaders using emusak for **${gameName}** (${titleID.toUpperCase()}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
+    const message = `Hey there, I'm sharing my shaders using emusak for **${gameName}** v${result.ranTitleVersion} (${titleID.toUpperCase()}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
     const response = await postEmusakShaderShare(message);
     try {
       rimraf(shadersPath, () => {});
@@ -267,6 +276,7 @@ export const shareShader = async (
   });
 
   electron.ipcRenderer.on('uploaded-fail', () => {
+    done();
     Swal.fire('error', 'An error occured during the upload process :\'( please retry a bit later');
   })
 }
