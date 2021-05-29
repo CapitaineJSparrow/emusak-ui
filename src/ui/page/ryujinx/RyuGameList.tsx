@@ -182,7 +182,10 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
     })
 
     initPage();
-    await Swal.fire('Successfully downloaded shaders');
+    await Swal.fire({
+      icon: 'success',
+      text: 'Successfully downloaded shaders'
+    });
   }
 
   const handleTabChange = (event: any, newValue: any) => {
