@@ -3,7 +3,7 @@
 Emusak-ui is a graphical mod for [Emusak](https://github.com/sinscove/EmuSAK). This is a tool which allows you to download saves and shaders for switch emulators using a compatible Emusak backend compatible both with linux (only tested with ubuntu) and windows 
 
 <p align="center">
-  <img width="80%" alt="screenshot" src="https://raw.githubusercontent.com/stromcon/emusak-ui/main/screenshot_1.jpg?raw=true&id=01" />
+  <img width="80%" alt="screenshot" src="https://raw.githubusercontent.com/stromcon/emusak-ui/main/screenshot_2.jpg?raw=true&id=01" />
 </p>
 
 
@@ -34,12 +34,12 @@ There is also an `AppImage`,  I'll create a ppa and aur package for linux users 
 * Update production keys
 * Download save for specific game
 * Download shaders for specific game
+* Downloads mods for specific game
 * You can share shaders in just one click if you have more shaders than emusak
 
 Todo :
 
 - [ ] Add yuzu support
-- [ ] Add mods support
 
 ### Contributing
 
