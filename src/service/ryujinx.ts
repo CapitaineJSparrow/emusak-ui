@@ -215,7 +215,14 @@ export const shareShader = async (
     return;
   }
 
-  const ryuConfPath = getRyujinxPath(config, 'Config.json');
+  const ldnConfigPath = getRyujinxPath(config, 'LDNConfig.json');
+  const isLdnConfig = await fs.promises.access(ldnConfigPath).then(() => true).catch(() => false);
+  let ryuConfPath = getRyujinxPath(config, 'Config.json');
+
+  if (isLdnConfig)  {
+    ryuConfPath = ldnConfigPath;
+  }
+
   let ryujinxConfig = JSON.parse((await fs.promises.readFile(ryuConfPath)).toString());
   ryujinxConfig['logging_enable_error'] = true;
   ryujinxConfig['logging_enable_guest'] = true;
