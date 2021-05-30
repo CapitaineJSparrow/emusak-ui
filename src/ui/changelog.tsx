@@ -35,6 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
+          <li>Fix an issue preventing shaders to be shared when using LDN build (thanks TheOg for reporting)</li>
           <li>Minor UI fixes</li>
           <li>Share limit is now 3 per hour per user, instead 1.</li>
           <li>Mods support is finally here ! For now there is only mods from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/theboy181/switch-ptchtxt-mods")}>TheBoy181</a></li>
