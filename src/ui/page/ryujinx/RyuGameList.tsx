@@ -27,6 +27,7 @@ import {
   readGameList, shareShader
 } from "../../../service/ryujinx";
 import eshopData from "../../../assets/test.json";
+import tinfoilDb from "../../../assets/tinfoil_database.json";
 import { IRyujinxConfig } from "../../../model/RyujinxModel";
 import {
   IEmusakMods,
@@ -126,8 +127,18 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
   }, [games])
 
   const extractNameFromID = (id: string) => {
-    const gameData = eshopData.find(d => d.id.toLowerCase().includes(id.toLowerCase()))
-    return (customDatabase as ({ [key: string]: string}))[id.toUpperCase()] || (gameData?.title || id)
+    let gameData = eshopData.find(d => d.id.toLowerCase().includes(id.toLowerCase()))
+    let tinFoilName: any = tinfoilDb.data.find(d => d.id === id.toUpperCase());
+
+    if (tinFoilName) {
+      const matches = />(.+)</.exec(tinFoilName.name)
+
+      if (matches && matches.length >= 2) {
+        tinFoilName = matches[1];
+      }
+    }
+
+    return (customDatabase as ({ [key: string]: string}))[id.toUpperCase()] || (typeof tinFoilName === "string" ? tinFoilName : id)
   }
 
   const extractLocalShaderCount = (titleID: string): number => {
