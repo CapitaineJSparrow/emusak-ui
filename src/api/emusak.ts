@@ -40,12 +40,17 @@ export const getEmusakModsForGameWithVersion = async (titleId: string, version: 
 }
 
 export const getEmusakMod = async (titleId: string, version: string, mod: string): Promise<any> => {
-  console.log((encodeURI(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}/${titleId}/${version}/${mod}/`)));
   return fetchWithRetries(encodeURI(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}/${titleId}/${version}/${mod}/`)).then((r: Response) => r.json());
 }
 
 export const downloadEmusakMod = async (titleId: string, version: string, mod: string, file:string): Promise<any> => {
-  return fetchWithRetries(encodeURI(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}/${titleId}/${version}/${mod}/${file}`)).then((r: Response) => r.text());
+  return fetchWithRetries(encodeURI(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}/${titleId}/${version}/${mod}/${file}`)).then((r: any) => {
+    if (file.includes('.zip')) {
+      return r.arrayBuffer();
+    }
+
+    return r.text();
+  });
 }
 
 export const getEmusakFirmwareVersion = async (): Promise<string> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.FIRMWARE_VERSION}`).then((r: Response) => r.text()).then(v => v);

@@ -316,19 +316,40 @@ export const shareShader = async (
   })
 }
 
-export const installModToRyujinx = async (config: IRyujinxConfig, titleID: string, modName: string, modFileName: string, content: string) => {
+const toBuffer = (ab: ArrayBuffer) => {
+  const buf = Buffer.alloc(ab.byteLength);
+  const view = new Uint8Array(ab);
+  for (let i = 0; i < buf.length; ++i) {
+    buf[i] = view[i];
+  }
+  return buf;
+}
+
+export const installModToRyujinx = async (config: IRyujinxConfig, titleID: string, modName: string, modFileName: string, content: string | ArrayBuffer) => {
   let modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName, 'exefs');
+  const isZip = modFileName.includes('.zip');
+
+  if (isZip) {
+    modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName);
+  }
 
   const exists = await fs.promises.access(modPath).then(() => true).catch(() => false);
 
-  if (!exists) {
+  if (!exists && !isZip) { // We do not want to create subfolders for zip mods, I assume the archive contain a root directory with "exefs" and / or "romfs" directories
     await fs.promises.mkdir(modPath, {recursive: true});
   }
 
-  const filePath = path.resolve(modPath, modFileName);
-  await fs.promises.writeFile(filePath, content, 'utf-8');
+  let filePath = path.resolve(modPath, modFileName);
+
+  if (typeof  content === "string") { // If mod is a utf-8 file, just write to disk
+    await fs.promises.writeFile(filePath, content, 'utf-8');
+  } else { // If it is not, assume it is a zip and extract it from memory to right location
+    const archive = new zip(toBuffer(content));
+    archive.extractAllTo(path.resolve(modPath, '..'),true);
+  }
+
   await Swal.fire({
     icon: 'success',
-    text: `${modName} successfully installed at ${filePath}`
+    text: `${modName} successfully installed at ${isZip ? modName : modPath}`
   })
 }
