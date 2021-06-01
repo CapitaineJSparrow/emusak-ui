@@ -35,12 +35,14 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
+          <li>Uploaded tons of new mods</li>
+          <li>Add romFS mods support</li>
           <li>Fix a bug preventing users to download some mods</li>
           <li>Fix a lot of missing title IDs</li>
           <li>Fix an issue preventing shaders to be shared when using LDN build (thanks TheOg for reporting)</li>
           <li>Minor UI fixes</li>
           <li>Share limit is now 3 per hour per user, instead 1.</li>
-          <li>Mods support is finally here ! For now there is only mods from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/theboy181/switch-ptchtxt-mods")}>TheBoy181</a></li>
+          <li>Mods support is finally here !</li>
         </ul>
         <br/>
         <p>
