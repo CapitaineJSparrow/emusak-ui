@@ -358,8 +358,10 @@ export const installModToRyujinx = async (config: IRyujinxConfig, titleID: strin
     archive.extractAllTo(path.resolve(modPath, '..'),true);
   }
 
-  await Swal.fire({
+  Swal.fire({
     icon: 'success',
     text: `${modName} successfully installed ${isZip ? '' : `at ${modPath}`}`
   })
+
+  return true;
 }
