@@ -35,6 +35,7 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
+          <li>Fixed a bug preventing users sharing their shaders from mailine configuration if logs were disabled on mainline build while logs are disabled and using Ryujinx LDN without portable mode (thanks PHAT for reporting)</li>
           <li>Uploaded tons of new mods</li>
           <li>Add romFS mods support</li>
           <li>Fix a bug preventing users to download some mods</li>
