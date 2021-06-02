@@ -181,6 +181,16 @@ const asyncReadRyujinxProcess = async (ryuBinPath: string): Promise<any> => new 
   child.stdout.on('error', () => reject(false));
 })
 
+const updateConfig = (conf: any) => {
+  conf['logging_enable_error'] = true;
+  conf['logging_enable_guest'] = true;
+  conf['logging_enable_info'] = true;
+  conf['logging_enable_stub'] = true;
+  conf['logging_enable_warn'] = true;
+  conf['logging_enable_fs_access_log'] = true;
+  return conf;
+}
+
 export const shareShader = async (
   config: IRyujinxConfig,
   titleID: string,
@@ -216,21 +226,21 @@ export const shareShader = async (
   }
 
   const ldnConfigPath = getRyujinxPath(config, 'LDNConfig.json');
-  const isLdnConfig = await fs.promises.access(ldnConfigPath).then(() => true).catch(() => false);
-  let ryuConfPath = getRyujinxPath(config, 'Config.json');
+  const hasLdnConfigFile = await fs.promises.access(ldnConfigPath).then(() => true).catch(() => false);
+  const standardConfigPath = getRyujinxPath(config, 'Config.json');
+  const hasStandardConfigFile = await fs.promises.access(standardConfigPath).then(() => true).catch(() => false);
 
-  if (isLdnConfig)  {
-    ryuConfPath = ldnConfigPath;
+  if (hasLdnConfigFile) {
+    let ryujinxConfig = JSON.parse((await fs.promises.readFile(ldnConfigPath)).toString());
+    ryujinxConfig = updateConfig(ryujinxConfig);
+    await fs.promises.writeFile(ldnConfigPath, JSON.stringify(ryujinxConfig, null, 2), 'utf-8');
   }
 
-  let ryujinxConfig = JSON.parse((await fs.promises.readFile(ryuConfPath)).toString());
-  ryujinxConfig['logging_enable_error'] = true;
-  ryujinxConfig['logging_enable_guest'] = true;
-  ryujinxConfig['logging_enable_info'] = true;
-  ryujinxConfig['logging_enable_stub'] = true;
-  ryujinxConfig['logging_enable_warn'] = true;
-  ryujinxConfig['logging_enable_fs_access_log'] = true;
-  await fs.promises.writeFile(ryuConfPath, JSON.stringify(ryujinxConfig, null, 2), 'utf-8');
+  if (hasStandardConfigFile) {
+    let ryujinxConfig = JSON.parse((await fs.promises.readFile(standardConfigPath)).toString());
+    ryujinxConfig = updateConfig(ryujinxConfig);
+    await fs.promises.writeFile(standardConfigPath, JSON.stringify(ryujinxConfig, null, 2), 'utf-8');
+  }
 
   let ryuBinary = path.resolve(config.path, 'Ryujinx.exe');
 
@@ -350,6 +360,6 @@ export const installModToRyujinx = async (config: IRyujinxConfig, titleID: strin
 
   await Swal.fire({
     icon: 'success',
-    text: `${modName} successfully installed at ${isZip ? modName : modPath}`
+    text: `${modName} successfully installed ${isZip ? '' : `at ${modPath}`}`
   })
 }
