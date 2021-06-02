@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  Avatar,
-  Button,
+  Avatar, Backdrop,
+  Button, CircularProgress,
   Dialog,
   DialogTitle,
   List,
   ListItem,
-  ListItemAvatar, ListItemText,
+  ListItemAvatar, ListItemText, makeStyles,
   TableBody,
   TableCell,
   TableRow
@@ -30,6 +30,13 @@ interface IModsListProps {
   filter: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+}));
+
 export default ({
   games,
   extractNameFromID,
@@ -37,8 +44,10 @@ export default ({
   config,
   filter,
 }: IModsListProps) => {
+  const classes = useStyles();
   const [dialogVersionOpen, setDialogVersionOpen] = React.useState(false);
   const [modsDialogOpen, setModsDialogOpen] = React.useState(false);
+  const [backdropOpen, setBackdropOpen] = React.useState(false);
 
   const [modsName, setModsName]: [string[], Function] = React.useState([]);
   const [modsVersions, setModsVersions]: [string[], Function] = React.useState([]);
@@ -70,8 +79,10 @@ export default ({
     const modFile: any[] = await getEmusakMod(pickedTitleId, pickedVersion, modName);
     const mod = modFile.find(m => m.type === "file").name;
     setModsDialogOpen(false);
+    setBackdropOpen(true);
     const file = await downloadEmusakMod(pickedTitleId, pickedVersion, modName, mod);
     await installModToRyujinx(config, pickedTitleId, modName, mod, file);
+    setBackdropOpen(false);
   }
 
   return (
@@ -116,6 +127,11 @@ export default ({
           }
         </List>
       </Dialog>
+
+      <Backdrop className={classes.backdrop} open={backdropOpen} onClick={() => {}}>
+        <CircularProgress color="secondary" /> <br />
+        <h3>&nbsp; Downloading and installing mod ...</h3>
+      </Backdrop>
 
       {
         games
