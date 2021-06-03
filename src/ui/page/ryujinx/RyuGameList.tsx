@@ -349,7 +349,12 @@ const RyuGameList = ({ config, onConfigDelete, threshold, customDatabase, emusak
 
       <Grid container>
         <Grid item xs={3}>
-          <TextField onChange={e => setFilter(e.target.value)} fullWidth placeholder="Filter games" />
+          <TextField
+            onChange={e => setFilter(e.target.value)}
+            fullWidth
+            placeholder="Filter games"
+            type="search"
+          />
         </Grid>
       </Grid>
       <br/>

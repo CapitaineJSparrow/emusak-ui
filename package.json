@@ -1,7 +1,7 @@
 {
   "name": "emusak",
   "productName": "emusak",
-  "version": "1.0.70",
+  "version": "1.0.71",
   "description": "Saves, shaders, firmwares and keys manager for switch emulators",
   "main": ".webpack/main",
   "repository": "https://github.com/stromcon/emusak-ui.git",
@@ -24,7 +24,10 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon": "./icons/win/icon.ico"
+        "icon": "./icons/win/icon.ico",
+        "win32metadata": {
+          "requested-execution-level": "requireAdministrator"
+        }
       },
       "publishers": [
         {
