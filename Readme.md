@@ -1,5 +1,7 @@
 # Emusak UI
 
+![](https://img.shields.io/github/downloads/stromcon/emusak-ui/total?style=for-the-badge)
+
 Emusak-ui is a graphical mod for [Emusak](https://github.com/sinscove/EmuSAK). This is a tool which allows you to download saves and shaders for switch emulators using a compatible Emusak backend compatible both with linux (only tested with ubuntu) and windows 
 
 <p align="center">
