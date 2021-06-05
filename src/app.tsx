@@ -30,7 +30,7 @@ const App = () => {
   useEffect(() => {
     getThresholdValue().then(t => setThreshold(t));
     getLatestVersionNumber().then(v => setLatestVersion(v));
-  });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

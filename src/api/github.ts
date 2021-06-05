@@ -7,7 +7,10 @@ enum PATHS {
 }
 
 export const getThresholdValue = async (): Promise<number> => {
-  const thresholdResponse = await httpRequest(PATHS.THRESHOLD).catch(() => null);
+  const thresholdResponse = await httpRequest(PATHS.THRESHOLD).catch(e => {
+    console.error(e);
+    return null;
+  });
 
   if (!thresholdResponse) {
     // If request failed, just return a very high threshold and UI will display "share shaders feature is temporary disabled"
@@ -19,7 +22,10 @@ export const getThresholdValue = async (): Promise<number> => {
 };
 
 export const getLatestVersionNumber = async (): Promise<string> => {
-  const versionResponse = await httpRequest(PATHS.RELEASE_INFO).catch(() => null);
+  const versionResponse = await httpRequest(PATHS.RELEASE_INFO).catch(e => {
+    console.error(e);
+    return null;
+  });
 
   if (!versionResponse) {
     // If we cannot fetch the latest version return the current version to avoid trigger logic when emusak is not up to date

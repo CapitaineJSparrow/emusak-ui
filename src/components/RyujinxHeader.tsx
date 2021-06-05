@@ -3,10 +3,10 @@ import { Button, Grid, IconButton, Tooltip } from "@material-ui/core";
 import HelpIcon from "@material-ui/icons/Help";
 import { addRyujinxFolder } from "../service/Ryujinx/fs";
 
-const RyujinxHeader = () => (
+const RyujinxHeader = ({ threshold }: { threshold: number }) => (
   <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
     <Grid item xs={10}>
-      Shaders threshold <code>100</code>
+      Shaders threshold <code>{ threshold >= 1E6 ? 'Share shaders temporary disabled': threshold }</code>
       <Tooltip
         placement="right"
         arrow

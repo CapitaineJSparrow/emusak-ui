@@ -36,7 +36,7 @@ const UpdateFeedbackComponent = ({
   const renderAlert = (): React.ReactFragment => {
 
     // There is no auto update feature on linux, so just return an alert to ask update
-    if (process.platform === "win32") {
+    if (process.platform !== "win32") {
       if (latestVersion && (latestVersion !== currentVersion)) {
         return (
           <div style={{ padding: 20 }}>

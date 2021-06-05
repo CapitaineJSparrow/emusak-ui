@@ -36,11 +36,15 @@ export const addRyujinxFolder = async () => {
   if (!isValid) {
     await Swal.fire({
       icon: 'error',
-      text: '"Ryujinx.exe" or "Ryujinx" (for linux users) were not found in this location'
+      text: '"Ryujinx.exe" or "Ryujinx" (for linux users) was not found in this location'
     });
     return false
   }
 
   const isPortable = await isRyujinxPortableMode(path);
   RyujinxModel.addDirectory({ isPortable, path });
+}
+
+export const downloadFirmware = async () => {
+  alert('download firmware');
 }
