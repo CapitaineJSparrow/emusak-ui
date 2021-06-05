@@ -54,7 +54,7 @@ export const httpRequestWithProgress = async (url: string, options: RequestInit 
     receivedLength += value.length;
 
     if (progressCallback) {
-      progressCallback(parseFloat((receivedLength / contentLength).toFixed(2)) * 100, receivedLength, contentLength)
+      progressCallback(parseFloat((receivedLength / contentLength).toFixed(2)) * 100)
     }
   }
 

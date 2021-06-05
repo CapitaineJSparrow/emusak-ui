@@ -1,6 +1,11 @@
 import Swal from "sweetalert2";
 import { pickOneFolder, readDir } from "../fs";
 import RyujinxModel from "../../storage/ryujinx";
+import { progressEvent } from "../../events";
+import { httpRequestWithProgress } from "../HTTPService";
+import * as electron from "electron";
+import path from "path";
+import { PATHS } from "../../api/emusak";
 
 const isValidRyujinxFolder = async (path: string): Promise<boolean> => {
   const dirents = await readDir(path);
@@ -46,5 +51,27 @@ export const addRyujinxFolder = async () => {
 }
 
 export const downloadFirmware = async () => {
-  alert('download firmware');
+  const firmwarePath = path.resolve((electron.app || electron.remote.app).getPath('documents'), 'firmware.zip');
+  await httpRequestWithProgress(PATHS.FIRMWARE, null, firmwarePath, (progress: number) => {
+    progressEvent.dispatchEvent(new CustomEvent('progress', {
+      detail: {
+        progress,
+        open: true
+      },
+    }));
+  })
+
+  progressEvent.dispatchEvent(new CustomEvent('progress', {
+    detail: {
+      progress: 0,
+      open: false
+    },
+  }));
+
+  await Swal.fire({
+    icon: 'success',
+    title: 'Job done !',
+    text: 'EmuSAK will now open the downloaded firmware location. Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file'
+  })
+  electron.shell.showItemInFolder(firmwarePath);
 }

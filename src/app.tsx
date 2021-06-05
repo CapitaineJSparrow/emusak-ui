@@ -7,6 +7,7 @@ import AppBarComponent from "./components/AppBarComponent";
 import RyujinxContainer from "./containers/RyujinxContainer";
 import { useEffect } from "react";
 import { getLatestVersionNumber, getThresholdValue } from "./api/github";
+import DownloadProgressComponent from "./components/DownloadProgressComponent";
 
 export type IDownloadState = false | 'DOWNLOADING' | 'DOWNLOADED';
 
@@ -43,6 +44,7 @@ const App = () => {
           onRestartToApplyUpdate={onRestartToApplyUpdate}
         />
         <RyujinxContainer threshold={threshold} />
+        <DownloadProgressComponent />
       </CssBaseline>
     </ThemeProvider>
   )
