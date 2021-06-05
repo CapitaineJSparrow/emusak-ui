@@ -38,9 +38,13 @@ const UpdateFeedbackComponent = ({
     // There is no auto update feature on linux, so just return an alert to ask update
     if (process.platform === "win32") {
       if (latestVersion && (latestVersion !== currentVersion)) {
-        return <Alert severity="info">
-          You have version v{currentVersion}, please consider update to latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (v{latestVersion})
-        </Alert>;
+        return (
+          <div style={{ padding: 20 }}>
+            <Alert severity="info">
+              You have version v{currentVersion}, please consider update to latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (v{latestVersion})
+            </Alert>
+          </div>
+        );
       } else {
         return null;
       }
@@ -48,18 +52,18 @@ const UpdateFeedbackComponent = ({
 
     switch (downloadState) {
       case 'DOWNLOADING':
-        return (<Alert severity="info">A new emusak version is downloading in background ! Please do not close application until it is complete.</Alert>);
+        return (<div style={{ padding: 20 }}><Alert severity="info">A new emusak version is downloading in background ! Please do not close application until it is complete.</Alert></div>);
       case 'DOWNLOADED':
-        return (<Alert severity="info">Emusak update has been downloaded and will be applied on next launch.</Alert>);
+        return (<div style={{ padding: 20 }}><Alert severity="info">Emusak update has been downloaded and will be applied on next launch.</Alert></div>);
       default:
         return null;
     }
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <>
       { renderAlert() }
-    </div>
+    </>
   )
 };
 

@@ -35,8 +35,8 @@ There is also an `AppImage`,  I'll create a ppa and aur package for linux users 
 * Add one or multiple Ryujinx folders (where `Ryujinx.exe` is located) to manage mainline, portable and LDN build if any
 * List your game library
 * Display your local shaders count & emusak shaders count (to download them if you have fewer shaders)
-* UpdateComponent firmware
-* UpdateComponent production keys
+* Update firmware
+* Update production keys
 * Download save for specific game
 * Download shaders for specific game
 * Downloads mods for specific game
@@ -58,10 +58,6 @@ Set a valid EmuSAK backend and CDN URL in a variable :
 ```
 (powershell): $Env:EMUSAK_URL = 'http://...'
 (bash): export EMUSAK_URL = 'http://...'
-
-
-(powershell): $Env:EMUSAK_CDN = 'http://...'
-(bash): export EMUSAK_CDN = 'http://...'
 ```
 
 Install & run 
