@@ -3,7 +3,7 @@ import { Divider } from "@material-ui/core";
 import RyujinxHeader from "../components/RyujinxHeader";
 import FeaturesContainer from "../components/features/FeaturesContainer";
 import RyujinxModel, { IRyujinxConfig } from "../storage/ryujinx";
-import { downloadFirmware } from "../service/Ryujinx/fs";
+import { downloadFirmware, onKeysDownload } from "../service/Ryujinx/fs";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -20,12 +20,13 @@ const RyujinxContainer = ({ threshold } : IRyujinxContainerProps) => {
       <br />
 
       {
-        directories.map(d => (
+        directories.map(config => (
           <FeaturesContainer
-            path={d.path}
-            isPortable={d.isPortable}
-            key={`ryu-${d.path}`}
+            path={config.path}
+            isPortable={config.isPortable}
+            key={`ryu-${config.path}`}
             onFirmwareDownload={downloadFirmware}
+            onKeysDownload={() => onKeysDownload(config)}
           />
         ))
       }

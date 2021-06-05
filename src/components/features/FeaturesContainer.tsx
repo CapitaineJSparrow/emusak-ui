@@ -6,12 +6,14 @@ interface IFeaturesContainer {
   path: string;
   isPortable: boolean;
   onFirmwareDownload: Function;
+  onKeysDownload: Function;
 }
 
 const FeaturesContainer = ({
   path,
   isPortable,
   onFirmwareDownload,
+  onKeysDownload,
 }: IFeaturesContainer) => (
   <div>
     <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
@@ -32,7 +34,7 @@ const FeaturesContainer = ({
         <Button onClick={() => onFirmwareDownload()} fullWidth variant="contained" color="primary">Download firmware</Button>
       </Grid>
       <Grid item xs={3}>
-        <Button fullWidth variant="contained" color="primary">Download keys</Button>
+        <Button onClick={() => onKeysDownload()} fullWidth variant="contained" color="primary">Download keys</Button>
       </Grid>
       <Grid item xs={2} style={{ textAlign: 'right' }}>
         Is Portable: <Chip label={isPortable ? 'yes': 'no'} color="primary" />
