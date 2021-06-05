@@ -1,7 +1,7 @@
 {
   "name": "emusak",
   "productName": "emusak",
-  "version": "1.0.72",
+  "version": "1.0.71",
   "description": "Saves, shaders, firmwares and keys manager for switch emulators",
   "main": ".webpack/main",
   "repository": "https://github.com/stromcon/emusak-ui.git",
@@ -12,7 +12,6 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts .",
-    "dump-games": "ts-node ./dump.ts",
     "make-icons": "electron-icon-builder --input=.\\icons\\icon.png"
   },
   "keywords": [],
@@ -96,6 +95,7 @@
     "@electron-forge/publisher-github": "^6.0.0-beta.54",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@types/adm-zip": "^0.4.34",
+    "@types/node-fetch": "^2.5.10",
     "@types/react": "^17.0.4",
     "@types/react-dom": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^4.0.1",

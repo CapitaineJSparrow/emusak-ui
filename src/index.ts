@@ -5,6 +5,7 @@ import * as fs from "fs";
 import request from "request";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 const feed = `https://update.electronjs.org/stromcon/emusak-ui/${process.platform}-${process.arch}/${app.getVersion()}`
@@ -13,7 +14,6 @@ const feed = `https://update.electronjs.org/stromcon/emusak-ui/${process.platfor
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
-
 
 app.commandLine.appendSwitch ("disable-http-cache");
 const gotTheLock = app.requestSingleInstanceLock()
