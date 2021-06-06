@@ -1,6 +1,6 @@
 import React from "react";
-import {Box, LinearProgress, makeStyles, Modal, Typography} from "@material-ui/core";
-import {progressEvent} from "../events";
+import { Box, LinearProgress, makeStyles, Modal, Typography } from "@material-ui/core";
+import { progressEvent } from "../events";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -14,18 +14,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LinearProgressWithLabel(props: any) {
-  return (
-    <Box display="flex" alignItems="center">
-      <Box width="100%" mr={1}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box minWidth={35}>
-        <Typography variant="body2" color="textSecondary">{Math.round(props.value)} %</Typography>
-      </Box>
+const LinearProgressWithLabel = (props: any) => (
+  <Box display="flex" alignItems="center">
+    <Box width="100%" mr={1}>
+      <LinearProgress variant="determinate" {...props} />
     </Box>
-  )
-}
+    <Box minWidth={45}>
+      <Typography variant="body2" color="textSecondary">{Math.round(props.value)} %</Typography>
+    </Box>
+  </Box>
+);
 
 const DownloadProgressComponent = () => {
   const classes = useStyles();

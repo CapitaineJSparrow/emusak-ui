@@ -1,6 +1,6 @@
 import React from "react";
-import {Button, Chip, Grid, IconButton} from "@material-ui/core";
-import {DeleteOutline} from "@material-ui/icons";
+import { Button, Chip, Grid, IconButton } from "@material-ui/core";
+import { DeleteOutline } from "@material-ui/icons";
 
 interface IFeaturesContainer {
   path: string;
@@ -20,7 +20,7 @@ const FeaturesContainer = ({
   <div>
     <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
       <Grid item xs={4}>
-        <h3 style={{ lineHeight: '36px' }}>
+        <h3 style={{ lineHeight: '24px' }}>
           <IconButton
             size="small"
             color="secondary"
@@ -55,7 +55,7 @@ const FeaturesContainer = ({
         </Button>
       </Grid>
       <Grid item xs={2} style={{ textAlign: 'right' }}>
-        Is Portable: <Chip label={isPortable ? 'yes': 'no'} color="primary" />
+        Is Portable <Chip label={isPortable ? 'yes': 'no'} color="primary" />
       </Grid>
     </Grid>
   </div>

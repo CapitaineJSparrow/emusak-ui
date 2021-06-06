@@ -1,5 +1,5 @@
 import React from "react";
-import {CircularProgress, Divider} from "@material-ui/core";
+import { CircularProgress, Divider } from "@material-ui/core";
 import RyujinxHeader from "../components/RyujinxHeader";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel, { IRyujinxConfig } from "../storage/ryujinx";
@@ -34,18 +34,14 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
       <br />
 
       {
-        (threshold && firmwareVersion) && (
-          renderFeatures()
-        )
-      }
-
-      {
-        (!threshold || !firmwareVersion) && (
-          <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <CircularProgress />
-            <h3>Loading data from emusak. If this process never finish, emusak might be temporary down or something is wrong with your network</h3>
-          </div>
-        )
+        (threshold && firmwareVersion)
+          ? renderFeatures()
+          : (
+            <div style={{ textAlign: 'center', marginTop: 24 }}>
+              <CircularProgress />
+              <h3>Loading data from emusak. If this process never finish, emusak might be temporary down or something is wrong with your network</h3>
+            </div>
+          )
       }
     </div>
   );
