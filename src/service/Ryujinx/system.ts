@@ -8,28 +8,37 @@ import path from "path";
 import { getKeysContent, PATHS } from "../../api/emusak";
 import * as fs from "fs";
 
+/**
+ * On linux, "Ryujinx" binary has no extension
+ * @param path
+ */
 const isValidRyujinxFolder = async (path: string): Promise<boolean> => {
   const dirents = await readDir(path);
   const files = dirents.filter(d => d.isFile()).map(d => d.name);
   return files.includes('Ryujinx.exe') || files.includes('Ryujinx');
 }
 
+/**
+ * Support either portable mode when or standard (%appdata%) ryu file system
+ * @param path
+ */
 const isRyujinxPortableMode = async (path: string): Promise<boolean> => {
   const dirents = await readDir(path);
   const folders = dirents.filter(d => !d.isFile()).map(d => d.name.toLowerCase());
   return folders.includes('portable');
 }
 
-const getRyujinxPath = (config: IRyujinxConfig, ...paths: string[]): string => {
-  let dir;
-
+/**
+ * Util function to get path in same way if ryu is portable or not
+ * @param config
+ * @param paths
+ */
+export const getRyujinxPath = (config: IRyujinxConfig, ...paths: string[]): string => {
   if (config.isPortable) {
-    dir = path.resolve(config.path, 'portable', ...paths);
-  } else {
-    dir = path.resolve((electron.app || electron.remote.app).getPath('appData'), 'Ryujinx', ...paths);
+    return path.resolve(config.path, 'portable', ...paths);
   }
 
-  return dir;
+  return path.resolve((electron.app || electron.remote.app).getPath('appData'), 'Ryujinx', ...paths);
 }
 
 export const addRyujinxFolder = async () => {
@@ -64,8 +73,8 @@ export const addRyujinxFolder = async () => {
 }
 
 export const downloadFirmware = async () => {
-  const firmwarePath = path.resolve((electron.app || electron.remote.app).getPath('documents'), 'firmware.zip');
-  await httpRequestWithProgress(PATHS.FIRMWARE, null, firmwarePath, (progress: number) => {
+  const firmwareDestPath = path.resolve((electron.app || electron.remote.app).getPath('documents'), 'firmware.zip');
+  await httpRequestWithProgress(PATHS.FIRMWARE, firmwareDestPath, (progress: number) => {
     progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress, open: true } }));
   })
 
@@ -77,7 +86,7 @@ export const downloadFirmware = async () => {
     text: 'EmuSAK will now open the downloaded firmware location. Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file'
   });
 
-  electron.shell.showItemInFolder(firmwarePath);
+  electron.shell.showItemInFolder(firmwareDestPath);
 }
 
 export const onKeysDownload = async (config: IRyujinxConfig) => {

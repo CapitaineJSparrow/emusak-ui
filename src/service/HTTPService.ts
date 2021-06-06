@@ -28,8 +28,8 @@ export const httpRequest = (url: string, options: RequestInit = {}): Promise<Res
  * @param destPath
  * @param progressCallback
  */
-export const httpRequestWithProgress = async (url: string, options: RequestInit = {}, destPath: string, progressCallback?: Function) => {
-  const response = await httpRequest(url, options).catch(e => {
+export const httpRequestWithProgress = async (url: string, destPath: string, progressCallback?: Function) => {
+  const response = await httpRequest(url).catch(e => {
     console.error(e);
     return null;
   });

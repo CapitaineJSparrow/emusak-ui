@@ -8,6 +8,7 @@ import RyujinxContainer from "./containers/RyujinxContainer";
 import { useEffect } from "react";
 import { getLatestVersionNumber, getThresholdValue } from "./api/github";
 import DownloadProgressComponent from "./components/DownloadProgressComponent";
+import { getFirmwareVersion } from "./api/emusak";
 
 export type IDownloadState = false | 'DOWNLOADING' | 'DOWNLOADED';
 
@@ -21,6 +22,8 @@ const App = () => {
   const [downloadState, setDownloadState] = React.useState<IDownloadState>(false);
   const [threshold, setThreshold] = React.useState(0);
   const [latestVersion, setLatestVersion] = React.useState<string|null>(null);
+  const [firmwareVersion, setFirmwareVersion] = React.useState<string|null>(null);
+
   const currentVersion = electron.remote.app.getVersion();
   document.querySelector('title').innerText = `Emusak v${currentVersion}`
 
@@ -31,6 +34,7 @@ const App = () => {
   useEffect(() => {
     getThresholdValue().then(t => setThreshold(t));
     getLatestVersionNumber().then(v => setLatestVersion(v));
+    getFirmwareVersion().then(v => setFirmwareVersion(v));
   }, []);
 
   return (
@@ -43,7 +47,10 @@ const App = () => {
           downloadState={downloadState}
           onRestartToApplyUpdate={onRestartToApplyUpdate}
         />
-        <RyujinxContainer threshold={threshold} />
+        <RyujinxContainer
+          threshold={threshold}
+          firmwareVersion={firmwareVersion}
+        />
         <DownloadProgressComponent />
       </CssBaseline>
     </ThemeProvider>

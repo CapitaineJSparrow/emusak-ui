@@ -1,5 +1,5 @@
 import React from "react";
-import { LinearProgress, makeStyles, Modal } from "@material-ui/core";
+import {Box, LinearProgress, makeStyles, Modal, Typography} from "@material-ui/core";
 import {progressEvent} from "../events";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,6 +13,19 @@ const useStyles = makeStyles((theme) => ({
     width: '50%'
   },
 }));
+
+function LinearProgressWithLabel(props: any) {
+  return (
+    <Box display="flex" alignItems="center">
+      <Box width="100%" mr={1}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box minWidth={35}>
+        <Typography variant="body2" color="textSecondary">{Math.round(props.value)} %</Typography>
+      </Box>
+    </Box>
+  )
+}
 
 const DownloadProgressComponent = () => {
   const classes = useStyles();
@@ -35,7 +48,7 @@ const DownloadProgressComponent = () => {
       <div className={classes.modal}>
         <h2 id="simple-modal-title">Downloading ...</h2>
         <br />
-        <LinearProgress variant="buffer" value={progress} valueBuffer={0} />
+        <LinearProgressWithLabel variant="buffer" value={progress} valueBuffer={0} />
       </div>
     </Modal>
   )
