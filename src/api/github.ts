@@ -43,7 +43,7 @@ export const getFirmwareVersion = async (): Promise<string> => {
     return null;
   });
 
-  // If we cannot fetch firmware version, just display empty version this should not impact download
+  // If we cannot fetch firmware version, just display empty version this should not impact download from CDN
   if (!thresholdResponse) {
     return '';
   }

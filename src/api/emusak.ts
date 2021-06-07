@@ -6,4 +6,3 @@ export const PATHS = {
 }
 
 export const getKeysContent = (): Promise<string> => httpRequest(PATHS.KEYS).then(r => r.text());
-
