@@ -6,9 +6,8 @@ import * as electron from "electron";
 import AppBarComponent from "./components/AppBarComponent";
 import RyujinxContainer from "./containers/RyujinxContainer";
 import { useEffect } from "react";
-import { getLatestVersionNumber, getThresholdValue } from "./api/github";
+import { getFirmwareVersion, getLatestVersionNumber, getThresholdValue } from "./api/github";
 import DownloadProgressComponent from "./components/DownloadProgressComponent";
-import { getFirmwareVersion } from "./api/emusak";
 
 export type IDownloadState = false | 'DOWNLOADING' | 'DOWNLOADED';
 
