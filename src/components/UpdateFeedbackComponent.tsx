@@ -4,7 +4,7 @@ import { Alert } from "@material-ui/lab";
 import Swal from "sweetalert2";
 import * as electron from "electron";
 
-interface IUpdateComponentState {
+interface IUpdateComponentProps {
   downloadState: IDownloadState;
   onRestartToApplyUpdate: Function;
   latestVersion?: string;
@@ -16,7 +16,7 @@ const UpdateFeedbackComponent = ({
   onRestartToApplyUpdate,
   latestVersion,
   currentVersion
-}: IUpdateComponentState) => {
+}: IUpdateComponentProps) => {
 
   useEffect(() => {
     if (downloadState === 'DOWNLOADED') {
@@ -45,9 +45,9 @@ const UpdateFeedbackComponent = ({
             </Alert>
           </div>
         );
-      } else {
-        return null;
       }
+
+      return null;
     }
 
     switch (downloadState) {
@@ -55,9 +55,9 @@ const UpdateFeedbackComponent = ({
         return (<div style={{ padding: 20 }}><Alert severity="info">A new emusak version is downloading in background ! Please do not close application until it is complete.</Alert></div>);
       case 'DOWNLOADED':
         return (<div style={{ padding: 20 }}><Alert severity="info">Emusak update has been downloaded and will be applied on next launch.</Alert></div>);
-      default:
-        return null;
     }
+
+    return null;
   };
 
   return (

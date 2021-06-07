@@ -2,8 +2,9 @@ import React from "react";
 import { CircularProgress, Divider } from "@material-ui/core";
 import RyujinxHeader from "../components/RyujinxHeader";
 import FeaturesContainer from "./FeaturesContainer";
-import RyujinxModel, { IRyujinxConfig } from "../storage/ryujinx";
+import RyujinxModel from "../storage/ryujinx";
 import { downloadFirmware, onKeysDownload } from "../service/Ryujinx/system";
+import { IRyujinxConfig } from "../types";
 
 interface IRyujinxContainerProps {
   threshold: number;

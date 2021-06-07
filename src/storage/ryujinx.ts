@@ -1,7 +1,4 @@
-export interface IRyujinxConfig {
-  isPortable: boolean;
-  path: string;
-}
+import { IRyujinxConfig } from "../types";
 
 export default class RyujinxModel {
   static readonly LS_DIRECTORIES = "ryu-dir"

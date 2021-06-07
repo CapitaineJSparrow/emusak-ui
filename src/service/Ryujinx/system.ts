@@ -1,12 +1,13 @@
 import Swal from "sweetalert2";
 import { pickOneFolder, readDir } from "../fs";
-import RyujinxModel, { IRyujinxConfig } from "../../storage/ryujinx";
+import RyujinxModel from "../../storage/ryujinx";
 import { progressEvent } from "../../events";
 import { httpRequestWithProgress } from "../HTTPService";
 import * as electron from "electron";
 import path from "path";
 import { getKeysContent, PATHS } from "../../api/emusak";
 import * as fs from "fs";
+import { IRyujinxConfig } from "../../types";
 
 /**
  * On linux, "Ryujinx" binary has no extension

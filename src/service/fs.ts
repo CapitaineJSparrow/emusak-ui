@@ -1,12 +1,7 @@
 import * as electron from "electron";
 import * as fs from "fs";
 import path from "path";
-
-interface IDirent {
-  isDirectory: Function;
-  isFile: Function;
-  name: string;
-}
+import { IDirent } from "../types";
 
 export const pickOneFolder: () => Promise<string|null> = async () => {
   const { filePaths } = await electron.remote.dialog.showOpenDialog({ properties: ['openDirectory'] });
