@@ -53,7 +53,7 @@ Requirements :
 * NodeJS v14+
 * Yarn `npm i -g yarn`
 
-Set a valid EmuSAK backend and CDN URL in a variable :
+Set a valid EmuSAK CDN URL in a variable :
 
 ```
 (powershell): $Env:EMUSAK_URL = 'http://...'

@@ -11,7 +11,6 @@ import { IRyujinxConfig } from "../../types";
 
 /**
  * On linux, "Ryujinx" binary has no extension
- * @param path
  */
 const isValidRyujinxFolder = async (path: string): Promise<boolean> => {
   const dirents = await readDir(path);
@@ -21,7 +20,6 @@ const isValidRyujinxFolder = async (path: string): Promise<boolean> => {
 
 /**
  * Support either portable mode when or standard (%appdata%) ryu file system
- * @param path
  */
 const isRyujinxPortableMode = async (path: string): Promise<boolean> => {
   const dirents = await readDir(path);
@@ -31,8 +29,6 @@ const isRyujinxPortableMode = async (path: string): Promise<boolean> => {
 
 /**
  * Util function to get path in same way if ryu is portable or not
- * @param config
- * @param paths
  */
 export const getRyujinxPath = (config: IRyujinxConfig, ...paths: string[]): string => {
   if (config.isPortable) {
@@ -75,11 +71,11 @@ export const addRyujinxFolder = async () => {
 
 export const downloadFirmware = async () => {
   const firmwareDestPath = path.resolve((electron.app || electron.remote.app).getPath('documents'), 'firmware.zip');
-  await httpRequestWithProgress(PATHS.FIRMWARE, firmwareDestPath, (progress: number) => {
-    progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress, open: true } }));
-  })
+  const result = await httpRequestWithProgress(PATHS.FIRMWARE, firmwareDestPath).catch(() => null);
 
-  progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false }}));
+  if (!result) {
+    return;
+  }
 
   await Swal.fire({
     icon: 'success',

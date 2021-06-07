@@ -1,11 +1,11 @@
 import pRetry from "p-retry";
 import * as fs from "fs";
+import Swal from "sweetalert2";
+import { progressEvent } from "../events";
 
 /**
  * Create an HTTP Request with exponential backoff strategy
  * https://dzone.com/articles/understanding-retry-pattern-with-exponential-back
- * @param url
- * @param options
  */
 export const httpRequest = (url: string, options: RequestInit = {}): Promise<Response> => pRetry(
   async () => {
@@ -23,12 +23,8 @@ export const httpRequest = (url: string, options: RequestInit = {}): Promise<Res
 /**
  * Get a HTTP reader to track download progress
  * https://javascript.info/fetch-progress
- * @param url
- * @param options
- * @param destPath
- * @param progressCallback
  */
-export const httpRequestWithProgress = async (url: string, destPath: string, progressCallback?: Function) => {
+export const httpRequestWithProgress = async (url: string, destPath: string) => {
   const response = await httpRequest(url).catch(e => {
     console.error(e);
     return null;
@@ -52,14 +48,7 @@ export const httpRequestWithProgress = async (url: string, destPath: string, pro
 
     chunks.push(value);
     receivedLength += value.length;
-
-    if (progressCallback) {
-      progressCallback(parseFloat((receivedLength / contentLength).toFixed(2)) * 100)
-    }
-  }
-
-  if (progressCallback) {
-    progressCallback(100);
+    progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: parseFloat(((receivedLength / contentLength) * 100).toFixed(2)), open: true } }));
   }
 
   let completeChunks = new Uint8Array(receivedLength);
@@ -69,6 +58,15 @@ export const httpRequestWithProgress = async (url: string, destPath: string, pro
     position += chunk.length;
   }
 
+  if (receivedLength !== contentLength) {
+    await Swal.fire({
+      icon: 'error',
+      text: 'For an unknown reason, downloaded content has been corrupted during transfer. Please retry.'
+    });
+    return Promise.reject(`Received bytes length does not match content length`);
+  }
+
   await fs.promises.writeFile(destPath, completeChunks);
+  progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false }}));
   return true;
 }
