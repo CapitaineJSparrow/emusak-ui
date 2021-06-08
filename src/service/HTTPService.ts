@@ -22,16 +22,6 @@ export const httpRequest = (url: string, options: RequestInit = {}): Promise<Res
 
 const sendDownloadFinishedEvent = () => progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false, downloadSpeed: 0 }}));
 
-let lastTime = 0;
-function throttle(func: Function, timeFrame = 100, bypass = false) {
-  const now = +new Date();
-
-  if (now - lastTime >= timeFrame || bypass) {
-    func();
-    lastTime = +new Date();
-  }
-}
-
 /**
  * Get a HTTP reader to track download progress
  * https://javascript.info/fetch-progress
@@ -56,6 +46,7 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
   let downloadSpeed = 0;
   let chunks = [];
   let isCanceled = false;
+  let lastEmittedEventTimestamp = 0;
 
   while(!isCanceled) {
     const { done, value } = await reader.read();
@@ -68,6 +59,7 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
     receivedLength += value.length;
     const mbps = receivedLength / (1024 * 1024);
     downloadSpeed = Date.now() - startTime === 0 ? downloadSpeed : mbps / ((Date.now() - startTime) / 1000);
+    const currentTimestamp = +new Date();
 
     progressEvent.addEventListener('progress-cancel', () => {
       if (isCanceled) return;
@@ -76,7 +68,8 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
       controller.abort();
     });
 
-    throttle(() => {
+    // Throttle the dispatch event since loop is called many times
+    if (currentTimestamp - lastEmittedEventTimestamp >= 100 || receivedLength === contentLength) {
       progressEvent.dispatchEvent(new CustomEvent('progress', {
         detail: {
           progress: parseFloat(((receivedLength / contentLength) * 100).toFixed(2)),
@@ -84,7 +77,8 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
           downloadSpeed: downloadSpeed.toFixed(1)
         }
       }));
-    }, 110, receivedLength === contentLength);
+      lastEmittedEventTimestamp = +new Date();
+    }
   }
 
   if (receivedLength !== contentLength) {
