@@ -26,3 +26,7 @@ a {
   color: #00b0f4;
   text-decoration: none;
 }
+
+.MuiAppBar-root {
+  z-index: 100 !important;
+}

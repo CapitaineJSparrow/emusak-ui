@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, LinearProgress, makeStyles, Modal, Typography } from "@material-ui/core";
+import { Box, Button, LinearProgress, makeStyles, Modal, Typography } from "@material-ui/core";
 import { progressEvent } from "../events";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,8 +19,8 @@ const LinearProgressWithLabel = (props: any) => (
     <Box width="100%" mr={1}>
       <LinearProgress variant="determinate" {...props} />
     </Box>
-    <Box minWidth={45}>
-      <Typography variant="body2" color="textSecondary">{Math.round(props.value)} %</Typography>
+    <Box style={{ textAlign: 'right' }} minWidth={140}>
+      <Typography variant="body2" color="textSecondary">{Math.round(props.value)}% at {props.downloadspeed} Mbps</Typography>
     </Box>
   </Box>
 );
@@ -29,11 +29,17 @@ const DownloadProgressComponent = () => {
   const classes = useStyles();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
+  const [downloadSpeed, setDownloadSpeed] = React.useState(0);
 
   progressEvent.addEventListener('progress', ({ detail }: any) => {
     setModalOpen(detail.open);
     setProgress(detail.progress);
+    setDownloadSpeed(detail.downloadSpeed);
   });
+
+  const onCancelButtonClick = () => {
+    progressEvent.dispatchEvent(new CustomEvent('progress-cancel'));
+  }
 
   return (
     <Modal
@@ -46,7 +52,9 @@ const DownloadProgressComponent = () => {
       <div className={classes.modal}>
         <h2 id="simple-modal-title">Downloading ...</h2>
         <br />
-        <LinearProgressWithLabel variant="buffer" value={progress} valueBuffer={0} />
+        <LinearProgressWithLabel variant="buffer" value={progress} downloadspeed={downloadSpeed} valueBuffer={0} />
+        <br />
+        <Button onClick={onCancelButtonClick} style={{ float: 'right' }} variant="contained" color="secondary">Cancel</Button>
       </div>
     </Modal>
   )

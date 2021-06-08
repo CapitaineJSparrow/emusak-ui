@@ -37,9 +37,12 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
   const reader = response.body.getReader();
   const contentLength = +response.headers.get('Content-Length');
   let receivedLength = 0;
+  let startTime = Date.now();
+  let downloadSpeed = 0;
   let chunks = [];
+  let isCanceled = false;
 
-  while(true) {
+  while(!isCanceled) {
     const { done, value } = await reader.read();
 
     if (done) {
@@ -48,7 +51,22 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
 
     chunks.push(value);
     receivedLength += value.length;
-    progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: parseFloat(((receivedLength / contentLength) * 100).toFixed(2)), open: true } }));
+    const mbps = receivedLength / (1024 * 1024);
+    downloadSpeed = Date.now() - startTime === 0 ? downloadSpeed : mbps / ((Date.now() - startTime) / 1000);
+
+    progressEvent.addEventListener('progress-cancel', () => isCanceled = true);
+    progressEvent.dispatchEvent(new CustomEvent('progress', {
+      detail: {
+        progress: parseFloat(((receivedLength / contentLength) * 100).toFixed(2)),
+        open: true,
+        downloadSpeed: downloadSpeed.toFixed(1)
+      }
+    }));
+  }
+
+  if (isCanceled) {
+    progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false, downloadSpeed: 0 }}));
+    return;
   }
 
   let completeChunks = new Uint8Array(receivedLength);
@@ -63,10 +81,11 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
       icon: 'error',
       text: 'For an unknown reason, downloaded content has been corrupted during transfer. Please retry.'
     });
+    progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false, downloadSpeed: 0 }}));
     return Promise.reject(`Received bytes length does not match content length`);
   }
 
   await fs.promises.writeFile(destPath, completeChunks);
-  progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false }}));
+  progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false, downloadSpeed: 0 }}));
   return true;
 }
