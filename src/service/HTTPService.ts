@@ -20,12 +20,27 @@ export const httpRequest = (url: string, options: RequestInit = {}): Promise<Res
   { retries: 5 }
 ) as unknown as Promise<Response>
 
+const sendDownloadFinishedEvent = () => progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false, downloadSpeed: 0 }}));
+
+let lastTime = 0;
+function throttle(func: Function, timeFrame = 100, bypass = false) {
+  const now = +new Date();
+
+  if (now - lastTime >= timeFrame || bypass) {
+    func();
+    lastTime = +new Date();
+  }
+}
+
 /**
  * Get a HTTP reader to track download progress
  * https://javascript.info/fetch-progress
  */
 export const httpRequestWithProgress = async (url: string, destPath: string) => {
-  const response = await httpRequest(url).catch(e => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const response = await httpRequest(url, { signal }).catch(e => {
     console.error(e);
     return null;
   });
@@ -54,19 +69,31 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
     const mbps = receivedLength / (1024 * 1024);
     downloadSpeed = Date.now() - startTime === 0 ? downloadSpeed : mbps / ((Date.now() - startTime) / 1000);
 
-    progressEvent.addEventListener('progress-cancel', () => isCanceled = true);
-    progressEvent.dispatchEvent(new CustomEvent('progress', {
-      detail: {
-        progress: parseFloat(((receivedLength / contentLength) * 100).toFixed(2)),
-        open: true,
-        downloadSpeed: downloadSpeed.toFixed(1)
-      }
-    }));
+    progressEvent.addEventListener('progress-cancel', () => {
+      if (isCanceled) return;
+      isCanceled = true;
+      sendDownloadFinishedEvent();
+      controller.abort();
+    });
+
+    throttle(() => {
+      progressEvent.dispatchEvent(new CustomEvent('progress', {
+        detail: {
+          progress: parseFloat(((receivedLength / contentLength) * 100).toFixed(2)),
+          open: true,
+          downloadSpeed: downloadSpeed.toFixed(1)
+        }
+      }));
+    }, 110, receivedLength === contentLength);
   }
 
-  if (isCanceled) {
-    progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false, downloadSpeed: 0 }}));
-    return;
+  if (receivedLength !== contentLength) {
+    await Swal.fire({
+      icon: 'error',
+      text: 'For an unknown reason, downloaded content has been corrupted during transfer. Please retry.'
+    });
+    sendDownloadFinishedEvent();
+    return Promise.reject(`Received bytes length does not match content length`);
   }
 
   let completeChunks = new Uint8Array(receivedLength);
@@ -76,16 +103,7 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
     position += chunk.length;
   }
 
-  if (receivedLength !== contentLength) {
-    await Swal.fire({
-      icon: 'error',
-      text: 'For an unknown reason, downloaded content has been corrupted during transfer. Please retry.'
-    });
-    progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false, downloadSpeed: 0 }}));
-    return Promise.reject(`Received bytes length does not match content length`);
-  }
-
   await fs.promises.writeFile(destPath, completeChunks);
-  progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: false, downloadSpeed: 0 }}));
+  sendDownloadFinishedEvent();
   return true;
 }
