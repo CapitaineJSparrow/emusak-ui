@@ -1,13 +1,13 @@
 import Swal from "sweetalert2";
 import { pickOneFolder, readDir } from "../fs";
 import RyujinxModel from "../../storage/ryujinx";
-import { progressEvent } from "../../events";
 import { httpRequestWithProgress } from "../HTTPService";
 import * as electron from "electron";
 import path from "path";
 import { getKeysContent, PATHS } from "../../api/emusak";
 import * as fs from "fs";
-import { IRyujinxConfig } from "../../types";
+import { IEmusakEmulatorConfig, IRyujinxConfig } from "../../types";
+import zip from "adm-zip";
 
 /**
  * On linux, "Ryujinx" binary has no extension
@@ -97,3 +97,31 @@ export const onKeysDownload = async (config: IRyujinxConfig) => {
     text: `Created or replaced keys at : ${prodKeysPath}`
   })
 }
+
+export const listGamesWithNameAndShadersCount = async (configs: IRyujinxConfig[]): Promise<IEmusakEmulatorConfig[]> => Promise.all(configs.map(async config => {
+  const gameDirectory = getRyujinxPath(config, 'games');
+  const titleIds: any[] = (await readDir(gameDirectory)).filter(d => !d.isFile()).map(d => d.name.toUpperCase());
+  const shadersCount = await Promise.all(titleIds.map(async id => {
+    let shaderZipPath = getRyujinxPath(config, 'games', id, 'cache', 'shader', 'guest', 'program', 'cache.zip');
+    const exists = await fs.promises.access(shaderZipPath).then(() => true).catch(() => false);
+    let count = 0;
+
+    if (exists) { // To get shaders count, we just have to count files in zip archive
+      try {
+        const archive = new zip(shaderZipPath);
+        count = archive.getEntries().length;
+      } catch (e) {}
+    }
+
+    return count;
+  }));
+
+  return {
+    path: config.path,
+    isPortable: config.isPortable,
+    games: titleIds.map((id, index) => ({
+      id,
+      shadersCount: shadersCount[index]
+    }))
+  }
+}));

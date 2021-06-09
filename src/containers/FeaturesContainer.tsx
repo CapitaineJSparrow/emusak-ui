@@ -1,36 +1,18 @@
 import React from "react";
-import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, Typography } from "@material-ui/core";
+import { AppBar, Button, Chip, Grid, IconButton, Tab, Tabs } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
+import ShadersListComponent from "../components/features/ShadersListComponent";
+import { IEmusakEmulatorConfig } from "../types";
 
 interface IFeaturesContainerProps {
-  path: string;
-  isPortable: boolean;
+  config: IEmusakEmulatorConfig;
   onFirmwareDownload: Function;
   onKeysDownload: Function;
   firmwareVersion: string;
 }
 
-const TabPanel = (props: any) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      hidden={value !== index}
-      id={`features-panel-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
 const FeaturesContainer = ({
-  path,
-  isPortable,
+  config,
   onFirmwareDownload,
   onKeysDownload,
   firmwareVersion,
@@ -50,7 +32,7 @@ const FeaturesContainer = ({
               <DeleteOutline />
             </IconButton>
             &nbsp;
-            <small>{path}</small>
+            <small>{config.path}</small>
           </h3>
         </Grid>
         <Grid item xs={3}>
@@ -76,7 +58,7 @@ const FeaturesContainer = ({
           </Button>
         </Grid>
         <Grid item xs={2} style={{ textAlign: 'right' }}>
-          Is Portable <Chip label={isPortable ? 'yes': 'no'} color="primary" />
+          Is Portable <Chip label={config.isPortable ? 'yes': 'no'} color="primary" />
         </Grid>
       </Grid>
 
@@ -88,15 +70,8 @@ const FeaturesContainer = ({
             <Tab label="Mods" />
           </Tabs>
         </AppBar>
-        <TabPanel value={`${0}`}>
-          Shaders
-        </TabPanel>
-        <TabPanel value={`${1}`}>
-          Saves
-        </TabPanel>
-        <TabPanel value={`${2}`}>
-          Mods
-        </TabPanel>
+
+        <ShadersListComponent games={config.games} />
       </Grid>
     </div>
   );

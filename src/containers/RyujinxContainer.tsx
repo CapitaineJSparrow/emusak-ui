@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CircularProgress, Divider } from "@material-ui/core";
 import RyujinxHeader from "../components/RyujinxHeader";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
-import { downloadFirmware, onKeysDownload } from "../service/Ryujinx/system";
-import { IRyujinxConfig } from "../types";
+import { downloadFirmware, listGamesWithNameAndShadersCount, onKeysDownload } from "../service/Ryujinx/system";
+import { IEmusakEmulatorConfig } from "../types";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -12,13 +12,16 @@ interface IRyujinxContainerProps {
 }
 
 const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProps) => {
-  const [directories] = React.useState<IRyujinxConfig[]>(RyujinxModel.getDirectories())
+  const [directories, setDirectories] = React.useState<IEmusakEmulatorConfig[]>([]);
+
+  useEffect(() => {
+    listGamesWithNameAndShadersCount(RyujinxModel.getDirectories()).then(configs => setDirectories(configs));
+  }, []);
 
   const renderFeatures = () => {
     return directories.map(config => (
       <FeaturesContainer
-        path={config.path}
-        isPortable={config.isPortable}
+        config={config}
         key={`ryu-${config.path}`}
         onFirmwareDownload={downloadFirmware}
         firmwareVersion={firmwareVersion}
