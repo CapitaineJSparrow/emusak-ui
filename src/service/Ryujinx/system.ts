@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { pickOneFolder, readDir } from "../fs";
+import { pickOneFolder, readDir } from "../FService";
 import RyujinxModel from "../../storage/ryujinx";
 import { httpRequestWithProgress } from "../HTTPService";
 import * as electron from "electron";

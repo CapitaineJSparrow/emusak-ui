@@ -12,6 +12,7 @@ export interface IRyujinxConfig {
 export interface IEmusakGame {
   id: string;
   shadersCount: number;
+  name?: string;
 }
 
 export interface IEmusakEmulatorConfig {
