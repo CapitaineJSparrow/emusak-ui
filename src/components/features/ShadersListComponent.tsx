@@ -1,13 +1,24 @@
 import React from "react";
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
-import { IEmusakGame } from "../../types";
+import {
+  Box,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from "@material-ui/core";
+import { IEmusakGame, IEmusakShaders } from "../../types";
 import { matchIdFromCustomDatabase, matchIdFromTinfoil } from "../../service/SwithDBService";
 
 interface IShadersListComponentProps {
   games: IEmusakGame[];
+  emusakShaders: IEmusakShaders;
 }
 
-const ShadersListComponent = ({ games }: IShadersListComponentProps) => (
+const ShadersListComponent = ({ games, emusakShaders }: IShadersListComponentProps) => (
   <TableContainer component={Paper}>
     <Table aria-label="simple table">
       <TableHead>
@@ -30,10 +41,23 @@ const ShadersListComponent = ({ games }: IShadersListComponentProps) => (
                 <br/>
                 <span><small>{g.id.toUpperCase()}</small></span>
               </TableCell>
-              <TableCell>0</TableCell>
+              <TableCell>{emusakShaders[g.id] || 'No remote shaders'}</TableCell>
               <TableCell>{g.shadersCount === 0 ? 'No local shaders' : g.shadersCount}</TableCell>
               <TableCell>
-                <Button variant="contained" color="primary">Download shaders</Button>
+                <Box display="flex" justifyContent="space-between">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                  >
+                    Download shaders
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                  >
+                    Share shaders
+                  </Button>
+                </Box>
               </TableCell>
             </TableRow>
           ))

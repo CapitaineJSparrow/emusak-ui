@@ -72,9 +72,9 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
     if (currentTimestamp - lastEmittedEventTimestamp >= 100 || receivedLength === contentLength) {
       progressEvent.dispatchEvent(new CustomEvent('progress', {
         detail: {
-          progress: parseFloat(((receivedLength / contentLength) * 100).toFixed(2)),
+          progress: parseFloat(((receivedLength / contentLength) * 100).toFixed(1)),
           open: true,
-          downloadSpeed: downloadSpeed.toFixed(1)
+          downloadSpeed: downloadSpeed.toFixed(2)
         }
       }));
       lastEmittedEventTimestamp = +new Date();
@@ -97,7 +97,7 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
     position += chunk.length;
   }
 
-  await fs.promises.writeFile(destPath, completeChunks);
+  await fs.promises.writeFile(destPath, completeChunks).catch(() => null);
   sendDownloadFinishedEvent();
   return true;
 }

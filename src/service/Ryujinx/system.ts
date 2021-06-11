@@ -8,6 +8,7 @@ import { getKeysContent, PATHS } from "../../api/emusak";
 import * as fs from "fs";
 import { IEmusakEmulatorConfig, IRyujinxConfig } from "../../types";
 import zip from "adm-zip";
+import { countShadersFromGames } from "./shaders";
 
 /**
  * On linux, "Ryujinx" binary has no extension
@@ -101,20 +102,7 @@ export const onKeysDownload = async (config: IRyujinxConfig) => {
 export const listGamesWithNameAndShadersCount = async (configs: IRyujinxConfig[]): Promise<IEmusakEmulatorConfig[]> => Promise.all(configs.map(async config => {
   const gameDirectory = getRyujinxPath(config, 'games');
   const titleIds: any[] = (await readDir(gameDirectory)).filter(d => !d.isFile()).map(d => d.name.toUpperCase());
-  const shadersCount = await Promise.all(titleIds.map(async id => {
-    let shaderZipPath = getRyujinxPath(config, 'games', id, 'cache', 'shader', 'guest', 'program', 'cache.zip');
-    const exists = await fs.promises.access(shaderZipPath).then(() => true).catch(() => false);
-    let count = 0;
-
-    if (exists) { // To get shaders count, we just have to count files in zip archive
-      try {
-        const archive = new zip(shaderZipPath);
-        count = archive.getEntries().length;
-      } catch (e) {}
-    }
-
-    return count;
-  }));
+  const shadersCount = await countShadersFromGames(titleIds, config);
 
   return {
     path: config.path,

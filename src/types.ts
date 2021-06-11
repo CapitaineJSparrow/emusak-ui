@@ -20,3 +20,7 @@ export interface IEmusakEmulatorConfig {
   isPortable: boolean;
   games: IEmusakGame[];
 }
+
+export interface IEmusakShaders {
+  [id: string]: number;
+}

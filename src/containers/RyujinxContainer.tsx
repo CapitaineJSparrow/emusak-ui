@@ -4,7 +4,8 @@ import RyujinxHeader from "../components/RyujinxHeader";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
 import { downloadFirmware, listGamesWithNameAndShadersCount, onKeysDownload } from "../service/Ryujinx/system";
-import { IEmusakEmulatorConfig } from "../types";
+import { IEmusakEmulatorConfig, IEmusakShaders } from "../types";
+import { getShadersCount } from "../api/emusak";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -13,9 +14,11 @@ interface IRyujinxContainerProps {
 
 const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProps) => {
   const [directories, setDirectories] = React.useState<IEmusakEmulatorConfig[]>([]);
+  const [emusakShaders, setEmusakShaders] = React.useState<IEmusakShaders>({});
 
   useEffect(() => {
-    listGamesWithNameAndShadersCount(RyujinxModel.getDirectories()).then(configs => setDirectories(configs));
+    listGamesWithNameAndShadersCount(RyujinxModel.getDirectories()).then(setDirectories);
+    getShadersCount().then(setEmusakShaders);
   }, []);
 
   const renderFeatures = () => {
@@ -26,6 +29,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
         onFirmwareDownload={downloadFirmware}
         firmwareVersion={firmwareVersion}
         onKeysDownload={() => onKeysDownload(config)}
+        emusakShaders={emusakShaders}
       />
     ));
   }
@@ -38,7 +42,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
       <br />
 
       {
-        (threshold && firmwareVersion)
+        (threshold && firmwareVersion && Object.keys(emusakShaders).length > 0)
           ? renderFeatures()
           : (
             <div style={{ textAlign: 'center', marginTop: 24 }}>

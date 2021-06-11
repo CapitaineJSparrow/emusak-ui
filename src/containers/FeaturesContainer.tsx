@@ -1,14 +1,15 @@
 import React from "react";
-import { AppBar, Button, Chip, Grid, IconButton, Tab, Tabs } from "@material-ui/core";
+import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
-import { IEmusakEmulatorConfig } from "../types";
+import { IEmusakEmulatorConfig, IEmusakShaders } from "../types";
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
   onFirmwareDownload: Function;
   onKeysDownload: Function;
   firmwareVersion: string;
+  emusakShaders: IEmusakShaders;
 }
 
 const FeaturesContainer = ({
@@ -16,6 +17,7 @@ const FeaturesContainer = ({
   onFirmwareDownload,
   onKeysDownload,
   firmwareVersion,
+  emusakShaders,
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
 
@@ -23,17 +25,18 @@ const FeaturesContainer = ({
     <div>
       <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
         <Grid item xs={4}>
-          <h3 style={{ lineHeight: '24px' }}>
-            <IconButton
-              size="small"
-              color="secondary"
-              component="span"
-            >
-              <DeleteOutline />
-            </IconButton>
-            &nbsp;
-            <small>{config.path}</small>
-          </h3>
+          <Box display="flex" justifyContent="start" alignItems="center">
+            <h3 style={{ lineHeight: '24px' }}>
+              <IconButton
+                size="small"
+                color="secondary"
+                component="span"
+              >
+                <DeleteOutline />
+              </IconButton>
+            </h3>
+            <h3><small>{config.path}</small></h3>
+          </Box>
         </Grid>
         <Grid item xs={3}>
           <Button
@@ -71,7 +74,7 @@ const FeaturesContainer = ({
           </Tabs>
         </AppBar>
 
-        <ShadersListComponent games={config.games} />
+        <ShadersListComponent emusakShaders={emusakShaders} games={config.games} />
       </Grid>
     </div>
   );
