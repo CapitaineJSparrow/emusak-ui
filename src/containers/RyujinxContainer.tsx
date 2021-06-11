@@ -3,7 +3,7 @@ import { CircularProgress, Divider } from "@material-ui/core";
 import RyujinxHeader from "../components/RyujinxHeader";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
-import { downloadFirmware, listGamesWithNameAndShadersCount, onKeysDownload } from "../service/Ryujinx/system";
+import { installFirmware, listGamesWithNameAndShadersCount, onKeysDownload } from "../service/Ryujinx/system";
 import { IEmusakEmulatorConfig, IEmusakShaders } from "../types";
 import { getShadersCount } from "../api/emusak";
 
@@ -26,7 +26,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
       <FeaturesContainer
         config={config}
         key={`ryu-${config.path}`}
-        onFirmwareDownload={downloadFirmware}
+        onFirmwareDownload={installFirmware}
         firmwareVersion={firmwareVersion}
         onKeysDownload={() => onKeysDownload(config)}
         emusakShaders={emusakShaders}

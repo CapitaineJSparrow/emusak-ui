@@ -1,13 +1,11 @@
 import Swal from "sweetalert2";
 import { pickOneFolder, readDir } from "../FService";
 import RyujinxModel from "../../storage/ryujinx";
-import { httpRequestWithProgress } from "../HTTPService";
 import * as electron from "electron";
 import path from "path";
-import { getKeysContent, PATHS } from "../../api/emusak";
+import { downloadFirmwareWithProgress, getKeysContent } from "../../api/emusak";
 import * as fs from "fs";
 import { IEmusakEmulatorConfig, IRyujinxConfig } from "../../types";
-import zip from "adm-zip";
 import { countShadersFromGames } from "./shaders";
 
 /**
@@ -70,11 +68,15 @@ export const addRyujinxFolder = async () => {
   RyujinxModel.addDirectory({ isPortable, path });
 }
 
-export const downloadFirmware = async () => {
+export const installFirmware = async () => {
   const firmwareDestPath = path.resolve((electron.app || electron.remote.app).getPath('documents'), 'firmware.zip');
-  const result = await httpRequestWithProgress(PATHS.FIRMWARE, firmwareDestPath).catch(() => null);
+  const result = await downloadFirmwareWithProgress(firmwareDestPath);
 
   if (!result) {
+    Swal.fire({
+      icon: 'error',
+      text: 'An error has occurred during firmware download, please retry'
+    });
     return;
   }
 
