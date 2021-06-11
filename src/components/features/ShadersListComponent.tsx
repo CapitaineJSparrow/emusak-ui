@@ -11,7 +11,7 @@ import {
   TableRow
 } from "@material-ui/core";
 import { IEmusakGame, IEmusakShaders } from "../../types";
-import { matchIdFromCustomDatabase, matchIdFromTinfoil } from "../../service/SwithDBService";
+import { matchIdFromCustomDatabase, matchIdFromTinfoil } from "../../service/EshopDBService";
 
 interface IShadersListComponentProps {
   games: IEmusakGame[];
