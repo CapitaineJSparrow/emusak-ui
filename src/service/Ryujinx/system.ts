@@ -73,10 +73,6 @@ export const installFirmware = async () => {
   const result = await downloadFirmwareWithProgress(firmwareDestPath);
 
   if (!result) {
-    Swal.fire({
-      icon: 'error',
-      text: 'An error has occurred during firmware download, please retry'
-    });
     return;
   }
 

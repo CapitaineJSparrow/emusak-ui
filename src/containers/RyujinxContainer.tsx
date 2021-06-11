@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { CircularProgress, Divider } from "@material-ui/core";
+import { Box, CircularProgress, Divider } from "@material-ui/core";
 import RyujinxHeader from "../components/RyujinxHeader";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
@@ -35,7 +35,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
   }
 
   return (
-    <div style={{ padding: 20 }}>
+    <Box p={3}>
       <RyujinxHeader threshold={threshold} />
       <br />
       <Divider />
@@ -45,13 +45,13 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
         (threshold && firmwareVersion && Object.keys(emusakShaders).length > 0)
           ? renderFeatures()
           : (
-            <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <Box mt={3} style={{ textAlign: 'center' }}>
               <CircularProgress />
               <h3>Loading data from emusak. If this process never finish, emusak might be temporary down or something is wrong with your network</h3>
-            </div>
+            </Box>
           )
       }
-    </div>
+    </Box>
   );
 };
 

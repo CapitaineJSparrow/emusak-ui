@@ -22,7 +22,7 @@ const FeaturesContainer = ({
   const [tabIndex, setTabIndex] = React.useState(0);
 
   return (
-    <div>
+    <>
       <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
         <Grid item xs={4}>
           <Box display="flex" justifyContent="start" alignItems="center">
@@ -76,7 +76,7 @@ const FeaturesContainer = ({
 
         <ShadersListComponent emusakShaders={emusakShaders} games={config.games} />
       </Grid>
-    </div>
+    </>
   );
 }
 

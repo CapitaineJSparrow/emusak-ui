@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@material-ui/core";
 import electron from "electron";
 // @ts-ignore
 import discord_logo from "../assets/discord_logo.png";
@@ -11,11 +11,11 @@ const AppBarComponent = () =>  (
       <Typography variant="h6" style={{ flex: 1 }}>
         EmuSAK
       </Typography>
-      <div style={{ flex: '0 0 50px' }}>
+      <Box style={{ flex: '0 0 50px' }}>
         <IconButton onClick={() => electron.shell.openExternal("https://discord.gg/nKstg6x")} edge="start" color="inherit" aria-label="menu">
           <img height={30} src={discord_logo} alt=""/>
         </IconButton>
-      </div>
+      </Box>
     </Toolbar>
   </AppBar>
 );

@@ -49,13 +49,13 @@ const DownloadProgressComponent = () => {
       aria-describedby="simple-modal-description"
       disableBackdropClick
     >
-      <div className={classes.modal}>
+      <Box className={classes.modal}>
         <h2 id="simple-modal-title">Downloading ...</h2>
         <br />
         <LinearProgressWithLabel variant="buffer" value={progress} downloadspeed={downloadSpeed} valueBuffer={0} />
         <br />
         <Button onClick={onCancelButtonClick} style={{ float: 'right' }} variant="contained" color="secondary">Cancel</Button>
-      </div>
+      </Box>
     </Modal>
   )
 }
