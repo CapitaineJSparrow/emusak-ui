@@ -6,10 +6,11 @@ import { IEmusakEmulatorConfig, IEmusakShaders } from "../types";
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
-  onFirmwareDownload: Function;
-  onKeysDownload: Function;
+  onFirmwareDownload: () => void;
+  onKeysDownload: () => void;
   firmwareVersion: string;
   emusakShaders: IEmusakShaders;
+  onShadersDownload: (id: string) => void;
 }
 
 const FeaturesContainer = ({
@@ -18,6 +19,7 @@ const FeaturesContainer = ({
   onKeysDownload,
   firmwareVersion,
   emusakShaders,
+  onShadersDownload,
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
 
@@ -74,7 +76,11 @@ const FeaturesContainer = ({
           </Tabs>
         </AppBar>
 
-        <ShadersListComponent emusakShaders={emusakShaders} games={config.games} />
+        <ShadersListComponent
+          emusakShaders={emusakShaders}
+          games={config.games}
+          onShadersDownload={(id) => onShadersDownload(id)}
+        />
       </Grid>
     </>
   );

@@ -11,14 +11,15 @@ import {
   TableRow
 } from "@material-ui/core";
 import { IEmusakGame, IEmusakShaders } from "../../types";
-import { matchIdFromCustomDatabase, matchIdFromTinfoil } from "../../service/EshopDBService";
+import { matchIdFromCustomDatabase, matchIdFromNswdb, matchIdFromTinfoil } from "../../service/EshopDBService";
 
 interface IShadersListComponentProps {
   games: IEmusakGame[];
   emusakShaders: IEmusakShaders;
+  onShadersDownload: (id: string) => void;
 }
 
-const ShadersListComponent = ({ games, emusakShaders }: IShadersListComponentProps) => (
+const ShadersListComponent = ({ games, emusakShaders, onShadersDownload }: IShadersListComponentProps) => (
   <TableContainer component={Paper}>
     <Table aria-label="simple table">
       <TableHead>
@@ -32,7 +33,7 @@ const ShadersListComponent = ({ games, emusakShaders }: IShadersListComponentPro
       <TableBody>
         {
           games
-            .map(g => ({ ...g, name: matchIdFromCustomDatabase(g.id) || matchIdFromTinfoil(g.id) || g.id }))
+            .map(g => ({ ...g, name: matchIdFromCustomDatabase(g.id) || matchIdFromTinfoil(g.id) || matchIdFromNswdb(g.id) || g.id }))
             .sort((a, b) => a.name.localeCompare(b.name))
             .map(g => (
             <TableRow key={g.id}>
@@ -48,6 +49,7 @@ const ShadersListComponent = ({ games, emusakShaders }: IShadersListComponentPro
                   <Button
                     variant="contained"
                     color="primary"
+                    onClick={() => onShadersDownload(g.id)}
                   >
                     Download shaders
                   </Button>

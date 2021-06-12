@@ -34,7 +34,7 @@ export const getRyujinxPath = (config: IRyujinxConfig, ...paths: string[]): stri
     return path.resolve(config.path, 'portable', ...paths);
   }
 
-  return path.resolve((electron.app || electron.remote.app).getPath('appData'), 'Ryujinx', ...paths);
+  return path.resolve(electron.remote.app.getPath('appData'), 'Ryujinx', ...paths);
 }
 
 export const addRyujinxFolder = async () => {

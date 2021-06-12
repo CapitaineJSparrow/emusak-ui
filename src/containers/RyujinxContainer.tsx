@@ -30,6 +30,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
         firmwareVersion={firmwareVersion}
         onKeysDownload={() => onKeysDownload(config)}
         emusakShaders={emusakShaders}
+        onShadersDownload={id => console.log({ id, config })}
       />
     ));
   }

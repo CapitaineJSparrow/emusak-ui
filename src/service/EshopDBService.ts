@@ -1,5 +1,6 @@
 import { data } from "../assets/tinfoil_database.json";
 import customDatabase from "../assets/custom_database.json";
+import nswdb from "../assets/nswdb.json";
 
 export const matchIdFromTinfoil = (id: string): string => {
   let tinFoilName: any = data.find(d => d.id.toUpperCase() === id);
@@ -15,6 +16,6 @@ export const matchIdFromTinfoil = (id: string): string => {
   return null;
 }
 
-export const matchIdFromCustomDatabase = (id: string) : string => {
-  return (customDatabase as ({ [key: string]: string}))[id] || null;
-}
+export const matchIdFromCustomDatabase = (id: string): string => ( customDatabase as ( { [key: string]: string } ) )[id]
+
+export const matchIdFromNswdb = (id: string): string => nswdb.find(entry => entry.id === id)?.title

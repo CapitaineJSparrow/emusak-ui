@@ -16,3 +16,8 @@ export const countShadersFromGames = (titleIds: string[], config: IRyujinxConfig
 
   return 0;
 }));
+
+export const installShadersToGame = (config: IRyujinxConfig, titleId: string) => {
+  const shaderDestPath = getRyujinxPath(config, 'games', titleId, 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  const infoDestPath = getRyujinxPath(config, 'games', titleId, 'cache', 'shader', 'guest', 'program', 'cache.zip');
+}
