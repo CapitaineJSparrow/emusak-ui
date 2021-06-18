@@ -93,7 +93,8 @@ export const onKeysDownload = async (config: IRyujinxConfig) => {
   return Swal.fire({
     icon: 'success',
     title: 'Job done !',
-    text: `Created or replaced keys at : ${prodKeysPath}`
+    html: `Created or replaced keys at : <code>${prodKeysPath}</code>`,
+    width: 600
   })
 }
 

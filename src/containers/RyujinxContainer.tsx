@@ -9,8 +9,9 @@ import {
   listGamesWithNameAndShadersCount,
   onKeysDownload
 } from "../service/Ryujinx/system";
-import { IEmusakEmulatorConfig, IEmusakShaders } from "../types";
+import { IEmusakEmulatorConfig, IEmusakShaders, IRyujinxConfig } from "../types";
 import { getShadersCount } from "../api/emusak";
+import { installShadersToGame } from "../service/Ryujinx/shaders";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -21,18 +22,21 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
   const [directories, setDirectories] = React.useState<IEmusakEmulatorConfig[]>([]);
   const [emusakShaders, setEmusakShaders] = React.useState<IEmusakShaders>({});
 
-  const initPage = () => {
+  useEffect(() => loadContainerData(), []);
+
+  const loadContainerData = () => {
     listGamesWithNameAndShadersCount(RyujinxModel.getDirectories()).then(setDirectories);
     getShadersCount().then(setEmusakShaders);
   }
 
-  useEffect(() => {
-    initPage();
-  }, []);
-
   const onRyuFolderAdd = async () => {
     await addRyujinxFolder();
-    initPage();
+    loadContainerData();
+  }
+
+  const onRyuShadersDownload = async (config: IRyujinxConfig, titleId: string) => {
+    await installShadersToGame(config, titleId);
+    loadContainerData();
   }
 
   const renderFeatures = () => {
@@ -44,7 +48,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
         firmwareVersion={firmwareVersion}
         onKeysDownload={() => onKeysDownload(config)}
         emusakShaders={emusakShaders}
-        onShadersDownload={id => console.log({ id, config })}
+        onShadersDownload={id => onRyuShadersDownload(config, id)}
       />
     ));
   }

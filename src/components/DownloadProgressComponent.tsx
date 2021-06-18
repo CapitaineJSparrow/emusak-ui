@@ -39,6 +39,9 @@ const DownloadProgressComponent = () => {
 
   const onCancelButtonClick = () => {
     progressEvent.dispatchEvent(new CustomEvent('progress-cancel'));
+    setModalOpen(false);
+    setProgress(0);
+    setDownloadSpeed(0);
   }
 
   return (
