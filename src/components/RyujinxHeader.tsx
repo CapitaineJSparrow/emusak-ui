@@ -1,13 +1,13 @@
 import React from "react";
 import { Button, Grid, IconButton, Tooltip } from "@material-ui/core";
 import HelpIcon from "@material-ui/icons/Help";
-import { addRyujinxFolder } from "../service/Ryujinx/system";
 
 interface IRyujinxHeaderProps {
   threshold: number;
+  onRyuFolderAdd: Function;
 }
 
-const RyujinxHeader = ({ threshold }: IRyujinxHeaderProps) => (
+const RyujinxHeader = ({ threshold, onRyuFolderAdd }: IRyujinxHeaderProps) => (
   <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
     <Grid item xs={10}>
       Shaders threshold <code>{ threshold >= 1E6 ? 'Share shaders temporary disabled': threshold }</code>
@@ -28,7 +28,7 @@ const RyujinxHeader = ({ threshold }: IRyujinxHeaderProps) => (
         color="primary"
         fullWidth
         variant="contained"
-        onClick={addRyujinxFolder}
+        onClick={() => onRyuFolderAdd()}
       >
         Add Ryujinx folder
       </Button>

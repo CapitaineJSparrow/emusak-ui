@@ -27,7 +27,7 @@ const ShadersListComponent = ({ games, emusakShaders, onShadersDownload }: IShad
           <TableCell>Games ({games.length})</TableCell>
           <TableCell>EmuSAK shaders count</TableCell>
           <TableCell>Local shaders count</TableCell>
-          <TableCell>Actions</TableCell>
+          <TableCell style={{ width: 370 }}>Actions</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
