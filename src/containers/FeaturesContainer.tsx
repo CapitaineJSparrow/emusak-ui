@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
-import { IEmusakEmulatorConfig, IEmusakGame, IEmusakShaders } from "../types";
+import { IEmusakEmulatorConfig, IEmusakGame, IEmusakShaders, IRyujinxConfig } from "../types";
 import { matchIdFromCustomDatabase, matchIdFromNswdb, matchIdFromTinfoil } from "../service/EshopDBService";
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
   onFirmwareDownload: () => void;
   onKeysDownload: () => void;
+  onEmuConfigDelete: (config: IRyujinxConfig) => void;
   firmwareVersion: string;
   emusakShaders: IEmusakShaders;
   onShadersDownload: (id: string) => void;
@@ -21,6 +22,7 @@ const FeaturesContainer = ({
   firmwareVersion,
   emusakShaders,
   onShadersDownload,
+  onEmuConfigDelete,
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
@@ -57,6 +59,7 @@ const FeaturesContainer = ({
                 size="small"
                 color="secondary"
                 component="span"
+                onClick={() => onEmuConfigDelete(config)}
               >
                 <DeleteOutline />
               </IconButton>

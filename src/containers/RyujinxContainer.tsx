@@ -39,6 +39,11 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
     loadContainerData();
   }
 
+  const onRyuConfigRemove = (config: IRyujinxConfig) => {
+    RyujinxModel.deleteDirectory(config);
+    loadContainerData();
+  }
+
   const renderFeatures = () => {
     return directories.map(config => (
       <FeaturesContainer
@@ -49,6 +54,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
         onKeysDownload={() => onKeysDownload(config)}
         emusakShaders={emusakShaders}
         onShadersDownload={id => onRyuShadersDownload(config, id)}
+        onEmuConfigDelete={onRyuConfigRemove}
       />
     ));
   }
