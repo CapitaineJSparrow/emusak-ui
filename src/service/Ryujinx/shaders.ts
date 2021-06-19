@@ -60,6 +60,6 @@ export const installShadersToGame = async (config: IRyujinxConfig, titleId: stri
 
   return Swal.fire({
     icon: 'success',
-    text: 'Shaders successfully installed. Please not to avoid "cache collision" issue, you will have to rebuild all shaders from scratch on next launch for that game'
+    text: 'Shaders successfully installed. Please note, to avoid "cache collision" issue, you will have to rebuild all shaders from scratch on next launch for that game (emusak cleared precompiled shaders)'
   });
 }

@@ -33,8 +33,6 @@ const ShadersListComponent = ({ games, emusakShaders, onShadersDownload }: IShad
       <TableBody>
         {
           games
-            .map(g => ({ ...g, name: matchIdFromCustomDatabase(g.id) || matchIdFromTinfoil(g.id) || matchIdFromNswdb(g.id) || g.id }))
-            .sort((a, b) => a.name.localeCompare(b.name))
             .map(g => (
             <TableRow key={g.id}>
               <TableCell>

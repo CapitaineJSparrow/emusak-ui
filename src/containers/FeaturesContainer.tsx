@@ -1,8 +1,9 @@
-import React from "react";
-import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs } from "@material-ui/core";
+import React, { useEffect } from "react";
+import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
-import { IEmusakEmulatorConfig, IEmusakShaders } from "../types";
+import { IEmusakEmulatorConfig, IEmusakGame, IEmusakShaders } from "../types";
+import { matchIdFromCustomDatabase, matchIdFromNswdb, matchIdFromTinfoil } from "../service/EshopDBService";
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
@@ -22,6 +23,29 @@ const FeaturesContainer = ({
   onShadersDownload,
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
+  const [filterTerm, setFilterTerm] = React.useState<string>(null);
+  const [games, setGames] = React.useState([]);
+
+  const filterGames = (games: IEmusakGame[]) => {
+    if (!filterTerm) {
+      return games;
+    }
+
+    return games.filter(g => {
+      return g.name.toLowerCase().includes(filterTerm.toLowerCase());
+    });
+  };
+
+  /**
+   * Since we receive only title IDs from emulator config, find real title name from different databases and sort list alphabetically
+   */
+  useEffect(() => {
+    setGames(config
+      .games
+      .map(g => ({ ...g, name: matchIdFromCustomDatabase(g.id) || matchIdFromTinfoil(g.id) || matchIdFromNswdb(g.id) || g.id }))
+      .sort((a, b) => a.name.localeCompare(b.name))
+    )
+  }, [config]);
 
   return (
     <>
@@ -67,20 +91,32 @@ const FeaturesContainer = ({
         </Grid>
       </Grid>
 
-      <Grid container spacing={2}>
-        <AppBar style={{ marginTop: 20 }} position="static">
-          <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)} aria-label="simple tabs example">
-            <Tab label="Shaders" />
-            <Tab label="Saves" />
-            <Tab label="Mods" />
-          </Tabs>
-        </AppBar>
+      <Grid container>
+        <Grid item xs={4}>
+          <TextField
+            onChange={e => setFilterTerm(e.target.value)}
+            value={filterTerm || ''}
+            label="Filter game list"
+            type="search" />
+        </Grid>
+      </Grid>
 
-        <ShadersListComponent
-          emusakShaders={emusakShaders}
-          games={config.games}
-          onShadersDownload={(id) => onShadersDownload(id)}
-        />
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <AppBar style={{ marginTop: 20 }} position="static">
+            <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)} aria-label="simple tabs example">
+              <Tab label="Shaders" />
+              <Tab label="Saves" />
+              <Tab label="Mods" />
+            </Tabs>
+          </AppBar>
+
+          <ShadersListComponent
+            emusakShaders={emusakShaders}
+            games={filterGames(games)}
+            onShadersDownload={(id) => onShadersDownload(id)}
+          />
+        </Grid>
       </Grid>
     </>
   );
