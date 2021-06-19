@@ -9,16 +9,17 @@ import {
   listGamesWithNameAndShadersCount,
   onKeysDownload
 } from "../service/Ryujinx/system";
-import { IEmusakEmulatorConfig, IEmusakShaders, IRyujinxConfig } from "../types";
+import { IEmusakEmulatorConfig, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { getShadersCount } from "../api/emusak";
 import { installShadersToGame } from "../service/Ryujinx/shaders";
 
 interface IRyujinxContainerProps {
   threshold: number;
   firmwareVersion: string;
+  emusakSaves: IEmusakSaves;
 }
 
-const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProps) => {
+const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinxContainerProps) => {
   const [directories, setDirectories] = React.useState<IEmusakEmulatorConfig[]>([]);
   const [emusakShaders, setEmusakShaders] = React.useState<IEmusakShaders>({});
 
@@ -44,22 +45,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
     loadContainerData();
   }
 
-  const renderFeatures = () => {
-    return directories.map(config => (
-      <FeaturesContainer
-        config={config}
-        key={`ryu-${config.path}`}
-        onFirmwareDownload={installFirmware}
-        firmwareVersion={firmwareVersion}
-        onKeysDownload={() => onKeysDownload(config)}
-        emusakShaders={emusakShaders}
-        onShadersDownload={id => onRyuShadersDownload(config, id)}
-        onEmuConfigDelete={onRyuConfigRemove}
-      />
-    ));
-  }
-
-  const isAppReady = threshold && firmwareVersion && Object.keys(emusakShaders).length > 0;
+  const isAppReady = Object.keys(emusakSaves).length > 0 && threshold && firmwareVersion && Object.keys(emusakShaders).length > 0;
 
   return (
     <Box p={3}>
@@ -80,7 +66,19 @@ const RyujinxContainer = ({ threshold, firmwareVersion } : IRyujinxContainerProp
       }
       {
         (isAppReady)
-          ? renderFeatures()
+          ? directories.map(config => (
+              <FeaturesContainer
+                config={config}
+                key={`ryu-${config.path}`}
+                onFirmwareDownload={installFirmware}
+                firmwareVersion={firmwareVersion}
+                onKeysDownload={() => onKeysDownload(config)}
+                emusakShaders={emusakShaders}
+                onShadersDownload={id => onRyuShadersDownload(config, id)}
+                onEmuConfigDelete={onRyuConfigRemove}
+                emusakSaves={emusakSaves}
+              />
+            ))
           : (
             <Box mt={3} style={{ textAlign: 'center' }}>
               <CircularProgress />

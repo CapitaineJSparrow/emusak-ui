@@ -24,3 +24,7 @@ export interface IEmusakEmulatorConfig {
 export interface IEmusakShaders {
   [id: string]: number;
 }
+
+export interface IEmusakSaves {
+  [id: string]: string[];
+}

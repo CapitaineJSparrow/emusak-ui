@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
-import { IEmusakEmulatorConfig, IEmusakGame, IEmusakShaders, IRyujinxConfig } from "../types";
+import { IEmusakEmulatorConfig, IEmusakGame, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { matchIdFromCustomDatabase, matchIdFromNswdb, matchIdFromTinfoil } from "../service/EshopDBService";
+import SavesListComponent from "../components/features/SavesListComponent";
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
@@ -13,6 +14,7 @@ interface IFeaturesContainerProps {
   firmwareVersion: string;
   emusakShaders: IEmusakShaders;
   onShadersDownload: (id: string) => void;
+  emusakSaves: IEmusakSaves;
 }
 
 const FeaturesContainer = ({
@@ -23,6 +25,7 @@ const FeaturesContainer = ({
   emusakShaders,
   onShadersDownload,
   onEmuConfigDelete,
+  emusakSaves,
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
@@ -44,24 +47,44 @@ const FeaturesContainer = ({
   useEffect(() => {
     setGames(config
       .games
-      .map(g => ({ ...g, name: matchIdFromCustomDatabase(g.id) || matchIdFromTinfoil(g.id) || matchIdFromNswdb(g.id) || g.id }))
+      .map(g => ({
+        ...g,
+        name: matchIdFromCustomDatabase(g.id) || matchIdFromTinfoil(g.id) || matchIdFromNswdb(g.id) || g.id
+      }))
       .sort((a, b) => a.name.localeCompare(b.name))
     )
   }, [config]);
 
+  const renderTab = () => {
+    switch (tabIndex) {
+      case 0:
+        return <ShadersListComponent
+          emusakShaders={emusakShaders}
+          games={filterGames(games)}
+          onShadersDownload={(id) => onShadersDownload(id)}
+        />;
+      case 1:
+        return <SavesListComponent
+          games={filterGames(games)}
+          onSavesDownload={() => {}}
+          emusakSaves={emusakSaves}
+        />;
+    }
+  }
+
   return (
     <>
-      <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
+      <Grid container spacing={2} style={{display: 'flex', alignItems: 'center'}}>
         <Grid item xs={4}>
           <Box display="flex" justifyContent="start" alignItems="center">
-            <h3 style={{ lineHeight: '24px' }}>
+            <h3 style={{lineHeight: '24px'}}>
               <IconButton
                 size="small"
                 color="secondary"
                 component="span"
                 onClick={() => onEmuConfigDelete(config)}
               >
-                <DeleteOutline />
+                <DeleteOutline/>
               </IconButton>
             </h3>
             <h3><small>{config.path}</small></h3>
@@ -89,36 +112,34 @@ const FeaturesContainer = ({
             Download keys
           </Button>
         </Grid>
-        <Grid item xs={2} style={{ textAlign: 'right' }}>
-          Is Portable <Chip label={config.isPortable ? 'yes': 'no'} color="primary" />
+        <Grid item xs={2} style={{textAlign: 'right'}}>
+          Is Portable <Chip label={config.isPortable ? 'yes' : 'no'} color="primary"/>
         </Grid>
       </Grid>
 
       <Grid container>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           <TextField
             onChange={e => setFilterTerm(e.target.value)}
             value={filterTerm || ''}
             label="Filter game list"
-            type="search" />
+            type="search"
+            fullWidth
+          />
         </Grid>
       </Grid>
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <AppBar style={{ marginTop: 20 }} position="static">
+          <AppBar style={{marginTop: 20}} position="static">
             <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)} aria-label="simple tabs example">
-              <Tab label="Shaders" />
-              <Tab label="Saves" />
-              <Tab label="Mods" />
+              <Tab label="Shaders"/>
+              <Tab label="Saves"/>
+              <Tab label="Mods"/>
             </Tabs>
           </AppBar>
 
-          <ShadersListComponent
-            emusakShaders={emusakShaders}
-            games={filterGames(games)}
-            onShadersDownload={(id) => onShadersDownload(id)}
-          />
+          {renderTab()}
         </Grid>
       </Grid>
     </>
