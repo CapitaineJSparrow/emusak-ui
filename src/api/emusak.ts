@@ -12,7 +12,7 @@ const PATHS = {
 
 export const getKeysContent = (): Promise<string> => httpRequest(PATHS.KEYS).then(r => r.text());
 
-export const getShadersCount = (): Promise<IEmusakShaders> => httpRequest(PATHS.SHADERS_COUNT).then(r => r.json());
+export const getRyujinxShadersCount = (): Promise<IEmusakShaders> => httpRequest(PATHS.SHADERS_COUNT).then(r => r.json());
 
 export const downloadFirmwareWithProgress = (firmwareDestPath: string): Promise<boolean> => httpRequestWithProgress(PATHS.FIRMWARE, firmwareDestPath).catch(() => null)
 

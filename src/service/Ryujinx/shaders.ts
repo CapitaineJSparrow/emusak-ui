@@ -6,8 +6,8 @@ import { progressEvent } from "../../events";
 import rimraf from "rimraf";
 import { downloadShaderInfo, downloadShaderZip } from "../../api/emusak";
 import path from "path";
-import { arrayBufferToBuffer } from "../HTTPService";
 import Swal from "sweetalert2";
+import { arrayBufferToBuffer } from "../utils";
 
 export const countShadersFromGames = (titleIds: string[], config: IRyujinxConfig) => Promise.all(titleIds.map(async id => {
   let shaderZipPath = getRyujinxPath(config, 'games', id, 'cache', 'shader', 'guest', 'program', 'cache.zip');

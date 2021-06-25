@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField } from "@material-ui/core";
+import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField, Typography } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
 import { IEmusakEmulatorConfig, IEmusakGame, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { matchIdFromCustomDatabase, matchIdFromNswdb, matchIdFromTinfoil } from "../service/EshopDBService";
 import SavesListComponent from "../components/features/SavesListComponent";
+import AutorenewIcon from '@material-ui/icons/Autorenew';
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
@@ -15,6 +16,7 @@ interface IFeaturesContainerProps {
   emusakShaders: IEmusakShaders;
   onShadersDownload: (id: string) => void;
   emusakSaves: IEmusakSaves;
+  onRefresh: Function;
 }
 
 const FeaturesContainer = ({
@@ -26,6 +28,7 @@ const FeaturesContainer = ({
   onShadersDownload,
   onEmuConfigDelete,
   emusakSaves,
+  onRefresh
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
@@ -117,8 +120,19 @@ const FeaturesContainer = ({
         </Grid>
       </Grid>
 
-      <Grid container>
-        <Grid item xs={3}>
+      <Box display="flex" alignItems="center">
+        <Box marginRight={"12px"} style={{ position: 'relative', top: 8 }}>
+          <IconButton
+            size="small"
+            onClick={() => onRefresh()}
+            color="primary"
+            aria-label="upload picture"
+            component="span"
+          >
+            <AutorenewIcon />
+          </IconButton>
+        </Box>
+        <Box minWidth={240}>
           <TextField
             onChange={e => setFilterTerm(e.target.value)}
             value={filterTerm || ''}
@@ -126,8 +140,8 @@ const FeaturesContainer = ({
             type="search"
             fullWidth
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       <Grid container spacing={2}>
         <Grid item xs={12}>

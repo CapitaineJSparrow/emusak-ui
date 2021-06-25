@@ -10,7 +10,7 @@ import {
   onKeysDownload
 } from "../service/Ryujinx/system";
 import { IEmusakEmulatorConfig, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
-import { getShadersCount } from "../api/emusak";
+import { getRyujinxShadersCount } from "../api/emusak";
 import { installShadersToGame } from "../service/Ryujinx/shaders";
 
 interface IRyujinxContainerProps {
@@ -27,7 +27,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
 
   const loadContainerData = () => {
     listGamesWithNameAndShadersCount(RyujinxModel.getDirectories()).then(setDirectories);
-    getShadersCount().then(setEmusakShaders);
+    getRyujinxShadersCount().then(setEmusakShaders);
   }
 
   const onRyuFolderAdd = async () => {
@@ -77,6 +77,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
                 onShadersDownload={id => onRyuShadersDownload(config, id)}
                 onEmuConfigDelete={onRyuConfigRemove}
                 emusakSaves={emusakSaves}
+                onRefresh={() => loadContainerData()}
               />
             ))
           : (
