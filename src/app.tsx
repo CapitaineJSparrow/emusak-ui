@@ -10,6 +10,7 @@ import { getFirmwareVersion, getLatestVersionNumber, getThresholdValue } from ".
 import DownloadProgressComponent from "./components/DownloadProgressComponent";
 import { getSavesList } from "./api/emusak";
 import { IEmusakSaves } from "./types";
+import FilePickerComponent from "./components/FilePickerComponent";
 
 export type IDownloadState = false | 'DOWNLOADING' | 'DOWNLOADED';
 
@@ -56,6 +57,7 @@ const App = () => {
           emusakSaves={emusakSaves}
         />
         <DownloadProgressComponent />
+        <FilePickerComponent />
       </CssBaseline>
     </ThemeProvider>
   )

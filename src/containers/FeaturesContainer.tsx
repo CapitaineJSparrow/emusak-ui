@@ -6,6 +6,7 @@ import { IEmusakEmulatorConfig, IEmusakGame, IEmusakSaves, IEmusakShaders, IRyuj
 import { matchIdFromCustomDatabase, matchIdFromNswdb, matchIdFromTinfoil } from "../service/EshopDBService";
 import SavesListComponent from "../components/features/SavesListComponent";
 import AutorenewIcon from '@material-ui/icons/Autorenew';
+import Swal from "sweetalert2";
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
@@ -73,6 +74,13 @@ const FeaturesContainer = ({
           emusakSaves={emusakSaves}
         />;
     }
+  }
+
+  const onSaveOrModSubmissionClick = () => {
+    Swal.fire({
+      icon: 'info',
+      html: 'To submit a save or a mod, please join the discord server on top right then post it in <code style="white-space: nowrap">#switch-mods-saves</code> channel. Please specify game title and version.'
+    })
   }
 
   return (
@@ -146,11 +154,24 @@ const FeaturesContainer = ({
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <AppBar style={{marginTop: 20}} position="static">
-            <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)} aria-label="simple tabs example">
-              <Tab label="Shaders"/>
-              <Tab label="Saves"/>
-              <Tab label="Mods"/>
-            </Tabs>
+            <Box display="flex" alignItems="center" justifyContent="space-between" paddingRight="12px">
+              <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)} aria-label="simple tabs example">
+                <Tab label="Shaders"/>
+                <Tab label="Saves"/>
+                <Tab label="Mods"/>
+              </Tabs>
+              {
+                tabIndex !== 0 && (
+                  <Button
+                    fullWidth={false}
+                    variant="outlined"
+                    onClick={onSaveOrModSubmissionClick}
+                  >
+                    How to submit a new {tabIndex == 1 ? 'save' : 'mod'} ?
+                  </Button>
+                )
+              }
+            </Box>
           </AppBar>
 
           {renderTab()}

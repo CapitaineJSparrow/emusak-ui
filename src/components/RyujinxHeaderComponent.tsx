@@ -7,7 +7,7 @@ interface IRyujinxHeaderProps {
   onRyuFolderAdd: Function;
 }
 
-const RyujinxHeader = ({ threshold, onRyuFolderAdd }: IRyujinxHeaderProps) => (
+const RyujinxHeaderComponent = ({ threshold, onRyuFolderAdd }: IRyujinxHeaderProps) => (
   <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
     <Grid item xs={10}>
       Shaders threshold <code>{ threshold >= 1E6 ? 'Share shaders temporary disabled': threshold }</code>
@@ -36,4 +36,4 @@ const RyujinxHeader = ({ threshold, onRyuFolderAdd }: IRyujinxHeaderProps) => (
   </Grid>
 );
 
-export default RyujinxHeader;
+export default RyujinxHeaderComponent;

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Box, CircularProgress, Divider } from "@material-ui/core";
-import RyujinxHeader from "../components/RyujinxHeader";
+import RyujinxHeaderComponent from "../components/RyujinxHeaderComponent";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
 import {
@@ -49,7 +49,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
 
   return (
     <Box p={3}>
-      <RyujinxHeader
+      <RyujinxHeaderComponent
         threshold={threshold}
         onRyuFolderAdd={onRyuFolderAdd}
       />

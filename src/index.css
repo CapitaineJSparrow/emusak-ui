@@ -20,6 +20,7 @@ code {
   border: none;
   white-space: pre-wrap;
   background: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
 }
 
 a {
