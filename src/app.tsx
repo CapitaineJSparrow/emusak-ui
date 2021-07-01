@@ -103,7 +103,7 @@ const App = () => {
         {
           (version !== latestRelease && latestRelease && process.platform !== "win32") && (
             <div style={{ padding: 20 }}>
-              <Alert severity="info">You have version v{version}, please consider update to latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (v{latestRelease})</Alert>
+              <Alert severity="info">You have version v{version}, please consider updating to the latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> or the <a href="#" onClick={() => electron.shell.openExternal("https://aur.archlinux.org/packages/emusak-bin/")}>AUR</a> (v{latestRelease})</Alert>
             </div>
           )
         }
