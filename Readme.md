@@ -81,3 +81,4 @@ yarn dev
 * Sin for creating a nice community and init the ideas
 * Niwu for testing, suggestions and help me to match switch title IDs to game name
 * Joshi to update the backend to create a nice software
+* LiveLM to put some love to arch linux users
