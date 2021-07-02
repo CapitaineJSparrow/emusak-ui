@@ -6,11 +6,9 @@ jobs:
   Publish-to-AUR:
     runs-on: ubuntu-latest
     steps:
-      - name: "Get PKGBUILD from repo"
-        uses: Bhacaz/checkout-files@v1
+      - uses: actions/checkout@v2
         with:
-          files: AUR/PKGBUILD
-          token: ${{ github.token }}
+          fetch-depth: 0
       - name: "Get latest release"
         id: latestrelease
         uses: InsonusK/get-latest-release@v1.0.1
