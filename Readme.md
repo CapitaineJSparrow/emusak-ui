@@ -26,9 +26,13 @@ install the software just by executing the `.exe` file. You can remove the softw
 
 Download deb file then `sudo dpkg -i ./emusak-ui-X.Y_amd64.deb`
 
+##### Arch Linux
+
+Download [emusak-bin from the AUR](https://aur.archlinux.org/packages/emusak-bin/) and install it with `makepkg -si` or use your favorite AUR helper.
+
 ##### All distros
 
-There is also an `AppImage`,  I'll create a ppa and aur package for linux users soon
+There is also an `AppImage`,  I'll create a ppa for linux users soon
 
 ### Features
 
