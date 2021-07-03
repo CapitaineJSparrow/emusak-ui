@@ -13,8 +13,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-      - name: Checkout repository
       - uses: actions/checkout@v2
+        name: Checkout repository
         with:
           fetch-depth: 0
       - name: Install Node.js, NPM and Yarn
