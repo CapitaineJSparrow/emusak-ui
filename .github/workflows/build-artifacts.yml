@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - test-actions
+    paths:
+      - package.json
 
 jobs:
   release:
@@ -25,4 +27,4 @@ jobs:
       - run: npm run publish
         name: Publish github artifacts
         env:
-          GITHUB_TOKEN: ${{ secrets.github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
