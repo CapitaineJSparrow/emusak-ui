@@ -26,3 +26,5 @@ jobs:
         name: Publish github artifacts
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          EMUSAK_CDN: ${{ secrets.EMUSAK_CDN }}
+          EMUSAK_URL: ${{ secrets.EMUSAK_URL }}
