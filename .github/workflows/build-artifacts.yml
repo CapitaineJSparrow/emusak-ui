@@ -22,6 +22,5 @@ jobs:
         with:
           node-version: 14
       - run: yarn install
-      - run: npm run publish
-        with:
-          github_token: ${{ github.token }}
+      - run: ./node_modules/.bin/electron-forge publish --auth-token ${{ secrets.github.token }}
+        name: Publish github artifacts
