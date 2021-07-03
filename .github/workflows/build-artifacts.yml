@@ -23,3 +23,5 @@ jobs:
           node-version: 14
       - run: yarn install
       - run: npm run publish
+        with:
+          github_token: ${{ github.token }}
