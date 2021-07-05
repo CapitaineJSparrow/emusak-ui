@@ -1,0 +1,31 @@
+name: Build artifacts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - package.json
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout repository
+        with:
+          fetch-depth: 0
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: yarn install
+      - run: npm run publish
+        name: Publish github artifacts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          EMUSAK_CDN: ${{ secrets.EMUSAK_CDN }}
+          EMUSAK_URL: ${{ secrets.EMUSAK_URL }}
