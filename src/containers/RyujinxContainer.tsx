@@ -4,7 +4,7 @@ import RyujinxHeaderComponent from "../components/RyujinxHeaderComponent";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
 import {
-  addRyujinxFolder,
+  addRyujinxFolder, createPortableDirectory,
   installFirmware,
   listGamesWithNameAndShadersCount,
   onKeysDownload
@@ -23,26 +23,32 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
   const [directories, setDirectories] = React.useState<IEmusakEmulatorConfig[]>([]);
   const [emusakShaders, setEmusakShaders] = React.useState<IEmusakShaders>({});
 
-  useEffect(() => loadContainerData(), []);
-
-  const loadContainerData = () => {
-    listGamesWithNameAndShadersCount(RyujinxModel.getDirectories()).then(setDirectories);
+  const loadPageData = async () => {
+    const configs = await RyujinxModel.getDirectories();
+    listGamesWithNameAndShadersCount(configs).then(setDirectories);
     getRyujinxShadersCount().then(setEmusakShaders);
   }
 
+  useEffect(() => { loadPageData() }, []);
+
   const onRyuFolderAdd = async () => {
     await addRyujinxFolder();
-    loadContainerData();
+    loadPageData();
   }
 
   const onRyuShadersDownload = async (config: IRyujinxConfig, titleId: string) => {
     await installShadersToGame(config, titleId);
-    loadContainerData();
+    loadPageData();
   }
 
   const onRyuConfigRemove = (config: IRyujinxConfig) => {
     RyujinxModel.deleteDirectory(config);
-    loadContainerData();
+    loadPageData();
+  }
+
+  const onPortableButtonClick = async (config: IRyujinxConfig) => {
+    await createPortableDirectory(config);
+    loadPageData();
   }
 
   const isAppReady = Object.keys(emusakSaves).length > 0 && threshold && firmwareVersion && Object.keys(emusakShaders).length > 0;
@@ -77,7 +83,8 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
                 onShadersDownload={id => onRyuShadersDownload(config, id)}
                 onEmuConfigDelete={onRyuConfigRemove}
                 emusakSaves={emusakSaves}
-                onRefresh={() => loadContainerData()}
+                onRefresh={() => loadPageData()}
+                onPortableButtonClick={() => onPortableButtonClick(config)}
               />
             ))
           : (

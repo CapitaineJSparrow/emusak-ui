@@ -18,6 +18,7 @@ interface IFeaturesContainerProps {
   onShadersDownload: (id: string) => void;
   emusakSaves: IEmusakSaves;
   onRefresh: Function;
+  onPortableButtonClick: Function;
 }
 
 const FeaturesContainer = ({
@@ -29,6 +30,7 @@ const FeaturesContainer = ({
   onShadersDownload,
   onEmuConfigDelete,
   emusakSaves,
+  onPortableButtonClick,
   onRefresh
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -112,7 +114,7 @@ const FeaturesContainer = ({
             Download firmware {firmwareVersion}
           </Button>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <Button
             onClick={() => onKeysDownload()}
             fullWidth
@@ -123,8 +125,26 @@ const FeaturesContainer = ({
             Download keys
           </Button>
         </Grid>
-        <Grid item xs={2} style={{textAlign: 'right'}}>
-          Is Portable <Chip label={config.isPortable ? 'yes' : 'no'} color="primary"/>
+        <Grid item xs={3} style={{textAlign: 'right'}}>
+          Is Portable
+          <Chip
+            label={config.isPortable ? 'yes' : 'no'}
+            color="primary"
+            style={{ marginLeft: 12 }}
+          />
+          {
+            !config.isPortable && (
+              <Button
+                style={{ marginLeft: 12 }}
+                size="small"
+                color="primary"
+                variant="contained"
+                onClick={() => onPortableButtonClick()}
+              >
+                Make portable
+              </Button>
+            )
+          }
         </Grid>
       </Grid>
 

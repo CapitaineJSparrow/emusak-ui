@@ -20,7 +20,7 @@ const isValidRyujinxFolder = async (path: string): Promise<boolean> => {
 /**
  * Support either portable mode when or standard (%appdata%) ryu file system
  */
-const isRyujinxPortableMode = async (path: string): Promise<boolean> => {
+export const isRyujinxPortableMode = async (path: string): Promise<boolean> => {
   const dirents = await readDir(path);
   const folders = dirents.filter(d => !d.isFile()).map(d => d.name.toLowerCase());
   return folders.includes('portable');
@@ -65,7 +65,7 @@ export const addRyujinxFolder = async () => {
   }
 
   const isPortable = await isRyujinxPortableMode(path);
-  RyujinxModel.addDirectory({ isPortable, path });
+  await RyujinxModel.addDirectory({ isPortable, path });
 }
 
 export const installFirmware = async () => {
@@ -87,7 +87,14 @@ export const installFirmware = async () => {
 
 export const onKeysDownload = async (config: IRyujinxConfig) => {
   const keysContent = await getKeysContent();
-  const prodKeysPath = getRyujinxPath(config, 'system', 'prod.keys');
+  const systemPath = getRyujinxPath(config, 'system');
+  const exists = await fs.promises.stat(systemPath).catch(() => null);
+
+  if (!exists) {
+    await fs.promises.mkdir(systemPath);
+  }
+
+  const prodKeysPath = path.resolve(systemPath, 'prod.keys');
 
   await fs.promises.writeFile(prodKeysPath, keysContent, 'utf-8');
   return Swal.fire({
@@ -100,6 +107,16 @@ export const onKeysDownload = async (config: IRyujinxConfig) => {
 
 export const listGamesWithNameAndShadersCount = async (configs: IRyujinxConfig[]): Promise<IEmusakEmulatorConfig[]> => Promise.all(configs.map(async config => {
   const gameDirectory = getRyujinxPath(config, 'games');
+  const exists = await fs.promises.stat(gameDirectory).catch(() => null);
+
+  if (!exists) {
+    return {
+      path: config.path,
+      isPortable: config.isPortable,
+      games: []
+    }
+  }
+
   const titleIds: any[] = (await readDir(gameDirectory)).filter(d => !d.isFile()).map(d => d.name.toUpperCase());
   const shadersCount = await countShadersFromGames(titleIds, config);
 
@@ -112,3 +129,31 @@ export const listGamesWithNameAndShadersCount = async (configs: IRyujinxConfig[]
     }))
   }
 }));
+
+export const createPortableDirectory = async (config: IRyujinxConfig) => {
+  const portableDirectoryPath = path.resolve(config.path, 'portable');
+  const exists = await fs.promises.stat(portableDirectoryPath).catch(() => null);
+
+  if (exists) {
+    return true;
+  }
+
+  await fs.promises.mkdir(portableDirectoryPath);
+  await Swal.fire({
+    icon: 'success',
+    // html: `Emusak created a "portable" directory at <code>${portableDirectoryPath}</code> and installed keys. Ryujinx will create the filesystem structures at this location when you launch any game next time, so please run a game and use the "reload" button (near the filter search) or relaunch emusak then. You will also need to re-install firmware : Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file (or use the "download firmware button" if you don't have archive yet)`
+    html: `<ul style="list-style: none; text-align: left">
+        <li><b style="color: green; font-size: 1.4em">✓</b> Emusak created a "portable" directory at <code>${portableDirectoryPath}</code></li>
+        <li><b style="color: green; font-size: 1.4em">✓</b> Emusak downloaded keys</li>
+        <li><b style="color: blue; font-size: 1.4em">?</b> You'll need to install firmware again, if you don't have firmware archive use the "Download firmware" button then : Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file</li>
+        <li><b style="color: blue; font-size: 1.4em">?</b> You configuration is now empty, Go to "options" ⇾ settings and update your settings again (such as controllers or game directories)</li>
+        <li><b style="color: blue; font-size: 1.4em">?</b> Ryujinx will create the right file structure in portable directory when you run any game next time, so launch any title and either restart emusak or use the reload button near the filter input</li>
+        <li><b style="color: green; font-size: 1.4em">✓</b> To revert this changes, just delete the directory</li>
+    </ul>`
+  });
+
+  await onKeysDownload({
+    ...config,
+    isPortable: true
+  });
+}
