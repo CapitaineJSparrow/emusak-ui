@@ -148,12 +148,12 @@ export const makeRyujinxPortable = async (config: IRyujinxConfig) => {
     icon: 'success',
     // html: `Emusak created a "portable" directory at <code>${portableDirectoryPath}</code> and installed keys. Ryujinx will create the filesystem structures at this location when you launch any game next time, so please run a game and use the "reload" button (near the filter search) or relaunch emusak then. You will also need to re-install firmware : Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file (or use the "download firmware button" if you don't have archive yet)`
     html: `<ul style="list-style: none; text-align: left">
-        <li><b style="color: green; font-size: 1.4em">✓</b> Emusak created a "portable" directory at <code>${portableDirectoryPath}</code></li>
-        <li><b style="color: green; font-size: 1.4em">✓</b> Emusak downloaded keys</li>
-        <li><b style="color: blue; font-size: 1.4em">?</b> You'll need to install firmware again, if you don't have firmware archive use the "Download firmware" button then : Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file</li>
-        <li><b style="color: blue; font-size: 1.4em">?</b> You configuration is now empty, Go to "options" ⇾ settings and update your settings again (such as controllers or game directories)</li>
-        <li><b style="color: blue; font-size: 1.4em">?</b> Ryujinx will create the right file structure in portable directory when you run any game next time, so launch any title and either restart emusak or use the reload button near the filter input</li>
-        <li><b style="color: green; font-size: 1.4em">✓</b> To revert this changes, just delete the portable directory</li>
+        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> Emusak created a "portable" directory at <code>${portableDirectoryPath}</code></li>
+        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> Emusak downloaded keys</li>
+        <li><b style="color: #3498db; font-size: 1.4em">?</b> You'll need to install firmware again, if you don't have firmware archive use the "Download firmware" button then : Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file</li>
+        <li><b style="color: #3498db; font-size: 1.4em">?</b> You configuration is now empty, Go to "options" ⇾ settings and update your settings again (such as controllers or game directories)</li>
+        <li><b style="color: #3498db; font-size: 1.4em">?</b> Ryujinx will create the right file structure in portable directory when you run any game next time, so launch any title and either restart emusak or use the reload button near the filter input</li>
+        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> To revert this changes, just delete the portable directory</li>
     </ul>`
   });
 

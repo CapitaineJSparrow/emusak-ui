@@ -1,18 +1,16 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
 import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import UpdateFeedbackComponent from "./components/UpdateFeedbackComponent";
 import * as electron from "electron";
 import AppBarComponent from "./components/AppBarComponent";
 import RyujinxContainer from "./containers/RyujinxContainer";
-import { useEffect } from "react";
 import { getFirmwareVersion, getLatestVersionNumber, getThresholdValue } from "./api/github";
 import DownloadProgressComponent from "./components/DownloadProgressComponent";
 import { getSavesList } from "./api/emusak";
-import { IEmusakSaves } from "./types";
+import { IDownloadState, IEmusakSaves } from "./types";
 import FilePickerComponent from "./components/FilePickerComponent";
-
-export type IDownloadState = false | 'DOWNLOADING' | 'DOWNLOADED';
 
 const theme = createMuiTheme({
   palette: {

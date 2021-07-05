@@ -24,14 +24,14 @@ const ShadersListComponent = ({ games, emusakShaders, onShadersDownload }: IShad
   const isDownloadButtonDisabled = (emusakShaderCount: number, localShaderCount: number): boolean => !emusakShaderCount || (localShaderCount >= emusakShaderCount);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer className="table-sticky" style={{ overflowX: 'initial' }} component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Games ({games.length})</TableCell>
             <TableCell>EmuSAK shaders count</TableCell>
             <TableCell>Local shaders count</TableCell>
-            <TableCell style={{ width: 370 }}>Actions</TableCell>
+            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

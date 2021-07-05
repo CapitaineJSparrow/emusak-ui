@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { IDownloadState } from "../app";
 import { Alert } from "@material-ui/lab";
 import Swal from "sweetalert2";
 import * as electron from "electron";
+import { IDownloadState } from "../types";
 
 interface IUpdateComponentProps {
   downloadState: IDownloadState;

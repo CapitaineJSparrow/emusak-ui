@@ -28,3 +28,5 @@ export interface IEmusakShaders {
 export interface IEmusakSaves {
   [id: string]: string[];
 }
+
+export type IDownloadState = false | 'DOWNLOADING' | 'DOWNLOADED';
