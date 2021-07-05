@@ -85,7 +85,7 @@ export const installFirmware = async () => {
   electron.shell.showItemInFolder(firmwareDestPath);
 }
 
-export const onKeysDownload = async (config: IRyujinxConfig) => {
+export const onKeysDownload = async (config: IRyujinxConfig, withAlert = true) => {
   const keysContent = await getKeysContent();
   const systemPath = getRyujinxPath(config, 'system');
   const exists = await fs.promises.stat(systemPath).catch(() => null);
@@ -97,12 +97,17 @@ export const onKeysDownload = async (config: IRyujinxConfig) => {
   const prodKeysPath = path.resolve(systemPath, 'prod.keys');
 
   await fs.promises.writeFile(prodKeysPath, keysContent, 'utf-8');
-  return Swal.fire({
-    icon: 'success',
-    title: 'Job done !',
-    html: `Created or replaced keys at : <code>${prodKeysPath}</code>`,
-    width: 600
-  })
+
+  if (withAlert) {
+    await Swal.fire({
+      icon: 'success',
+      title: 'Job done !',
+      html: `Created or replaced keys at : <code>${prodKeysPath}</code>`,
+      width: 600
+    });
+  }
+
+  return true;
 }
 
 export const listGamesWithNameAndShadersCount = async (configs: IRyujinxConfig[]): Promise<IEmusakEmulatorConfig[]> => Promise.all(configs.map(async config => {
@@ -130,7 +135,7 @@ export const listGamesWithNameAndShadersCount = async (configs: IRyujinxConfig[]
   }
 }));
 
-export const createPortableDirectory = async (config: IRyujinxConfig) => {
+export const makeRyujinxPortable = async (config: IRyujinxConfig) => {
   const portableDirectoryPath = path.resolve(config.path, 'portable');
   const exists = await fs.promises.stat(portableDirectoryPath).catch(() => null);
 
@@ -148,12 +153,12 @@ export const createPortableDirectory = async (config: IRyujinxConfig) => {
         <li><b style="color: blue; font-size: 1.4em">?</b> You'll need to install firmware again, if you don't have firmware archive use the "Download firmware" button then : Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file</li>
         <li><b style="color: blue; font-size: 1.4em">?</b> You configuration is now empty, Go to "options" ⇾ settings and update your settings again (such as controllers or game directories)</li>
         <li><b style="color: blue; font-size: 1.4em">?</b> Ryujinx will create the right file structure in portable directory when you run any game next time, so launch any title and either restart emusak or use the reload button near the filter input</li>
-        <li><b style="color: green; font-size: 1.4em">✓</b> To revert this changes, just delete the directory</li>
+        <li><b style="color: green; font-size: 1.4em">✓</b> To revert this changes, just delete the portable directory</li>
     </ul>`
   });
 
   await onKeysDownload({
     ...config,
     isPortable: true
-  });
+  }, false);
 }

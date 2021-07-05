@@ -4,7 +4,7 @@ import RyujinxHeaderComponent from "../components/RyujinxHeaderComponent";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
 import {
-  addRyujinxFolder, createPortableDirectory,
+  addRyujinxFolder, makeRyujinxPortable,
   installFirmware,
   listGamesWithNameAndShadersCount,
   onKeysDownload
@@ -47,7 +47,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
   }
 
   const onPortableButtonClick = async (config: IRyujinxConfig) => {
-    await createPortableDirectory(config);
+    await makeRyujinxPortable(config);
     loadPageData();
   }
 
