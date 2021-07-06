@@ -30,3 +30,9 @@ export interface IEmusakSaves {
 }
 
 export type IDownloadState = false | 'DOWNLOADING' | 'DOWNLOADED';
+
+export interface IEmulatorStorageInterface {
+  getDirectories: () => Promise<any>;
+  addDirectory: (conf: IRyujinxConfig) => Promise<any>;
+  deleteDirectory: (conf: IRyujinxConfig) => Promise<any>;
+}

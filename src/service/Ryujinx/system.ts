@@ -85,7 +85,7 @@ export const installFirmware = async () => {
   electron.shell.showItemInFolder(firmwareDestPath);
 }
 
-export const onKeysDownload = async (config: IRyujinxConfig, withAlert = true) => {
+export const downloadKeys = async (config: IRyujinxConfig, withAlert = true) => {
   const keysContent = await getKeysContent();
   const systemPath = getRyujinxPath(config, 'system');
   const exists = await fs.promises.stat(systemPath).catch(() => null);
@@ -157,7 +157,7 @@ export const makeRyujinxPortable = async (config: IRyujinxConfig) => {
     </ul>`
   });
 
-  await onKeysDownload({
+  await downloadKeys({
     ...config,
     isPortable: true
   }, false);

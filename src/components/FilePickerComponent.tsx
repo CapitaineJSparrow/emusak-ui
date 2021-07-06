@@ -3,7 +3,7 @@ import { Avatar, Dialog, DialogTitle, List, ListItem, ListItemAvatar, ListItemTe
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 const FilePickerComponent = () => {
-  const [open, setOpen] = React.useState<boolean>(false);
+  const [open, setOpen] = React.useState<boolean>(true);
 
   const handleClose = () => {
     setOpen(false);

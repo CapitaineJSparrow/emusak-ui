@@ -4,10 +4,11 @@ import RyujinxHeaderComponent from "../components/RyujinxHeaderComponent";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
 import {
-  addRyujinxFolder, makeRyujinxPortable,
+  addRyujinxFolder,
+  makeRyujinxPortable,
   installFirmware,
   listGamesWithNameAndShadersCount,
-  onKeysDownload
+  downloadKeys
 } from "../service/Ryujinx/system";
 import { IEmusakEmulatorConfig, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { getRyujinxShadersCount } from "../api/emusak";
@@ -22,35 +23,40 @@ interface IRyujinxContainerProps {
 const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinxContainerProps) => {
   const [directories, setDirectories] = React.useState<IEmusakEmulatorConfig[]>([]);
   const [emusakShaders, setEmusakShaders] = React.useState<IEmusakShaders>({});
+  const [needsRefresh, setNeedsRefresh] = React.useState(true);
 
-  const loadPageData = async () => {
+  const refreshPageData = async () => {
     const configs = await RyujinxModel.getDirectories();
     listGamesWithNameAndShadersCount(configs).then(setDirectories);
     getRyujinxShadersCount().then(setEmusakShaders);
   }
 
-  useEffect(() => { loadPageData() }, []);
+  // On component mount
+  useEffect(() => {
+    needsRefresh && refreshPageData().then(() => setNeedsRefresh(false));
+  }, [needsRefresh]);
 
   const onRyuFolderAdd = async () => {
     await addRyujinxFolder();
-    loadPageData();
+    setNeedsRefresh(true);
   }
 
   const onRyuShadersDownload = async (config: IRyujinxConfig, titleId: string) => {
     await installShadersToGame(config, titleId);
-    loadPageData();
+    setNeedsRefresh(true);
   }
 
   const onRyuConfigRemove = (config: IRyujinxConfig) => {
     RyujinxModel.deleteDirectory(config);
-    loadPageData();
+    setNeedsRefresh(true);
   }
 
   const onPortableButtonClick = async (config: IRyujinxConfig) => {
     await makeRyujinxPortable(config);
-    loadPageData();
+    setNeedsRefresh(true);
   }
 
+  // App is ready once saves and shaders data are fetched, as well with firmware version and threshold values
   const isAppReady = Object.keys(emusakSaves).length > 0 && threshold && firmwareVersion && Object.keys(emusakShaders).length > 0;
 
   return (
@@ -70,6 +76,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
           </Box>
         )
       }
+
       {
         (isAppReady)
           ? directories.map(config => (
@@ -78,12 +85,12 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
                 key={`ryu-${config.path}`}
                 onFirmwareDownload={installFirmware}
                 firmwareVersion={firmwareVersion}
-                onKeysDownload={() => onKeysDownload(config)}
+                onKeysDownload={() => downloadKeys(config)}
                 emusakShaders={emusakShaders}
                 onShadersDownload={id => onRyuShadersDownload(config, id)}
                 onEmuConfigDelete={onRyuConfigRemove}
                 emusakSaves={emusakSaves}
-                onRefresh={() => loadPageData()}
+                onRefresh={() => refreshPageData()}
                 onPortableButtonClick={() => onPortableButtonClick(config)}
               />
             ))
