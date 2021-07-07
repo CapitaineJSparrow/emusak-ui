@@ -7,10 +7,10 @@ import * as electron from "electron";
 import AppBarComponent from "./components/AppBarComponent";
 import RyujinxContainer from "./containers/RyujinxContainer";
 import { getFirmwareVersion, getLatestVersionNumber, getThresholdValue } from "./api/github";
-import DownloadProgressComponent from "./components/DownloadProgressComponent";
+import DownloadProgressComponent from "./components/ui/DownloadProgressComponent";
 import { getSavesList } from "./api/emusak";
 import { IDownloadState, IEmusakSaves } from "./types";
-import FilePickerComponent from "./components/FilePickerComponent";
+import FilePickerComponent from "./components/ui/FilePickerComponent";
 
 const theme = createMuiTheme({
   palette: {

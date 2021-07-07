@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, LinearProgress, makeStyles, Modal, Typography } from "@material-ui/core";
-import { progressEvent } from "../events";
+import { progressEvent } from "../../events";
 
 const useStyles = makeStyles((theme) => ({
   modal: {

@@ -2,7 +2,8 @@ import { IEmulatorStorageInterface, IRyujinxConfig } from "../types";
 import { isRyujinxPortableMode } from "../service/Ryujinx/system";
 
 class RyujinxModel implements IEmulatorStorageInterface {
-  public readonly LS_DIRECTORIES_KEY = "ryu-dir"
+  // Localstorage identifier to store ryu config
+  protected readonly LS_DIRECTORIES_KEY = "ryu-dir"
 
   public async getDirectories(): Promise<IRyujinxConfig[]> {
     const d = localStorage.getItem(this.LS_DIRECTORIES_KEY);
@@ -35,6 +36,5 @@ class RyujinxModel implements IEmulatorStorageInterface {
   }
 }
 
-// Export class as singleton
-const instance = new RyujinxModel();
-export default instance;
+const singleton = new RyujinxModel();
+export default singleton;
