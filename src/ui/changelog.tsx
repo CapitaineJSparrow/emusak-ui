@@ -35,17 +35,8 @@ const Changelog = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Network optimisations, add a "clear" to filter input. Fresh install of emusak now require admin privileges to prevent some issues</li>
-          <li>Added a progress indicator while downloading mods (some texture packs are heavy)</li>
-          <li>Fixed a bug preventing users sharing their shaders from mailine configuration if logs were disabled on mainline build while logs are disabled and using Ryujinx LDN without portable mode (thanks PHAT for reporting)</li>
-          <li>Uploaded tons of new mods</li>
-          <li>Add romFS mods support</li>
-          <li>Fix a bug preventing users to download some mods</li>
-          <li>Fix a lot of missing title IDs</li>
-          <li>Fix an issue preventing shaders to be shared when using LDN build (thanks TheOg for reporting)</li>
-          <li>Minor UI fixes</li>
-          <li>Share limit is now 3 per hour per user, instead 1.</li>
-          <li>Mods support is finally here !</li>
+          <li>Thanks to LiveLM, archlinux users can now download emusak PKGBUILD from aur and get updates through their package manager</li>
+          <li>Fixed html code rendered in game title</li>
         </ul>
         <br/>
         <p>
