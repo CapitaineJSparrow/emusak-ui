@@ -48,7 +48,7 @@ export default ({
             return (
               <TableRow key={`${titleId}-${config.path}`}>
                 <TableCell>
-                  <span>{name}</span>
+                  <span dangerouslySetInnerHTML={{ __html: name }} />
                   <br/>
                   <span><small>{titleId.toUpperCase()}</small></span>
                 </TableCell>
