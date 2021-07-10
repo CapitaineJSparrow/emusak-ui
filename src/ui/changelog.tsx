@@ -36,7 +36,7 @@ const Changelog = () => {
         <br />
         <ul style={{ marginLeft: 20 }}>
           <li>If you were an user from 128 Bit bay discord server, they have been hacked and everyone has been baned. You can find the new discord <a
-            href="#" onClick={() => electron.shell.openExternal("https://discordapp.com/channels/@me/863325681471455252/863325833702408192")}>by clicking here</a></li>
+            href="#" onClick={() => electron.shell.openExternal("https://discord.gg/7Rqhp6AvUw")}>by clicking here</a></li>
           <li>Thanks to LiveLM, archlinux users can now download emusak PKGBUILD from aur and get updates through their package manager</li>
           <li>Fixed html code rendered in game title</li>
         </ul>
