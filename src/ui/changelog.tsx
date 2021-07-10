@@ -23,7 +23,7 @@ const Changelog = () => {
 
   const onModalClose = () => {
     setOpen(false);
-    // localStorage.setItem(LS_KEY, 'true');
+    localStorage.setItem(LS_KEY, 'true');
   }
 
   return (
