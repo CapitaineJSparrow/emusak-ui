@@ -10,24 +10,30 @@ import {
   TableHead,
   TableRow
 } from "@material-ui/core";
-import { IEmusakGame, IEmusakSaves } from "../../types";
+import { IEmusakFilePickerDirent, IEmusakGame, IEmusakSaves } from "../../types";
 import { filePickerEvent } from "../../events";
 
 interface ISavesListComponentProps {
   games: IEmusakGame[];
-  onSavesDownload: (id: string) => void;
+  onSaveDownload: (id: string, saveIndex: number, fileName: string) => void;
   emusakSaves: IEmusakSaves;
 }
 
-const SavesListComponent = ({ games, onSavesDownload, emusakSaves }: ISavesListComponentProps) => {
+const SavesListComponent = ({ games, onSaveDownload, emusakSaves }: ISavesListComponentProps) => {
 
   const onSaveDownloadButtonClick = (id: string) => {
     filePickerEvent.dispatchEvent(new CustomEvent('pick', {
       detail: {
-        dirents: emusakSaves[id].map(saveName => ({ label: saveName }))
+        dirents: emusakSaves[id].map(saveName => ({ label: saveName, titleId: id }))
       }
     }));
   }
+
+  filePickerEvent.addEventListener('picked', ({ detail }: Event & { detail: IEmusakFilePickerDirent }) => {
+    const { titleId, label } = detail;
+    const index = emusakSaves[titleId].findIndex(l => l === label);
+    onSaveDownload(titleId, index, label);
+  });
 
   return (
     <TableContainer component={Paper}>
@@ -56,11 +62,10 @@ const SavesListComponent = ({ games, onSavesDownload, emusakSaves }: ISavesListC
                           fullWidth
                           variant="contained"
                           color="primary"
-                          // onClick={() => onSavesDownload(g.id)}
                           onClick={() => onSaveDownloadButtonClick(g.id)}
                           disabled={isEmpty}
                         >
-                          {isEmpty ? 'No save data' : 'Download save'}
+                          { isEmpty ? 'No save data' : 'Download save' }
                         </Button>
                       </Box>
                     </TableCell>

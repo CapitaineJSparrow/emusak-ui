@@ -79,7 +79,7 @@ export const installFirmware = async () => {
   await Swal.fire({
     icon: 'success',
     title: 'Job done !',
-    text: 'EmuSAK will now open the downloaded firmware location. Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file'
+    html: 'Emusak downloaded firmware to your <i>Documents</i> folder and will open windows explorer. If file or explorer does not show up, try to add an exception for emusak to your antivirus. To install firmware, Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file'
   });
 
   electron.shell.showItemInFolder(firmwareDestPath);

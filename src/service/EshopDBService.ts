@@ -19,3 +19,5 @@ export const matchIdFromTinfoil = (id: string): string => {
 export const matchIdFromCustomDatabase = (id: string): string => ( customDatabase as ( { [key: string]: string } ) )[id]
 
 export const matchIdFromNswdb = (id: string): string => nswdb.find(entry => entry.id === id)?.title
+
+export const titleIdToName = (id: string) => matchIdFromCustomDatabase(id) || matchIdFromTinfoil(id) || matchIdFromNswdb(id) || id

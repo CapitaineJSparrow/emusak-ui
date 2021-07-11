@@ -17,7 +17,10 @@ const FilePickerComponent = () => {
     setOpen(false);
   }
 
-  const onDirentPick = (dirent: IEmusakFilePickerDirent) => filePickerEvent.dispatchEvent(new CustomEvent('picked', { detail: { dirent } }));
+  const onDirentPick = (dirent: IEmusakFilePickerDirent) => {
+    filePickerEvent.dispatchEvent(new CustomEvent('picked', { detail: dirent } as Event & { detail: IEmusakFilePickerDirent }));
+    setOpen(false);
+  }
 
   filePickerEvent.addEventListener('pick', (event: Event & IFilePickerEvent) => {
     const { detail } = event;

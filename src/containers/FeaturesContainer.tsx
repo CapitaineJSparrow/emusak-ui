@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField, Typography } from "@material-ui/core";
+import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
 import { IEmusakEmulatorConfig, IEmusakGame, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
-import { matchIdFromCustomDatabase, matchIdFromNswdb, matchIdFromTinfoil } from "../service/EshopDBService";
+import { titleIdToName } from "../service/EshopDBService";
 import SavesListComponent from "../components/features/SavesListComponent";
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import Swal from "sweetalert2";
@@ -19,6 +19,7 @@ interface IFeaturesContainerProps {
   emusakSaves: IEmusakSaves;
   onRefresh: Function;
   onPortableButtonClick: Function;
+  onSaveDownload: Function;
 }
 
 const FeaturesContainer = ({
@@ -31,7 +32,8 @@ const FeaturesContainer = ({
   onEmuConfigDelete,
   emusakSaves,
   onPortableButtonClick,
-  onRefresh
+  onRefresh,
+  onSaveDownload,
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
@@ -55,7 +57,7 @@ const FeaturesContainer = ({
       .games
       .map(g => ({
         ...g,
-        name: matchIdFromCustomDatabase(g.id) || matchIdFromTinfoil(g.id) || matchIdFromNswdb(g.id) || g.id
+        name: titleIdToName(g.id)
       }))
       .sort((a, b) => a.name.localeCompare(b.name))
     )
@@ -72,7 +74,7 @@ const FeaturesContainer = ({
       case 1:
         return <SavesListComponent
           games={filterGames(games)}
-          onSavesDownload={() => {}}
+          onSaveDownload={(id: string, saveIndex: number, fileName: string) => onSaveDownload(id, saveIndex, fileName)}
           emusakSaves={emusakSaves}
         />;
     }

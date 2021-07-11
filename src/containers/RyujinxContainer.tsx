@@ -13,6 +13,7 @@ import {
 import { IEmusakEmulatorConfig, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { getRyujinxShadersCount } from "../api/emusak";
 import { installShadersToGame } from "../service/Ryujinx/shaders";
+import { downloadSave } from "../service/shared/saves";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -91,6 +92,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
                 onEmuConfigDelete={onRyuConfigRemove}
                 emusakSaves={emusakSaves}
                 onRefresh={() => refreshPageData()}
+                onSaveDownload={downloadSave}
                 onPortableButtonClick={() => onPortableButtonClick(config)}
               />
             ))

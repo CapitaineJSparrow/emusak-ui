@@ -8,6 +8,7 @@ const PATHS = {
   SHADERS_INFO: `${process.env.EMUSAK_CDN}/ryu/{id}.info`,
   SHADERS_ZIP: `${process.env.EMUSAK_CDN}/ryu/{id}.zip`,
   SAVES_LIST: `${process.env.EMUSAK_CDN}/bo/api/saves`,
+  SAVES_DOWNLOAD: `${process.env.EMUSAK_CDN}/bo/api/saves?id={id}&index={index}`,
 }
 
 export const getKeysContent = (): Promise<string> => httpRequest(PATHS.KEYS).then(r => r.text());
@@ -21,3 +22,5 @@ export const downloadShaderInfo = (titleId: string): Promise<ArrayBuffer> => htt
 export const downloadShaderZip = (titleId: string, destPath: string): Promise<boolean> => httpRequestWithProgress(PATHS.SHADERS_ZIP.replace('{id}', titleId), destPath);
 
 export const getSavesList = (): Promise<IEmusakSaves> => httpRequest(PATHS.SAVES_LIST).then(r => r.json());
+
+export const downloadSaveAb = (id: string, index: number): Promise<ArrayBuffer> => httpRequest(PATHS.SAVES_DOWNLOAD.replace('{id}', id).replace('{index}', `${index}`)).then(r => r.arrayBuffer())
