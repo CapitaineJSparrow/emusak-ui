@@ -45,7 +45,7 @@ const FilePickerComponent = () => {
               <ListItem onClick={() => onDirentPick(dirent)} key={`component-filepicker-${i}`} button>
                 <ListItemAvatar>
                   <Avatar>
-                    { kind === 'zip' ? <ArchiveIcon /> : <FolderIcon /> }
+                    { ['zip', 'rar', '7z', '7zip'].includes(kind) ? <ArchiveIcon /> : <FolderIcon /> }
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={label} />
