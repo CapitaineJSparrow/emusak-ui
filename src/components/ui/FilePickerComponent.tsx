@@ -1,6 +1,7 @@
 import React from "react";
 import { Avatar, Dialog, DialogTitle, List, ListItem, ListItemAvatar, ListItemText } from "@material-ui/core";
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import FolderIcon from '@material-ui/icons/Folder';
+import ArchiveIcon from '@material-ui/icons/Archive';
 import { filePickerEvent } from "../../events";
 import { IEmusakFilePickerDirent } from "../../types";
 
@@ -16,6 +17,8 @@ const FilePickerComponent = () => {
     setOpen(false);
   }
 
+  const onDirentPick = (dirent: IEmusakFilePickerDirent) => filePickerEvent.dispatchEvent(new CustomEvent('picked', { detail: { dirent } }));
+
   filePickerEvent.addEventListener('pick', (event: Event & IFilePickerEvent) => {
     const { detail } = event;
     setDirents(detail.dirents);
@@ -30,16 +33,22 @@ const FilePickerComponent = () => {
       <DialogTitle style={{ textAlign: 'center' }}>Choose a file to download</DialogTitle>
       <List style={{ width: 400 }}>
         {
-          dirents.map((d, i) => (
-            <ListItem key={`component-filepicker-${i}`} button>
-              <ListItemAvatar>
-                <Avatar>
-                  <FileCopyIcon/>
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={d.label}/>
-            </ListItem>
-          ))
+          dirents.map((dirent, i) => {
+            const parts = dirent.label.split('.');
+            const kind = parts.pop(); // Remove extension from label
+            let label: string = parts.join();
+
+            return (
+              <ListItem onClick={() => onDirentPick(dirent)} key={`component-filepicker-${i}`} button>
+                <ListItemAvatar>
+                  <Avatar>
+                    { kind === 'zip' ? <ArchiveIcon /> : <FolderIcon /> }
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={label} />
+              </ListItem>
+            );
+          })
         }
       </List>
     </Dialog>
