@@ -36,3 +36,7 @@ export interface IEmulatorStorageInterface {
   addDirectory: (conf: IRyujinxConfig) => Promise<any>;
   deleteDirectory: (conf: IRyujinxConfig) => Promise<any>;
 }
+
+export interface IEmusakFilePickerDirent {
+  label: string;
+}
