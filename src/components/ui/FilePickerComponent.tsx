@@ -38,18 +38,14 @@ const FilePickerComponent = () => {
       <List style={{ width: 400 }}>
         {
           dirents.map((dirent, i) => {
-            const parts = dirent.label.split('.');
-            const kind = parts.pop(); // Remove extension from label
-            let label: string = parts.join();
-
             return (
               <ListItem onClick={() => onDirentPick(dirent)} key={`component-filepicker-${i}`} button>
                 <ListItemAvatar>
                   <Avatar>
-                    { ['zip', 'rar', '7z', '7zip'].includes(kind) ? <ArchiveIcon /> : <FolderIcon /> }
+                    { ['zip', 'rar', '7z', '7zip'].includes(dirent.label) ? <ArchiveIcon /> : <FolderIcon /> }
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={label} />
+                <ListItemText primary={dirent.label} />
               </ListItem>
             );
           })

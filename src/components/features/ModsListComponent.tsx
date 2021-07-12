@@ -33,7 +33,8 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
         break;
       case 'MODS_LIST':
         let mods = await listModsByVersion(pickedTitleId, pickedVersion);
-        console.log(mods);
+        mods = mods.map((m: any) => ({ label: m.name }));
+        filePickerEvent.dispatchEvent(new CustomEvent('pick', { detail: { dirents: mods } }));
         break;
     }
   }
