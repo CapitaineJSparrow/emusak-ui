@@ -39,6 +39,8 @@ const Changelog = () => {
             href="#" onClick={() => electron.shell.openExternal("https://discord.gg/7Rqhp6AvUw")}>by clicking here</a></li>
           <li>Thanks to LiveLM, archlinux users can now download emusak PKGBUILD from aur and get updates through their package manager</li>
           <li>Fixed html code rendered in game title</li>
+          <li>Delete the <code>%appdata%/emusak</code> folder on uninstall to keep your system clean</li>
+          <li>Mitigate an issue which can occasionally occur preventing emusak to launch when an update as been applied until system reboot</li>
         </ul>
         <br/>
         <p>
