@@ -14,6 +14,7 @@ import { IEmusakEmulatorConfig, IEmusakSaves, IEmusakShaders, IRyujinxConfig } f
 import { getRyujinxShadersCount } from "../api/emusak";
 import { installShadersToGame } from "../service/Ryujinx/shaders";
 import { downloadSave } from "../service/shared/saves";
+import electron from "electron";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -99,7 +100,10 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
           : (
             <Box mt={3} style={{ textAlign: 'center' }}>
               <CircularProgress />
-              <h3>Loading data from emusak. If this process never finish, emusak might be temporary down or something is wrong with your network</h3>
+              <br />
+              <br />
+              <h3>Loading data from emusak. If this process never finish, emusak might be temporary down or something is wrong with your network.</h3>
+              <h4>You can check emusak status by clicking this link <a href="#" onClick={() => electron.shell.openExternal("https://emusak.betteruptime.com/")}>https://emusak.betteruptime.com</a></h4>
             </Box>
           )
       }
