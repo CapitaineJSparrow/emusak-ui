@@ -10,13 +10,14 @@ import {
   TableHead,
   TableRow
 } from "@material-ui/core";
-import { IEmusakGame } from "../../types";
+import { IEmusakGame, IEmusakMod } from "../../types";
 
 interface IModsListComponentProps {
   games: IEmusakGame[];
+  emusakMods: IEmusakMod[];
 }
 
-const ModsListComponent = ({ games }: IModsListComponentProps) => (
+const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => (
   <TableContainer component={Paper}>
     <Table className="table-sticky" aria-label="simple table">
       <TableHead>
@@ -29,6 +30,7 @@ const ModsListComponent = ({ games }: IModsListComponentProps) => (
         {
           games
             .map(g => {
+              const disabled = !emusakMods.find(predicate => predicate.name.toUpperCase() === g.id)
               return (
                 <TableRow key={g.id}>
                   <TableCell>
@@ -42,9 +44,9 @@ const ModsListComponent = ({ games }: IModsListComponentProps) => (
                         fullWidth
                         variant="contained"
                         color="primary"
-                        disabled={true}
+                        disabled={disabled}
                       >
-                        Download mods
+                        { disabled ? 'No mods data' : 'Download mods' }
                       </Button>
                     </Box>
                   </TableCell>

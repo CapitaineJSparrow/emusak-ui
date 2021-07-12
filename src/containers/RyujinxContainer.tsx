@@ -10,7 +10,7 @@ import {
   listGamesWithNameAndShadersCount,
   downloadKeys
 } from "../service/Ryujinx/system";
-import { IEmusakEmulatorConfig, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
+import { IEmusakEmulatorConfig, IEmusakMod, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { getRyujinxShadersCount } from "../api/emusak";
 import { installShadersToGame } from "../service/Ryujinx/shaders";
 import { downloadSave } from "../service/shared/saves";
@@ -20,9 +20,10 @@ interface IRyujinxContainerProps {
   threshold: number;
   firmwareVersion: string;
   emusakSaves: IEmusakSaves;
+  emusakMods: IEmusakMod[];
 }
 
-const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinxContainerProps) => {
+const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves, emusakMods } : IRyujinxContainerProps) => {
   const [directories, setDirectories] = React.useState<IEmusakEmulatorConfig[]>([]);
   const [emusakShaders, setEmusakShaders] = React.useState<IEmusakShaders>({});
   const [needsRefresh, setNeedsRefresh] = React.useState(true);
@@ -58,8 +59,12 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
     setNeedsRefresh(true);
   }
 
-  // App is ready once saves and shaders data are fetched, as well with firmware version and threshold values
-  const isAppReady = Object.keys(emusakSaves).length > 0 && threshold && firmwareVersion && Object.keys(emusakShaders).length > 0;
+  // App is ready once saves, mods and shaders data are fetched, as well with firmware version and threshold values
+  const isAppReady = Object.keys(emusakSaves).length > 0
+    && threshold
+    && firmwareVersion
+    && Object.keys(emusakShaders).length > 0
+    && emusakMods.length > 0;
 
   return (
     <Box p={3}>
@@ -92,6 +97,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves } : IRyujinx
                 onShadersDownload={id => onRyuShadersDownload(config, id)}
                 onEmuConfigDelete={onRyuConfigRemove}
                 emusakSaves={emusakSaves}
+                emusakMods={emusakMods}
                 onRefresh={() => refreshPageData()}
                 onSaveDownload={downloadSave}
                 onPortableButtonClick={() => onPortableButtonClick(config)}

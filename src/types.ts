@@ -29,6 +29,12 @@ export interface IEmusakSaves {
   [id: string]: string[];
 }
 
+export interface IEmusakMod {
+  name: string;
+  type: 'file' | 'directory';
+  mtime: string;
+}
+
 export type IDownloadState = false | 'DOWNLOADING' | 'DOWNLOADED';
 
 export interface IEmulatorStorageInterface {

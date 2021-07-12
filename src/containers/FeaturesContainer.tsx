@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
-import { IEmusakEmulatorConfig, IEmusakGame, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
+import { IEmusakEmulatorConfig, IEmusakGame, IEmusakMod, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { titleIdToName } from "../service/EshopDBService";
 import SavesListComponent from "../components/features/SavesListComponent";
 import AutorenewIcon from '@material-ui/icons/Autorenew';
@@ -21,6 +21,7 @@ interface IFeaturesContainerProps {
   onRefresh: Function;
   onPortableButtonClick: Function;
   onSaveDownload: Function;
+  emusakMods: IEmusakMod[]
 }
 
 const FeaturesContainer = ({
@@ -35,6 +36,7 @@ const FeaturesContainer = ({
   onPortableButtonClick,
   onRefresh,
   onSaveDownload,
+  emusakMods,
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
@@ -81,6 +83,7 @@ const FeaturesContainer = ({
       case 2:
         return <ModsListComponent
           games={filterGames(games)}
+          emusakMods={emusakMods}
         />;
     }
   }

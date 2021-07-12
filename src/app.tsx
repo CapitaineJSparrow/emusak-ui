@@ -8,8 +8,8 @@ import AppBarComponent from "./components/AppBarComponent";
 import RyujinxContainer from "./containers/RyujinxContainer";
 import { getFirmwareVersion, getLatestVersionNumber, getThresholdValue } from "./api/github";
 import DownloadProgressComponent from "./components/ui/DownloadProgressComponent";
-import { getSavesList } from "./api/emusak";
-import { IDownloadState, IEmusakSaves } from "./types";
+import { getSavesList, listMods } from "./api/emusak";
+import { IDownloadState, IEmusakMod, IEmusakSaves } from "./types";
 import FilePickerComponent from "./components/ui/FilePickerComponent";
 
 const theme = createMuiTheme({
@@ -24,6 +24,7 @@ const App = () => {
   const [latestVersion, setLatestVersion] = React.useState<string>(null);
   const [firmwareVersion, setFirmwareVersion] = React.useState<string>(null);
   const [emusakSaves, setEmusakSaves] = React.useState<IEmusakSaves>({});
+  const [emusakMods, setEmusakMods] = React.useState<IEmusakMod[]>([]);
 
   const currentVersion = electron.remote.app.getVersion();
   document.querySelector('title').innerText = `Emusak v${currentVersion}`
@@ -37,6 +38,10 @@ const App = () => {
     getLatestVersionNumber().then(v => setLatestVersion(v));
     getFirmwareVersion().then(v => setFirmwareVersion(v));
     getSavesList().then(setEmusakSaves);
+    listMods().then(r => {
+      console.log(r);
+      setEmusakMods(r);
+    });
   }, []);
 
   return (
@@ -53,6 +58,7 @@ const App = () => {
           threshold={threshold}
           firmwareVersion={firmwareVersion}
           emusakSaves={emusakSaves}
+          emusakMods={emusakMods}
         />
         <DownloadProgressComponent />
         <FilePickerComponent />
