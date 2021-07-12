@@ -7,6 +7,7 @@ import { titleIdToName } from "../service/EshopDBService";
 import SavesListComponent from "../components/features/SavesListComponent";
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import Swal from "sweetalert2";
+import ModsListComponent from "../components/features/ModsListComponent";
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
@@ -76,6 +77,10 @@ const FeaturesContainer = ({
           games={filterGames(games)}
           onSaveDownload={(id: string, saveIndex: number, fileName: string) => onSaveDownload(id, saveIndex, fileName)}
           emusakSaves={emusakSaves}
+        />;
+      case 2:
+        return <ModsListComponent
+          games={filterGames(games)}
         />;
     }
   }
@@ -196,7 +201,7 @@ const FeaturesContainer = ({
             </Box>
           </AppBar>
 
-          {renderTab()}
+          { renderTab() }
         </Grid>
       </Grid>
     </>
