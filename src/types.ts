@@ -45,5 +45,5 @@ export interface IEmulatorStorageInterface {
 
 export interface IEmusakFilePickerDirent {
   label: string;
-  titleId: string;
+  titleId?: string;
 }

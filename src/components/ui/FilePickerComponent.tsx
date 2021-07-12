@@ -14,6 +14,7 @@ const FilePickerComponent = () => {
   const [dirents, setDirents] = React.useState<IEmusakFilePickerDirent[]>([]);
 
   const handleClose = () => {
+    filePickerEvent.dispatchEvent(new CustomEvent('close'));
     setOpen(false);
   }
 

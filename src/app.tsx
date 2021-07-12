@@ -38,10 +38,7 @@ const App = () => {
     getLatestVersionNumber().then(v => setLatestVersion(v));
     getFirmwareVersion().then(v => setFirmwareVersion(v));
     getSavesList().then(setEmusakSaves);
-    listMods().then(r => {
-      console.log(r);
-      setEmusakMods(r);
-    });
+    listMods().then(setEmusakMods);
   }, []);
 
   return (

@@ -11,6 +11,8 @@ const PATHS = {
 
   SAVES_LIST: `${process.env.EMUSAK_CDN}/bo/api/saves`,
   MODS_LIST: `${process.env.EMUSAK_CDN}/mods/`,
+  MODS_VERSION_LIST: `${process.env.EMUSAK_CDN}/mods/{id}/`,
+  MODS_LIST_BY_VERSION: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/`,
 
   SAVES_DOWNLOAD: `${process.env.EMUSAK_CDN}/bo/api/saves?id={id}&index={index}`,
 }
@@ -30,3 +32,11 @@ export const getSavesList = (): Promise<IEmusakSaves> => httpRequest(PATHS.SAVES
 export const downloadSaveAb = (id: string, index: number): Promise<ArrayBuffer> => httpRequest(PATHS.SAVES_DOWNLOAD.replace('{id}', id).replace('{index}', `${index}`)).then(r => r.arrayBuffer())
 
 export const listMods = () => httpRequest(PATHS.MODS_LIST).then(r => r.json());
+
+export const listModsVersionForTitleId = (id: string) => httpRequest(PATHS.MODS_VERSION_LIST.replace('{id}', id)).then(r => r.json());
+
+export const listModsByVersion = (id: string, version: string) =>  httpRequest(
+  PATHS.MODS_LIST_BY_VERSION
+    .replace('{id}', id)
+    .replace('{version}', version)
+).then(r => r.json());
