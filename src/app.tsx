@@ -21,8 +21,8 @@ const theme = createMuiTheme({
 const App = () => {
   const [downloadState, setDownloadState] = React.useState<IDownloadState>(false);
   const [threshold, setThreshold] = React.useState(1E6);
-  const [latestVersion, setLatestVersion] = React.useState<string|null>(null);
-  const [firmwareVersion, setFirmwareVersion] = React.useState<string|null>(null);
+  const [latestVersion, setLatestVersion] = React.useState<string>(null);
+  const [firmwareVersion, setFirmwareVersion] = React.useState<string>(null);
   const [emusakSaves, setEmusakSaves] = React.useState<IEmusakSaves>({});
 
   const currentVersion = electron.remote.app.getVersion();
