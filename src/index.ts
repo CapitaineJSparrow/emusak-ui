@@ -173,6 +173,5 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
     })
     const form = r.form();
     form.append('file', fs.createReadStream(zipPath))
-  })
-
+  });
 })();
