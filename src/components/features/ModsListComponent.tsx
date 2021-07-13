@@ -45,7 +45,7 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
     setPickedVersion(null);
   });
 
-  filePickerEvent.addEventListener('picked', ({ detail }: Event & { detail: IEmusakFilePickerDirent }) => {
+  const handleFilePicked = ({ detail }: Event & { detail: IEmusakFilePickerDirent }) => {
     switch (STATE_MACHINE) {
       case 'LIST':
         setPickedVersion(detail.label);
@@ -55,10 +55,13 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
 
         break;
     }
-  });
+  };
+
+  filePickerEvent.addEventListener('picked', handleFilePicked);
 
   useEffect(() => {
-    pickedTitleId && onStateMachineChange()
+    pickedTitleId && onStateMachineChange();
+    return () => filePickerEvent.removeEventListener('picked', handleFilePicked); // On component unmount
   }, [STATE_MACHINE, pickedTitleId]);
 
   return (

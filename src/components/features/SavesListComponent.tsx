@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -29,11 +29,17 @@ const SavesListComponent = ({ games, onSaveDownload, emusakSaves }: ISavesListCo
     }));
   }
 
-  filePickerEvent.addEventListener('picked', ({ detail }: Event & { detail: IEmusakFilePickerDirent }) => {
+  const handleFilePicked = ({ detail }: Event & { detail: IEmusakFilePickerDirent }) => {
     const { titleId, label } = detail;
     const index = emusakSaves[titleId].findIndex(l => l === label);
     onSaveDownload(titleId, index, label);
-  });
+  };
+
+  filePickerEvent.addEventListener('picked', handleFilePicked);
+
+  useEffect(() => {
+    return () => filePickerEvent.removeEventListener('picked', handleFilePicked); // On component unmount
+  }, []);
 
   return (
     <TableContainer component={Paper}>
