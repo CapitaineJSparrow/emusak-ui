@@ -64,7 +64,6 @@ app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
     return false;
   }
 
-
   const feed = `https://update.electronjs.org/stromcon/emusak-ui/${process.platform}-${process.arch}/${app.getVersion()}`
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

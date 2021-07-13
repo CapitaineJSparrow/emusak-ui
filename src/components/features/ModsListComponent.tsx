@@ -12,12 +12,21 @@ interface IModsListComponentProps {
 const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
   /**
    * state machine to download a mod :
-   * 2. List mods version for a specific titleId (LIST)
-   * 3. Download a specific mod for a given title ID and game version (MODS_LIST)
+   * 1. List mods version for a specific titleId (LIST)
+   * 2. Download a specific mod for a given title ID and game version (MODS_LIST)
+   * 3. Then download the first file found in the mod name folder (DOWNLOAD)
    */
-  let [STATE_MACHINE, SET_STATE_MACHINE] = React.useState<'LIST' | 'MODS_LIST'>(null);
-  let [pickedTitleId, setPickedTitleId] = React.useState<string>(null);
-  let [pickedVersion, setPickedVersion] = React.useState<string>(null);
+  const [STATE_MACHINE, SET_STATE_MACHINE] = React.useState<'LIST' | 'MODS_LIST' | 'DOWNLOAD'>(null);
+  const [pickedTitleId, setPickedTitleId] = React.useState<string>(null);
+  const [pickedVersion, setPickedVersion] = React.useState<string>(null);
+  const [pickedMod, setPickedMod] = React.useState<string>(null);
+
+  const resetStateMachine = () => {
+    setPickedTitleId(null);
+    setPickedVersion(null);
+    setPickedMod(null);
+    SET_STATE_MACHINE('LIST');
+  };
 
   const onDownloadModButtonClick = (titleId: string) => {
     setPickedTitleId(titleId);
@@ -36,14 +45,15 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
         mods = mods.map((m: any) => ({ label: m.name }));
         filePickerEvent.dispatchEvent(new CustomEvent('pick', { detail: { dirents: mods } }));
         break;
+      case 'DOWNLOAD':
+        // @TODO pass data to first level component to download mod
+        console.log(pickedVersion, pickedMod, pickedTitleId);
+        resetStateMachine();
     }
   }
 
   // if user closed filePicker without picking a mod, just reset input to trigger useEffect on next button click
-  filePickerEvent.addEventListener('close', () => {
-    setPickedTitleId(null);
-    setPickedVersion(null);
-  });
+  filePickerEvent.addEventListener('close', resetStateMachine);
 
   const handleFilePicked = ({ detail }: Event & { detail: IEmusakFilePickerDirent }) => {
     switch (STATE_MACHINE) {
@@ -52,7 +62,8 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
         SET_STATE_MACHINE('MODS_LIST');
         break;
       case 'MODS_LIST':
-
+        setPickedMod(detail.label);
+        SET_STATE_MACHINE('DOWNLOAD');
         break;
     }
   };
@@ -61,8 +72,12 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
 
   useEffect(() => {
     pickedTitleId && onStateMachineChange();
-    return () => filePickerEvent.removeEventListener('picked', handleFilePicked); // On component unmount
   }, [STATE_MACHINE, pickedTitleId]);
+
+  useEffect(() => () => {
+    filePickerEvent.removeEventListener('picked', handleFilePicked);
+    resetStateMachine();
+  }, []);
 
   return (
     <TableContainer component={Paper}>
