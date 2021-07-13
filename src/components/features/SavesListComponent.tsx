@@ -35,7 +35,10 @@ const SavesListComponent = ({ games, onSaveDownload, emusakSaves }: ISavesListCo
     onSaveDownload(titleId, index, label);
   };
 
-  filePickerEvent.addEventListener('picked', handleFilePicked);
+  filePickerEvent.addEventListener('picked', handleFilePicked, {
+    once: true,
+    passive: true
+  });
 
   useEffect(() => {
     return () => filePickerEvent.removeEventListener('picked', handleFilePicked); // On component unmount

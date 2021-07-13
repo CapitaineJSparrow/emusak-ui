@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
 import { IEmusakFilePickerDirent, IEmusakGame, IEmusakMod } from "../../types";
-import { listModsByVersion, listModsVersionForTitleId } from "../../api/emusak";
+import { getModByVersionAndTitle, listModsByVersion, listModsVersionForTitleId } from "../../api/emusak";
 import { filePickerEvent } from "../../events";
 
 interface IModsListComponentProps {
@@ -37,17 +37,17 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
     switch (STATE_MACHINE) {
       case 'LIST':
         let versions = await listModsVersionForTitleId(pickedTitleId);
-        versions = versions.map((v: any) => ({ label: v.name }));
+        versions = versions.map(v => ({ label: v.name })) as any;
         filePickerEvent.dispatchEvent(new CustomEvent('pick', { detail: { dirents: versions } }));
         break;
       case 'MODS_LIST':
         let mods = await listModsByVersion(pickedTitleId, pickedVersion);
-        mods = mods.map((m: any) => ({ label: m.name }));
+        mods = mods.map((m: any) => ({ label: m.name })) as any;
         filePickerEvent.dispatchEvent(new CustomEvent('pick', { detail: { dirents: mods } }));
         break;
       case 'DOWNLOAD':
-        // @TODO pass data to first level component to download mod
-        console.log(pickedVersion, pickedMod, pickedTitleId);
+        const mod = await getModByVersionAndTitle(pickedTitleId, pickedVersion, pickedMod);
+        console.log(mod);
         resetStateMachine();
     }
   }
@@ -56,7 +56,7 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
   filePickerEvent.addEventListener('close', resetStateMachine);
 
   const handleFilePicked = ({ detail }: Event & { detail: IEmusakFilePickerDirent }) => {
-    switch (STATE_MACHINE) {
+    switch (STATE_MACHINE as any) {
       case 'LIST':
         setPickedVersion(detail.label);
         SET_STATE_MACHINE('MODS_LIST');
@@ -68,7 +68,10 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
     }
   };
 
-  filePickerEvent.addEventListener('picked', handleFilePicked);
+  filePickerEvent.addEventListener('picked', handleFilePicked, {
+    once: true,
+    passive: true
+  });
 
   useEffect(() => {
     pickedTitleId && onStateMachineChange();
