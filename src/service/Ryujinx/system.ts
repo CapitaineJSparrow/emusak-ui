@@ -8,6 +8,7 @@ import * as fs from "fs";
 import { IEmusakEmulatorConfig, IRyujinxConfig } from "../../types";
 import { countShadersFromGames } from "./shaders";
 import { arrayBufferToBuffer, asyncGlob } from "../utils";
+import Zip from "adm-zip";
 
 /**
  * On linux, "Ryujinx" binary has no extension
@@ -164,6 +165,7 @@ export const makeRyujinxPortable = async (config: IRyujinxConfig) => {
   }, false);
 }
 
+// In emusak backend, mod are either "pchtxt" mods (text file) or zip archive
 export const installMod = async (config: IRyujinxConfig, titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
   const kind = modFileName.toLowerCase().includes('.pchtxt') ? 'pchtxt' : 'archive';
   let modPath: string;
@@ -171,8 +173,7 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
   if (kind === 'pchtxt') {
     modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName, 'exefs');
   } else {
-    alert('Not implemented yet');
-    return false;
+    modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName);
   }
 
   const exists = await fs.promises.access(modPath).then(() => true).catch(() => false);
@@ -181,10 +182,18 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
     await fs.promises.mkdir(modPath, { recursive: true });
   }
 
-  const modArrayBuffer = await downloadMod(titleID, pickedVersion, modName, modFileName);
-  await fs.promises.writeFile(path.resolve(modPath, modName), arrayBufferToBuffer(modArrayBuffer), 'utf-8');
+  const modBuffer = arrayBufferToBuffer(await downloadMod(titleID, pickedVersion, modName, modFileName));
+
+  if (kind === 'pchtxt') {
+    await fs.promises.writeFile(path.resolve(modPath, modName), modBuffer, 'utf-8');
+  } else {
+    const archive = new Zip(modBuffer);
+    archive.extractAllTo(path.resolve(modPath, '..'), true);
+  }
+
   const { value } = await Swal.fire({
     icon: 'success',
+    title: 'Job done !',
     html: `<p>Successfully installed "${modName}" mod at <code>${modPath}</code>. You can manage your mods in ryujinx by opening it ⇾ Right click the game ⇾ Open mods directory.</p> <br /> <p>Some mods require to clear PTC cache to be stable (mostly 60FPS or resolution mods). Do you want emusak clear your PTC cache ? This action will not destroy it but you will need to rebuild it on next launch.</p>`,
     cancelButtonText: 'No, thanks',
     showCancelButton: true,
@@ -195,6 +204,11 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
   if (value) {
     const ptcCachePath = getRyujinxPath(config, 'games', titleID, 'cache', 'cpu');
     const cacheFiles = await asyncGlob(`${ptcCachePath}/**/*.cache`).catch(() => []) as string[];
-    await Promise.all(cacheFiles.map((file: string) => fs.promises.unlink(file)));
+    await Promise.all(cacheFiles.map(file => fs.promises.unlink(file)));
+    await Swal.fire({
+      icon: 'success',
+      title: 'Job done !',
+      text: 'PTC cache cleared'
+    })
   }
 }
