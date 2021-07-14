@@ -7,7 +7,7 @@ import { downloadFirmwareWithProgress, downloadMod, getKeysContent } from "../..
 import * as fs from "fs";
 import { IEmusakEmulatorConfig, IRyujinxConfig } from "../../types";
 import { countShadersFromGames } from "./shaders";
-import { arrayBufferToBuffer } from "../utils";
+import { arrayBufferToBuffer, asyncGlob } from "../utils";
 
 /**
  * On linux, "Ryujinx" binary has no extension
@@ -183,8 +183,18 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
 
   const modArrayBuffer = await downloadMod(titleID, pickedVersion, modName, modFileName);
   await fs.promises.writeFile(path.resolve(modPath, modName), arrayBufferToBuffer(modArrayBuffer), 'utf-8');
-  await Swal.fire({
+  const { value } = await Swal.fire({
     icon: 'success',
-    html: `Successfully installed "${modName}" mod at <code>${modPath}</code>. You can manage your mods in ryujinx by opening it ⇾ Right click the game ⇾ Open mods directory.`
+    html: `<p>Successfully installed "${modName}" mod at <code>${modPath}</code>. You can manage your mods in ryujinx by opening it ⇾ Right click the game ⇾ Open mods directory.</p> <br /> <p>Some mods require to clear PTC cache to be stable (mostly 60FPS or resolution mods). Do you want emusak clear your PTC cache ? This action will not destroy it but you will need to rebuild it on next launch.</p>`,
+    cancelButtonText: 'No, thanks',
+    showCancelButton: true,
+    confirmButtonText: 'Clear PTC cache'
   });
+
+  // Clear PTC cache as asked
+  if (value) {
+    const ptcCachePath = getRyujinxPath(config, 'games', titleID, 'cache', 'cpu');
+    const cacheFiles = await asyncGlob(`${ptcCachePath}/**/*.cache`).catch(() => []) as string[];
+    await Promise.all(cacheFiles.map((file: string) => fs.promises.unlink(file)));
+  }
 }
