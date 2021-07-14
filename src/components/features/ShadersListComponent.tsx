@@ -15,10 +15,12 @@ import { IEmusakGame, IEmusakShaders } from "../../types";
 interface IShadersListComponentProps {
   games: IEmusakGame[];
   emusakShaders: IEmusakShaders;
+  onShareShaders: Function;
   onShadersDownload: (id: string) => void;
+  threshold: number;
 }
 
-const ShadersListComponent = ({ games, emusakShaders, onShadersDownload }: IShadersListComponentProps) => {
+const ShadersListComponent = ({ games, emusakShaders, onShadersDownload, onShareShaders, threshold }: IShadersListComponentProps) => {
 
   const isDownloadButtonDisabled = (emusakShaderCount: number, localShaderCount: number): boolean => !emusakShaderCount || (localShaderCount >= emusakShaderCount);
 
@@ -61,6 +63,8 @@ const ShadersListComponent = ({ games, emusakShaders, onShadersDownload }: IShad
                         <Button
                           variant="contained"
                           color="primary"
+                          onClick={() => onShareShaders(g.id, localShaderCount, emusakShaderCount)}
+                          // disabled={(emusakShaderCount + threshold) >= localShaderCount}
                         >
                           Share shaders
                         </Button>

@@ -22,7 +22,9 @@ interface IFeaturesContainerProps {
   onPortableButtonClick: Function;
   onSaveDownload: Function;
   onModsDownload: Function;
-  emusakMods: IEmusakMod[]
+  onShareShaders: Function;
+  emusakMods: IEmusakMod[];
+  threshold: number;
 }
 
 const FeaturesContainer = ({
@@ -39,6 +41,8 @@ const FeaturesContainer = ({
   onSaveDownload,
   onModsDownload,
   emusakMods,
+  onShareShaders,
+  threshold
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
@@ -75,6 +79,8 @@ const FeaturesContainer = ({
           emusakShaders={emusakShaders}
           games={filterGames(games)}
           onShadersDownload={(id) => onShadersDownload(id)}
+          onShareShaders={onShareShaders}
+          threshold={threshold}
         />;
       case 1:
         return <SavesListComponent
