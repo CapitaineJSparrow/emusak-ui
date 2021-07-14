@@ -57,3 +57,13 @@ export const downloadMod = (gameId: string, version:string, modName:string, modI
     .replace('{modName}', encodeURIComponent(modName))
     .replace('{modId}', encodeURIComponent(modId))
 ) as Promise<Buffer>;
+
+export const postEmusakShaderShare = async (message: string): Promise<any> => httpRequest(`${process.env.EMUSAK_CDN}/bo/api/submit`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'text/plain'
+  },
+  body: JSON.stringify({
+    message
+  })
+});

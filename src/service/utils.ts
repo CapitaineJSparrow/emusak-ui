@@ -1,4 +1,5 @@
 import glob from "glob";
+import zip from "adm-zip";
 
 export const arrayBufferToBuffer = (ab: ArrayBuffer) => {
   const buf = Buffer.alloc(ab.byteLength);
@@ -14,4 +15,8 @@ export const asyncGlob = (pattern: string) => new Promise((resolve, reject) => {
     if (err) reject(err);
     else resolve(files);
   })
+});
+
+export const asyncZipWrite = (archive: zip, path: string): Promise<void> => new Promise((resolve) => {
+  archive.writeZip(path, () => resolve());
 });
