@@ -1,11 +1,11 @@
 # Emusak UI
 
-![](https://img.shields.io/github/downloads/stromcon/emusak-ui/total?style=for-the-badge)
-![](https://img.shields.io/github/package-json/v/stromcon/emusak-ui?style=for-the-badge)
-![](https://img.shields.io/github/last-commit/stromcon/emusak-ui?style=for-the-badge)
-![](https://img.shields.io/github/license/stromcon/emusak-ui?style=for-the-badge)
+![showDownloads](https://img.shields.io/github/downloads/stromcon/emusak-ui/total?style=for-the-badge)
+![showVersion](https://img.shields.io/github/package-json/v/stromcon/emusak-ui?style=for-the-badge)
+![showLatestCommit](https://img.shields.io/github/last-commit/stromcon/emusak-ui?style=for-the-badge)
+![showLicense](https://img.shields.io/github/license/stromcon/emusak-ui?style=for-the-badge)
 
-Emusak-ui is a graphical mod for [Emusak](https://github.com/sinscove/EmuSAK). This is a tool which allows you to download saves and shaders for switch emulators using a compatible Emusak backend compatible both with linux (only tested with ubuntu) and windows 
+Emusak-ui is a graphical interface for [Emusak](https://github.com/sinscove/EmuSAK). This is a tool which allows you to download saves and shaders for Nintendo Switch emulators using a compatible Emusak backend supported by both with Linux and Windows.
 
 <p align="center">
   <img width="80%" alt="screenshot" src="https://raw.githubusercontent.com/stromcon/emusak-ui/main/screenshot_2.jpg?raw=true&id=01" />
@@ -14,25 +14,30 @@ Emusak-ui is a graphical mod for [Emusak](https://github.com/sinscove/EmuSAK). T
 
 ### Installation
 
-Just go to [releases](https://github.com/stromcon/emusak-ui/releases) page and download latest build
+Just go to the [releases](https://github.com/stromcon/emusak-ui/releases) page and download latest build for your OS.
+**Only on Windows** there is an auto update feature.
 
 #### Windows
 
-install the software just by executing the `.exe` file. You can remove the software like any program on your computer then. **Only on windows** There is an auto update feature
+Install the software by executing the `.exe` file. Afterwards, you can remove the software like any other program on your computer.
 
 #### Linux
 
 ##### Debian
 
-Download deb file then `sudo dpkg -i ./emusak-ui-X.Y_amd64.deb`
+Download the `.deb` file, then install it with `sudo dpkg -i ./emusak-ui-X.Y_amd64.deb`.
 
 ##### Arch Linux
 
 Download [emusak's PKGBUILD](https://aur.archlinux.org/packages/emusak-bin/) and install it with `makepkg -si` or use your favorite AUR helper.
 
-##### All distros
+##### Red Hat Linux
 
-There is also an `AppImage`,  I'll create a ppa for debian users soon
+Download the `.rpm` file, then install it with `sudo rpm -i /emusak-ui-X.Y-1.x86_64.rpm`.
+
+##### Universal
+
+Download the `.AppImage` file, then mark it as executable and run it.
 
 ### Features
 
@@ -48,7 +53,8 @@ There is also an `AppImage`,  I'll create a ppa for debian users soon
 
 Todo :
 
-- [ ] Add yuzu support
+- [ ] Add Yuzu support
+- [ ] Add PPA for Ubuntu users
 
 ### Contributing
 
@@ -79,6 +85,6 @@ yarn dev
 ### Thanks 
 
 * Sin for creating a nice community and init the ideas
-* Niwu for testing, suggestions and help me to match switch title IDs to game name
-* Joshi to update the backend to create a nice software
-* LiveLM to put some love to arch linux users
+* Niwu for testing, suggestions and help me to match Switch title IDs to game name
+* Joshi for updating the backend to create a nice software
+* LiveLM for putting some love to Arch Linux users
