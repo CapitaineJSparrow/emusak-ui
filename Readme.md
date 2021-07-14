@@ -5,7 +5,7 @@
 ![showLatestCommit](https://img.shields.io/github/last-commit/stromcon/emusak-ui?style=for-the-badge)
 ![showLicense](https://img.shields.io/github/license/stromcon/emusak-ui?style=for-the-badge)
 
-Emusak-ui is a graphical interface for [Emusak](https://github.com/sinscove/EmuSAK). This is a tool which allows you to download saves and shaders for Nintendo Switch emulators using a compatible Emusak backend supported by both with Linux and Windows.
+Emusak-ui is a graphical interface for [Emusak](https://github.com/sinscove/EmuSAK). This is a tool which allows you to download saves and shaders for Nintendo Switch emulators using a compatible Emusak backend supported by both Linux and Windows.
 
 <p align="center">
   <img width="80%" alt="screenshot" src="https://raw.githubusercontent.com/stromcon/emusak-ui/main/screenshot_2.jpg?raw=true&id=01" />
