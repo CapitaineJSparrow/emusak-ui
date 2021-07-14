@@ -15,6 +15,7 @@ const PATHS = {
   MODS_LIST_BY_VERSION: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/`,
   MODS_LIST_BY_MOD: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/{modName}/`,
 
+  MOD_DOWNLOAD: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/{modName}/{modId}`,
   SAVES_DOWNLOAD: `${process.env.EMUSAK_CDN}/bo/api/saves?id={id}&index={index}`,
 }
 
@@ -48,3 +49,11 @@ export const getModByVersionAndTitle = (gameId: string, version:string, modName:
     .replace('{version}', encodeURIComponent(version))
     .replace('{modName}', encodeURIComponent(modName))
 ).then(r => r.json());
+
+export const downloadMod = (gameId: string, version:string, modName:string, modId: string): Promise<ArrayBuffer> => httpRequest(
+  PATHS.MOD_DOWNLOAD
+    .replace('{id}', encodeURIComponent(gameId))
+    .replace('{version}', encodeURIComponent(version))
+    .replace('{modName}', encodeURIComponent(modName))
+    .replace('{modId}', encodeURIComponent(modId))
+).then(r => r.arrayBuffer());

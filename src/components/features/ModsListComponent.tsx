@@ -7,9 +7,10 @@ import { filePickerEvent } from "../../events";
 interface IModsListComponentProps {
   games: IEmusakGame[];
   emusakMods: IEmusakMod[];
+  onModsDownload: Function;
 }
 
-const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
+const ModsListComponent = ({ games, emusakMods, onModsDownload }: IModsListComponentProps) => {
   /**
    * state machine to download a mod :
    * 1. List mods version for a specific titleId (LIST)
@@ -47,7 +48,7 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
         break;
       case 'DOWNLOAD':
         const mod = await getModByVersionAndTitle(pickedTitleId, pickedVersion, pickedMod);
-        console.log(mod);
+        onModsDownload(pickedTitleId, pickedVersion, pickedMod, mod[0].name);
         resetStateMachine();
     }
   }
@@ -56,7 +57,7 @@ const ModsListComponent = ({ games, emusakMods }: IModsListComponentProps) => {
   filePickerEvent.addEventListener('close', resetStateMachine);
 
   const handleFilePicked = ({ detail }: Event & { detail: IEmusakFilePickerDirent }) => {
-    switch (STATE_MACHINE as any) {
+    switch (STATE_MACHINE) {
       case 'LIST':
         setPickedVersion(detail.label);
         SET_STATE_MACHINE('MODS_LIST');

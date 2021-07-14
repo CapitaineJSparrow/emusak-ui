@@ -21,6 +21,7 @@ interface IFeaturesContainerProps {
   onRefresh: Function;
   onPortableButtonClick: Function;
   onSaveDownload: Function;
+  onModsDownload: Function;
   emusakMods: IEmusakMod[]
 }
 
@@ -36,6 +37,7 @@ const FeaturesContainer = ({
   onPortableButtonClick,
   onRefresh,
   onSaveDownload,
+  onModsDownload,
   emusakMods,
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -84,6 +86,7 @@ const FeaturesContainer = ({
         return <ModsListComponent
           games={filterGames(games)}
           emusakMods={emusakMods}
+          onModsDownload={onModsDownload}
         />;
     }
   }

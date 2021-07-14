@@ -8,7 +8,7 @@ import {
   makeRyujinxPortable,
   installFirmware,
   listGamesWithNameAndShadersCount,
-  downloadKeys
+  downloadKeys, installMod
 } from "../service/Ryujinx/system";
 import { IEmusakEmulatorConfig, IEmusakMod, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { getRyujinxShadersCount } from "../api/emusak";
@@ -100,6 +100,7 @@ const RyujinxContainer = ({ threshold, firmwareVersion, emusakSaves, emusakMods 
                 emusakMods={emusakMods}
                 onRefresh={() => refreshPageData()}
                 onSaveDownload={downloadSave}
+                onModsDownload={(titleId: string, version: string, modName: string, modId: string) => installMod(config, titleId, version, modName, modId)}
                 onPortableButtonClick={() => onPortableButtonClick(config)}
               />
             ))

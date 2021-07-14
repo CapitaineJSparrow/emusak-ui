@@ -40,9 +40,7 @@ const SavesListComponent = ({ games, onSaveDownload, emusakSaves }: ISavesListCo
     passive: true
   });
 
-  useEffect(() => {
-    return () => filePickerEvent.removeEventListener('picked', handleFilePicked); // On component unmount
-  }, []);
+  useEffect(() => () => filePickerEvent.removeEventListener('picked', handleFilePicked), []);
 
   return (
     <TableContainer component={Paper}>

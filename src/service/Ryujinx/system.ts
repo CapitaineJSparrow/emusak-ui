@@ -3,10 +3,11 @@ import { pickOneFolder, readDir } from "../FService";
 import RyujinxModel from "../../storage/ryujinx";
 import * as electron from "electron";
 import path from "path";
-import { downloadFirmwareWithProgress, getKeysContent } from "../../api/emusak";
+import { downloadFirmwareWithProgress, downloadMod, getKeysContent } from "../../api/emusak";
 import * as fs from "fs";
 import { IEmusakEmulatorConfig, IRyujinxConfig } from "../../types";
 import { countShadersFromGames } from "./shaders";
+import { arrayBufferToBuffer } from "../utils";
 
 /**
  * On linux, "Ryujinx" binary has no extension
@@ -161,4 +162,29 @@ export const makeRyujinxPortable = async (config: IRyujinxConfig) => {
     ...config,
     isPortable: true
   }, false);
+}
+
+export const installMod = async (config: IRyujinxConfig, titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
+  const kind = modFileName.toLowerCase().includes('.pchtxt') ? 'pchtxt' : 'archive';
+  let modPath: string;
+
+  if (kind === 'pchtxt') {
+    modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName, 'exefs');
+  } else {
+    alert('Not implemented yet');
+    return false;
+  }
+
+  const exists = await fs.promises.access(modPath).then(() => true).catch(() => false);
+
+  if (!exists) {
+    await fs.promises.mkdir(modPath, { recursive: true });
+  }
+
+  const modArrayBuffer = await downloadMod(titleID, pickedVersion, modName, modFileName);
+  await fs.promises.writeFile(path.resolve(modPath, modName), arrayBufferToBuffer(modArrayBuffer), 'utf-8');
+  await Swal.fire({
+    icon: 'success',
+    html: `Successfully installed "${modName}" mod at <code>${modPath}</code>. You can manage your mods in ryujinx by opening it ⇾ Right click the game ⇾ Open mods directory.`
+  });
 }
