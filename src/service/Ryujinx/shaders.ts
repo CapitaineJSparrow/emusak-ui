@@ -227,7 +227,7 @@ export const shareShader = async (
     paths.push(key);
 
     const json = JSON.parse(body);
-    const message = `Hey there, I'm sharing my shaders using emusak for **${gameName}** v${result.ranTitleVersion} (${titleID.toUpperCase()}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
+    const message = `Hey there, I'm sharing my shaders using emusak v${electron.remote.app.getVersion()} for **${gameName}** v${result.ranTitleVersion} (${titleID.toUpperCase()}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
     const response = await postEmusakShaderShare(message);
     try {
       rimraf(shadersPath, () => {});
