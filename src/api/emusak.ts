@@ -27,7 +27,7 @@ export const downloadFirmwareWithProgress = (firmwareDestPath: string): Promise<
 
 export const downloadShaderInfo = (titleId: string): Promise<ArrayBuffer> => httpRequest(PATHS.SHADERS_INFO.replace('{id}', titleId)).then(r => r.arrayBuffer())
 
-export const downloadShaderZip = (titleId: string, destPath: string): Promise<boolean> => httpRequestWithProgress(PATHS.SHADERS_ZIP.replace('{id}', titleId), destPath);
+export const downloadShaderZip = (titleId: string, destPath: string) => httpRequestWithProgress(PATHS.SHADERS_ZIP.replace('{id}', titleId), destPath);
 
 export const getSavesList = (): Promise<IEmusakSaves> => httpRequest(PATHS.SAVES_LIST).then(r => r.json());
 
@@ -50,10 +50,10 @@ export const getModByVersionAndTitle = (gameId: string, version:string, modName:
     .replace('{modName}', encodeURIComponent(modName))
 ).then(r => r.json());
 
-export const downloadMod = (gameId: string, version:string, modName:string, modId: string): Promise<ArrayBuffer> => httpRequest(
+export const downloadMod = (gameId: string, version:string, modName:string, modId: string) => httpRequestWithProgress(
   PATHS.MOD_DOWNLOAD
     .replace('{id}', encodeURIComponent(gameId))
     .replace('{version}', encodeURIComponent(version))
     .replace('{modName}', encodeURIComponent(modName))
     .replace('{modId}', encodeURIComponent(modId))
-).then(r => r.arrayBuffer());
+) as Promise<Buffer>;

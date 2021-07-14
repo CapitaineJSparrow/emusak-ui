@@ -26,7 +26,7 @@ const sendDownloadFinishedEvent = () => progressEvent.dispatchEvent(new CustomEv
  * Get a HTTP reader to track download progress
  * https://javascript.info/fetch-progress
  */
-export const httpRequestWithProgress = async (url: string, destPath: string) => {
+export const httpRequestWithProgress = async (url: string, destPath?: string) => {
   const controller = new AbortController();
   const signal = controller.signal;
 
@@ -97,8 +97,10 @@ export const httpRequestWithProgress = async (url: string, destPath: string) => 
     position += chunk.length;
   }
 
-  await fs.promises.writeFile(destPath, completeChunks).catch(() => null);
-  sendDownloadFinishedEvent();
-  return true;
-}
+  if (destPath) {
+    await fs.promises.writeFile(destPath, completeChunks).catch(() => null);
+  }
 
+  sendDownloadFinishedEvent();
+  return Buffer.from(completeChunks);
+}

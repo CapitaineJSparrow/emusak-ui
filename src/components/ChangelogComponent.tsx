@@ -50,6 +50,7 @@ const ChangelogComponent = () => {
           <li>The decompression of ZIP-files is not bound to the renderer process anymore! That means that counting local shaders won't freeze the UI anymore</li>
           <li>Instructions to share mods or saves were added</li>
           <li>Bump firmware & title keys for latest 12.1.0 version</li>
+          <li>Add a progress bar when downloading mods, some mods are really heavy (pokémon re-textured for example is 800Mo)</li>
           <li>EmuSAK now has a status page when it's down! You can check the status here: https://emusak.betteruptime.com/</li>
           <li>During last days we actively monitored up-time and now we have 100% up-time in last 4 days</li>
         </ul>
