@@ -182,7 +182,7 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
     await fs.promises.mkdir(modPath, { recursive: true });
   }
 
-  const modBuffer = arrayBufferToBuffer(await downloadMod(titleID, pickedVersion, modName, modFileName));
+  const modBuffer = await downloadMod(titleID, pickedVersion, modName, modFileName);
 
   if (kind === 'pchtxt') {
     await fs.promises.writeFile(path.resolve(modPath, modName), modBuffer, 'utf-8');
