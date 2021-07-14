@@ -1,0 +1,18 @@
+import path from "path";
+import electron from "electron";
+import fs from "fs";
+import { arrayBufferToBuffer } from "../utils";
+import { downloadSaveAb } from "../../api/emusak";
+import Swal from "sweetalert2";
+
+export const downloadSave = async (id: string, saveIndex: number, filename: string) => {
+  const buffer = await downloadSaveAb(id, saveIndex);
+  const documentsPath = path.resolve((electron.app || electron.remote.app).getPath('documents'), filename);
+  await fs.writeFileSync(documentsPath, arrayBufferToBuffer(buffer));
+  await Swal.fire({
+    icon: 'success',
+    title: 'Job done !',
+    html: `Emusak downloaded save to your <i>Documents</i> folder and will open windows explorer. If file or explorer does not show up, try to add an exception for emusak to your antivirus`
+  })
+  electron.shell.showItemInFolder(documentsPath);
+}

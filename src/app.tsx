@@ -1,26 +1,16 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
-import AppRouter from "./ui/router";
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import discord_logo from "./assets/discord_logo.png"
-import ryu_logo from "./assets/ryu_logo.png"
-import yuzu_logo from "./assets/yuzu.png"
-import {
-  Button,
-  createMuiTheme,
-  CssBaseline,
-  makeStyles,
-  ThemeProvider
-} from "@material-ui/core";
+import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
+import UpdateFeedbackComponent from "./components/UpdateFeedbackComponent";
 import * as electron from "electron";
-import "@sweetalert2/themes/dark/dark.min.css"
-import Changelog from "./ui/changelog";
-import {Alert} from "@material-ui/lab";
-import {useState} from "react";
-import Swal from "sweetalert2";
+import AppBarComponent from "./components/AppBarComponent";
+import RyujinxContainer from "./containers/RyujinxContainer";
+import { getFirmwareVersion, getLatestVersionNumber, getThresholdValue } from "./api/github";
+import DownloadProgressComponent from "./components/ui/DownloadProgressComponent";
+import { getSavesList, listMods } from "./api/emusak";
+import { IDownloadState, IEmusakMod, IEmusakSaves } from "./types";
+import FilePickerComponent from "./components/ui/FilePickerComponent";
 
 const theme = createMuiTheme({
   palette: {
@@ -28,96 +18,47 @@ const theme = createMuiTheme({
   },
 });
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-}));
-
 const App = () => {
-  const classes = useStyles();
-  const version = electron.remote.app.getVersion();
-  const [latestRelease, setLatestRelease]: [string|null, Function] = useState(null);
-  const [downloadingUpdate, setDownloadingUpdate]: [boolean, Function] = useState(false);
-  document.querySelector("title").innerText = `Emusak v${version}`
+  const [downloadState, setDownloadState] = React.useState<IDownloadState>(false);
+  const [threshold, setThreshold] = React.useState(1E6);
+  const [latestVersion, setLatestVersion] = React.useState<string>(null);
+  const [firmwareVersion, setFirmwareVersion] = React.useState<string>(null);
+  const [emusakSaves, setEmusakSaves] = React.useState<IEmusakSaves>({});
+  const [emusakMods, setEmusakMods] = React.useState<IEmusakMod[]>([]);
 
-  React.useEffect(() => {
-    fetch('https://api.github.com/repos/stromcon/emusak-ui/releases/latest')
-      .then(r => r.json())
-      .then((release: any) => {
-        setLatestRelease(release.tag_name.replace('v', ''));
-      })
+  const currentVersion = electron.remote.app.getVersion();
+  document.querySelector('title').innerText = `Emusak v${currentVersion}`
 
-    window.location.href = localStorage.getItem('default-tab') || '#';
-  }, [])
+  electron.ipcRenderer.on('update-available', () => setDownloadState('DOWNLOADING'));
+  electron.ipcRenderer.on('update-downloaded', () => setDownloadState('DOWNLOADED'));
+  const onRestartToApplyUpdate = () => electron.ipcRenderer.send('reboot-after-download');
 
-  electron.ipcRenderer.on('update-available', () => setDownloadingUpdate(true));
-  electron.ipcRenderer.on('update-downloaded', async () => {
-    const { value } = await Swal.fire({
-      title: 'Update complete !',
-      text: 'Do you want to reboot to apply emusak update ?',
-      showCancelButton: true,
-      confirmButtonText: `Restart`,
-      cancelButtonText: 'Later'
-    });
-
-    if (value) {
-      electron.ipcRenderer.send('reboot-after-download');
-    }
-  });
-
-  const onEmuTabChange = (emu: 'yuzu' | 'ryu') => {
-    if (emu === 'yuzu') {
-      localStorage.setItem('default-tab', '#yuzu');
-      window.location.href = '#yuzu';
-    } else {
-      localStorage.setItem('default-tab', '#');
-      window.location.href = '#';
-    }
-  }
+  useEffect(() => {
+    getThresholdValue().then(t => setThreshold(t));
+    getLatestVersionNumber().then(v => setLatestVersion(v));
+    getFirmwareVersion().then(v => setFirmwareVersion(v));
+    getSavesList().then(setEmusakSaves);
+    listMods().then(setEmusakMods);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" style={{ flex: '0 0 80px' }}>
-              EmuSAK
-            </Typography>
-            <div style={{ flex: 1 }}>
-              <p style={{ textAlign: 'center' }}>
-                <Button onClick={() => onEmuTabChange('ryu')} style={{ width: 130 }} variant="outlined"><img height={30} src={ryu_logo} alt=""/>&nbsp; Ryujinx</Button>
-              </p>
-            </div>
-            <div style={{ flex: '0 0 50px' }}>
-              <IconButton onClick={() => electron.shell.openExternal("https://discord.gg/nKstg6x")} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                <img height={30} src={discord_logo} alt=""/>
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-
-        {
-          (version !== latestRelease && latestRelease && process.platform !== "win32") && (
-            <div style={{ padding: 20 }}>
-              <Alert severity="info">You have version v{version}, please consider updating to the latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> or the <a href="#" onClick={() => electron.shell.openExternal("https://aur.archlinux.org/packages/emusak-bin/")}>AUR</a> (v{latestRelease})</Alert>
-            </div>
-          )
-        }
-
-        {
-          (downloadingUpdate) && (
-            <div style={{ padding: 20 }}>
-              <Alert severity="info">A new emusak version is downloading in background ! Please do not close application until it is complete</Alert>
-            </div>
-          )
-        }
-
-        <AppRouter />
-        <Changelog />
+        <AppBarComponent />
+        <UpdateFeedbackComponent
+          latestVersion={latestVersion}
+          currentVersion={currentVersion}
+          downloadState={downloadState}
+          onRestartToApplyUpdate={onRestartToApplyUpdate}
+        />
+        <RyujinxContainer
+          threshold={threshold}
+          firmwareVersion={firmwareVersion}
+          emusakSaves={emusakSaves}
+          emusakMods={emusakMods}
+        />
+        <DownloadProgressComponent />
+        <FilePickerComponent />
       </CssBaseline>
     </ThemeProvider>
   )

@@ -8,10 +8,10 @@ import path from "path";
 import child_process from "child_process";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
 (() => {
-  let emusakAppDataDir = path.resolve(app.getPath('appData'), 'emusak');
-
   const handleStartupEvent = function() {
     if (process.platform !== 'win32') {
       return false;
@@ -23,7 +23,7 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
     const exeName = path.basename(process.execPath);
 
     const spawn = function(command: any, args: any) {
-      let spawnedProcess, error;
+      let spawnedProcess;
 
       try {
         spawnedProcess = child_process.spawn(command, args, {detached: true});
@@ -39,6 +39,8 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
     const squirrelCommand = process.argv[1];
     switch (squirrelCommand) {
       case '--squirrel-install':
+        spawnUpdate(['--createShortcut', exeName]);
+        return false;
       case '--squirrel-updated':
         spawnUpdate(['--createShortcut', exeName]);
         setTimeout(app.quit, 1000);
@@ -62,9 +64,6 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
     return false;
   }
 
-  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-
-  app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
   const feed = `https://update.electronjs.org/stromcon/emusak-ui/${process.platform}-${process.arch}/${app.getVersion()}`
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

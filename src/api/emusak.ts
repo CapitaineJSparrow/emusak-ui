@@ -1,68 +1,59 @@
-import {fetchWithRetries} from "../service/http";
+import { httpRequest, httpRequestWithProgress } from "../service/HTTPService";
+import { IDirent, IEmusakSaves, IEmusakShaders } from "../types";
 
-export interface IEmusakShadersCount {
-  [key: string]: number;
+const PATHS = {
+  FIRMWARE: `${process.env.EMUSAK_CDN}/firmware/firmware.zip`,
+  KEYS: `${process.env.EMUSAK_CDN}/firmware/prod.keys`,
+
+  SHADERS_COUNT: `${process.env.EMUSAK_CDN}/bo/api/shaders/ryujinx/count`,
+  SHADERS_INFO: `${process.env.EMUSAK_CDN}/ryu/{id}.info`,
+  SHADERS_ZIP: `${process.env.EMUSAK_CDN}/ryu/{id}.zip`,
+
+  SAVES_LIST: `${process.env.EMUSAK_CDN}/bo/api/saves`,
+  MODS_LIST: `${process.env.EMUSAK_CDN}/mods/`,
+  MODS_VERSION_LIST: `${process.env.EMUSAK_CDN}/mods/{id}/`,
+  MODS_LIST_BY_VERSION: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/`,
+  MODS_LIST_BY_MOD: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/{modName}/`,
+
+  MOD_DOWNLOAD: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/{modName}/{modId}`,
+  SAVES_DOWNLOAD: `${process.env.EMUSAK_CDN}/bo/api/saves?id={id}&index={index}`,
 }
 
-export interface IEmusakSaves {
-  [key: string]: string;
-}
+export const getKeysContent = (): Promise<string> => httpRequest(PATHS.KEYS).then(r => r.text());
 
-interface IEmusakMod {
-  name: string;
-  type: string;
-  mtime: string;
-}
+export const getRyujinxShadersCount = (): Promise<IEmusakShaders> => httpRequest(PATHS.SHADERS_COUNT).then(r => r.json());
 
-export type IEmusakMods = IEmusakMod[];
+export const downloadFirmwareWithProgress = (firmwareDestPath: string): Promise<boolean> => httpRequestWithProgress(PATHS.FIRMWARE, firmwareDestPath).catch(() => null)
 
-export const enum PATHS {
-  COUNT_SHADERS = '/api/shaders/ryujinx/count',
-  LIST_SAVES = '/api/saves',
-  LIST_MODS = '/mods/',
-  FIRMWARE_VERSION = '/api/firmware/version',
-  PROD_KEYS = '/api/keys',
-  FIRMWARE_DOWNLOAD = '/firmware/firmware.zip',
-  INFO_DOWNLOAD = '/api/shaders/ryujinx?type=info',
-  ZIP_DOWNLOAD = '/api/shaders/ryujinx?type=zip',
-}
+export const downloadShaderInfo = (titleId: string): Promise<ArrayBuffer> => httpRequest(PATHS.SHADERS_INFO.replace('{id}', titleId)).then(r => r.arrayBuffer())
 
-export const getEmusakShadersCount = async (): Promise<IEmusakShadersCount> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.COUNT_SHADERS}`).then((r: Response) => r.json())
+export const downloadShaderZip = (titleId: string, destPath: string): Promise<boolean> => httpRequestWithProgress(PATHS.SHADERS_ZIP.replace('{id}', titleId), destPath);
 
-export const getEmusakSaves = async (): Promise<IEmusakSaves> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.LIST_SAVES}`).then((r: Response) => r.json())
+export const getSavesList = (): Promise<IEmusakSaves> => httpRequest(PATHS.SAVES_LIST).then(r => r.json());
 
-export const getEmusakMods = async (): Promise<IEmusakMods> => fetchWithRetries(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}`).then((r: Response) => r.json())
+export const downloadSaveAb = (id: string, index: number): Promise<ArrayBuffer> => httpRequest(PATHS.SAVES_DOWNLOAD.replace('{id}', id).replace('{index}', `${index}`)).then(r => r.arrayBuffer())
 
-export const getEmusakModsVersionsForGame = async (titleId: string): Promise<IEmusakMods> => fetchWithRetries(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}/${titleId}/`).then((r: Response) => r.json())
+export const listMods = () => httpRequest(PATHS.MODS_LIST).then(r => r.json());
 
-export const getEmusakModsForGameWithVersion = async (titleId: string, version: string): Promise<IEmusakMods> => {
-  return fetchWithRetries(encodeURI(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}/${titleId}/${version}/`)).then((r: Response) => r.json());
-}
+export const listModsVersionForTitleId = (id: string): Promise<IDirent[]> => httpRequest(PATHS.MODS_VERSION_LIST.replace('{id}', encodeURIComponent(id))).then(r => r.json());
 
-export const getEmusakMod = async (titleId: string, version: string, mod: string): Promise<any> => {
-  return fetchWithRetries(encodeURI(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}/${titleId}/${version}/${mod}/`)).then((r: Response) => r.json());
-}
+export const listModsByVersion = (id: string, version: string): Promise<IDirent[]> => httpRequest(
+  PATHS.MODS_LIST_BY_VERSION
+    .replace('{id}', encodeURIComponent(id))
+    .replace('{version}', encodeURIComponent(version))
+).then(r => r.json());
 
-export const downloadEmusakMod = async (titleId: string, version: string, mod: string, file:string): Promise<any> => {
-  return fetchWithRetries(encodeURI(`${process.env.EMUSAK_CDN}${PATHS.LIST_MODS}/${titleId}/${version}/${mod}/${file}`)).then((r: any) => {
-    if (file.includes('.zip')) {
-      return r.arrayBuffer();
-    }
+export const getModByVersionAndTitle = (gameId: string, version:string, modName:string): Promise<IDirent[]> => httpRequest(
+  PATHS.MODS_LIST_BY_MOD
+    .replace('{id}', encodeURIComponent(gameId))
+    .replace('{version}', encodeURIComponent(version))
+    .replace('{modName}', encodeURIComponent(modName))
+).then(r => r.json());
 
-    return r.text();
-  });
-}
-
-export const getEmusakFirmwareVersion = async (): Promise<string> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.FIRMWARE_VERSION}`).then((r: Response) => r.text()).then(v => v);
-
-export const getEmusakProdKeys = async (): Promise<string> => fetchWithRetries(`${process.env.EMUSAK_URL}${PATHS.PROD_KEYS}`).then((r: Response) => r.text()).then(v => v);
-
-export const postEmusakShaderShare = async (message: string): Promise<any> => fetch(`${process.env.EMUSAK_URL}/api/submit`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'text/plain'
-  },
-  body: JSON.stringify({
-    message
-  })
-})
+export const downloadMod = (gameId: string, version:string, modName:string, modId: string): Promise<ArrayBuffer> => httpRequest(
+  PATHS.MOD_DOWNLOAD
+    .replace('{id}', encodeURIComponent(gameId))
+    .replace('{version}', encodeURIComponent(version))
+    .replace('{modName}', encodeURIComponent(modName))
+    .replace('{modId}', encodeURIComponent(modId))
+).then(r => r.arrayBuffer());
