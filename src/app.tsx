@@ -11,6 +11,7 @@ import DownloadProgressComponent from "./components/ui/DownloadProgressComponent
 import { getSavesList, listMods } from "./api/emusak";
 import { IDownloadState, IEmusakMod, IEmusakSaves } from "./types";
 import FilePickerComponent from "./components/ui/FilePickerComponent";
+import ChangelogComponent from "./components/ChangelogComponent";
 
 const theme = createMuiTheme({
   palette: {
@@ -59,6 +60,7 @@ const App = () => {
         />
         <DownloadProgressComponent />
         <FilePickerComponent />
+        <ChangelogComponent />
       </CssBaseline>
     </ThemeProvider>
   )

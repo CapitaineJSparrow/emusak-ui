@@ -173,7 +173,7 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
   if (kind === 'pchtxt') {
     modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName, 'exefs');
   } else {
-    modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName);
+    modPath = getRyujinxPath(config, 'mods', 'contents', titleID);
   }
 
   const exists = await fs.promises.access(modPath).then(() => true).catch(() => false);
@@ -188,7 +188,7 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
     await fs.promises.writeFile(path.resolve(modPath, modName), modBuffer, 'utf-8');
   } else {
     const archive = new Zip(modBuffer);
-    archive.extractAllTo(path.resolve(modPath, '..'), true);
+    archive.extractAllTo(modPath, true);
   }
 
   const { value } = await Swal.fire({
