@@ -64,7 +64,7 @@ const ShadersListComponent = ({ games, emusakShaders, onShadersDownload, onShare
                           variant="contained"
                           color="primary"
                           onClick={() => onShareShaders(g.id, localShaderCount, emusakShaderCount)}
-                          // disabled={(emusakShaderCount + threshold) >= localShaderCount}
+                          disabled={(emusakShaderCount + threshold) >= localShaderCount}
                         >
                           Share shaders
                         </Button>
