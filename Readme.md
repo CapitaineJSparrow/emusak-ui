@@ -14,7 +14,7 @@ Emusak-ui is a graphical interface for [Emusak](https://github.com/sinscove/EmuS
 
 ### Installation
 
-Just go to the [releases](https://github.com/stromcon/emusak-ui/releases) page and download latest build for your OS.
+Just go to the [releases](https://github.com/stromcon/emusak-ui/releases) page and download the latest build for your OS.
 **Only on Windows** there is an auto update feature.
 
 #### Windows
