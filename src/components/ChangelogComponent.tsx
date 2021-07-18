@@ -35,24 +35,10 @@ const ChangelogComponent = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li>Complete refactoring of EmuSAK code base</li>
-          <li>Major refactoring of components to be re-used between multiple switch emulators</li>
-          <li>Checks if the download is complete before writing it to disk (to avoid writing files when download has been canceled for example when user lost his connection in the middle of download)</li>
-          <li>Add download speed indicator to download popup</li>
-          <li>You can now cancel any download</li>
-          <li>You can now clear PTC cache once you installed a mod</li>
-          <li>The CPU usage was reduced (mostly when downloading files)</li>
-          <li>The memory usage was slightly decreased by removing javascript polyfills at build</li>
-          <li>A button to make Ryujinx portable in one click was added</li>
-          <li>A reload button to refresh local & remote shaders count was added</li>
-          <li>The Download speed of the Servers was increased</li>
-          <li>The tables headers are now sticky</li>
-          <li>The decompression of ZIP-files is not bound to the renderer process anymore! That means that counting local shaders won't freeze the UI anymore</li>
-          <li>Instructions to share mods or saves were added</li>
-          <li>Bump firmware & title keys for latest 12.1.0 version</li>
-          <li>Add a progress bar when downloading mods, because some are really heavy (Pokémon re-textured for example is 800Mo)</li>
-          <li>EmuSAK now has a status page when it's down! You can check the status here: https://emusak.betteruptime.com/</li>
-          <li>During last days we actively monitored up-time and now we have 100% up-time in last 4 days</li>
+          <li>If there is only AMD graphics card detected, warn user shaders can be unstable on windows.</li>
+          <li>Emusak window is now resizable but minimum width / height is <code>960x1280</code>.</li>
+          <li>Fix an UI bug where table headers may be on two lines instead one.</li>
+          <li><b><u>Never</u> ask for emusak support in official Ryujinx channels (discord, reddit, ...)</b></li>
         </ul>
         <br/>
         <p>

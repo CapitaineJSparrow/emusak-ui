@@ -47,3 +47,7 @@ export interface IEmusakFilePickerDirent {
   label: string;
   titleId?: string;
 }
+
+export interface IQueryBase {
+  hasNvidiaGPU(): Promise<boolean>;
+}
