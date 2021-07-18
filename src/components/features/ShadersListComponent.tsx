@@ -30,8 +30,8 @@ const ShadersListComponent = ({ games, emusakShaders, onShadersDownload, onShare
         <TableHead>
           <TableRow>
             <TableCell>Games ({games.length})</TableCell>
-            <TableCell>EmuSAK shaders count</TableCell>
-            <TableCell>Local shaders count</TableCell>
+            <TableCell style={{ minWidth: 190 }}>EmuSAK shaders count</TableCell>
+            <TableCell style={{ minWidth: 190 }}>Local shaders count</TableCell>
             <TableCell style={{ width: 370 }}>Actions</TableCell>
           </TableRow>
         </TableHead>

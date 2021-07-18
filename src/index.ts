@@ -79,9 +79,9 @@ app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
     // Create the browser window.
     mainWindow = new BrowserWindow({
-      height: 960,
-      width: 1280,
-      resizable: false,
+      minHeight: 960,
+      minWidth: 1280,
+      resizable: true,
       autoHideMenuBar: true,
       show: false,
       webPreferences: {
@@ -92,11 +92,12 @@ app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
       }
     });
 
-
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     mainWindow.webContents.on('did-finish-load', function () {
+      mainWindow.setSize(960, 1280);
+      mainWindow.center();
       mainWindow.show()  // show the window now since everything is ready
 
       if (!isDev && process.platform === "win32") {

@@ -8,6 +8,7 @@ import SavesListComponent from "../components/features/SavesListComponent";
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import Swal from "sweetalert2";
 import ModsListComponent from "../components/features/ModsListComponent";
+import OSQueryFactory from "../queries/OSQueryFactory";
 
 interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
@@ -47,6 +48,7 @@ const FeaturesContainer = ({
   const [tabIndex, setTabIndex] = React.useState(0);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
   const [games, setGames] = React.useState([]);
+  const amdWarningKey = 'amd-warning';
 
   const filterGames = (games: IEmusakGame[]) => {
     if (!filterTerm) {
@@ -71,6 +73,23 @@ const FeaturesContainer = ({
       .sort((a, b) => a.name.localeCompare(b.name))
     )
   }, [config]);
+
+  // Warn user using without nvidia graphics cards that shaders are unstable on this vendor
+  useEffect(() => {
+    if(!localStorage.getItem(amdWarningKey)) {
+      OSQueryFactory
+        .hasNvidiaGPU()
+        .then(hasNvidiaGPU => {
+          if (!hasNvidiaGPU && process.platform === "win32") {
+            localStorage.setItem(amdWarningKey, 'true'); // Display warning only 1 time
+            Swal.fire({
+              icon: 'info',
+              text: 'Emusak Shaders may not work on AMD graphics cards due to strange behavior with OpenGL x AMD on windows and can cause crash when you compile shaders on first run.'
+            })
+          }
+        })
+    }
+  }, []);
 
   const renderTab = () => {
     switch (tabIndex) {
