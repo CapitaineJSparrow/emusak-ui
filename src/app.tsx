@@ -26,12 +26,10 @@ const App = () => {
   const [firmwareVersion, setFirmwareVersion] = React.useState<string>(null);
   const [emusakSaves, setEmusakSaves] = React.useState<IEmusakSaves>({});
   const [emusakMods, setEmusakMods] = React.useState<IEmusakMod[]>([]);
+  const [tab, setTab] = React.useState<'yuzu' | 'ryu'>('ryu');
 
   const currentVersion = electron.remote.app.getVersion();
-  document.querySelector('title').innerText = `Emusak v${currentVersion}`
-
-  electron.ipcRenderer.on('update-available', () => setDownloadState('DOWNLOADING'));
-  electron.ipcRenderer.on('update-downloaded', () => setDownloadState('DOWNLOADED'));
+  document.querySelector('title').innerText = `Emusak v${currentVersion}`;
   const onRestartToApplyUpdate = () => electron.ipcRenderer.send('reboot-after-download');
 
   useEffect(() => {
@@ -40,24 +38,35 @@ const App = () => {
     getFirmwareVersion().then(v => setFirmwareVersion(v));
     getSavesList().then(setEmusakSaves);
     listMods().then(setEmusakMods);
+
+    electron.ipcRenderer.on('update-available', () => setDownloadState('DOWNLOADING'));
+    electron.ipcRenderer.on('update-downloaded', () => setDownloadState('DOWNLOADED'));
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
-        <AppBarComponent />
+        <AppBarComponent tab={tab} onTabChange={setTab} />
         <UpdateFeedbackComponent
           latestVersion={latestVersion}
           currentVersion={currentVersion}
           downloadState={downloadState}
           onRestartToApplyUpdate={onRestartToApplyUpdate}
         />
-        <RyujinxContainer
-          threshold={threshold}
-          firmwareVersion={firmwareVersion}
-          emusakSaves={emusakSaves}
-          emusakMods={emusakMods}
-        />
+        {
+          tab === 'ryu'
+            ? (
+              <RyujinxContainer
+                threshold={threshold}
+                firmwareVersion={firmwareVersion}
+                emusakSaves={emusakSaves}
+                emusakMods={emusakMods}
+              />
+            )
+            : (
+              <p>Yazoo</p>
+            )
+        }
         <DownloadProgressComponent />
         <FilePickerComponent />
         <ChangelogComponent />
