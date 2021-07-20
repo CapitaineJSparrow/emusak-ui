@@ -26,11 +26,14 @@ const App = () => {
   const [firmwareVersion, setFirmwareVersion] = React.useState<string>(null);
   const [emusakSaves, setEmusakSaves] = React.useState<IEmusakSaves>({});
   const [emusakMods, setEmusakMods] = React.useState<IEmusakMod[]>([]);
-  const [tab, setTab] = React.useState<'yuzu' | 'ryu'>('ryu');
+  const [tab, setTab] = React.useState<'yuzu' | 'ryu'>(localStorage.getItem('tab') as any || 'ryu');
 
   const currentVersion = electron.remote.app.getVersion();
   document.querySelector('title').innerText = `Emusak v${currentVersion}`;
   const onRestartToApplyUpdate = () => electron.ipcRenderer.send('reboot-after-download');
+
+  const availableUpdateListener = () => setDownloadState('DOWNLOADING');
+  const downloadedUpdateListener = () => setDownloadState('DOWNLOADED');
 
   useEffect(() => {
     getThresholdValue().then(t => setThreshold(t));
@@ -39,14 +42,25 @@ const App = () => {
     getSavesList().then(setEmusakSaves);
     listMods().then(setEmusakMods);
 
-    electron.ipcRenderer.on('update-available', () => setDownloadState('DOWNLOADING'));
-    electron.ipcRenderer.on('update-downloaded', () => setDownloadState('DOWNLOADED'));
+    electron.ipcRenderer.on('update-available', availableUpdateListener);
+    electron.ipcRenderer.on('update-downloaded', downloadedUpdateListener);
+
+    return () => {
+      console.log('destroyed');
+      electron.ipcRenderer.removeListener('update-available', availableUpdateListener);
+      electron.ipcRenderer.removeListener('update-downloaded', availableUpdateListener);
+    }
   }, []);
+
+  const onTabChange = (tab: 'yuzu' | 'ryu') => {
+    localStorage.setItem('tab', tab);
+    setTab(tab);
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
-        <AppBarComponent tab={tab} onTabChange={setTab} />
+        <AppBarComponent tab={tab} onTabChange={onTabChange} />
         <UpdateFeedbackComponent
           latestVersion={latestVersion}
           currentVersion={currentVersion}
