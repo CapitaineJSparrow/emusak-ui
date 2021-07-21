@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
-import { IEmusakEmulatorConfig, IEmusakGame, IEmusakMod, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
+import { IEmusakEmulatorConfig, IEmusakMod, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { titleIdToName } from "../service/EshopDBService";
 import SavesListComponent from "../components/features/SavesListComponent";
 import AutorenewIcon from '@material-ui/icons/Autorenew';
@@ -50,16 +50,6 @@ const FeaturesContainer = ({
   const [games, setGames] = React.useState([]);
   const amdWarningKey = 'amd-warning';
 
-  const filterGames = (games: IEmusakGame[]) => {
-    if (!filterTerm) {
-      return games;
-    }
-
-    return games.filter(g => {
-      return g.name.toLowerCase().includes(filterTerm.toLowerCase());
-    });
-  };
-
   /**
    * Since we receive only title IDs from emulator config, find real title name from different databases and sort list alphabetically
    */
@@ -70,6 +60,13 @@ const FeaturesContainer = ({
         ...g,
         name: titleIdToName(g.id)
       }))
+      .filter(g => {
+        if (!filterTerm) {
+          return g;
+        }
+
+        return g.name.toLowerCase().includes(filterTerm.toLowerCase())
+      })
       .sort((a, b) => a.name.localeCompare(b.name))
     )
   }, [config]);
@@ -96,20 +93,20 @@ const FeaturesContainer = ({
       case 0:
         return <ShadersListComponent
           emusakShaders={emusakShaders}
-          games={filterGames(games)}
+          games={games}
           onShadersDownload={(id) => onShadersDownload(id)}
           onShareShaders={onShareShaders}
           threshold={threshold}
         />;
       case 1:
         return <SavesListComponent
-          games={filterGames(games)}
+          games={games}
           onSaveDownload={(id: string, saveIndex: number, fileName: string) => onSaveDownload(id, saveIndex, fileName)}
           emusakSaves={emusakSaves}
         />;
       case 2:
         return <ModsListComponent
-          games={filterGames(games)}
+          games={games}
           emusakMods={emusakMods}
           onModsDownload={onModsDownload}
         />;
