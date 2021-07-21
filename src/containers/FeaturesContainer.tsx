@@ -69,7 +69,7 @@ const FeaturesContainer = ({
       })
       .sort((a, b) => a.name.localeCompare(b.name))
     )
-  }, [config]);
+  }, [config, filterTerm]);
 
   // Warn user using without nvidia graphics cards that shaders are unstable on this vendor
   useEffect(() => {
