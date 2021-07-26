@@ -35,10 +35,14 @@ const ChangelogComponent = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
+          <li><b><u>Never</u> ask for emusak support in official Ryujinx channels (discord, reddit, ...)</b></li>
           <li>If there is only AMD graphics card detected, warn user shaders can be unstable on windows.</li>
           <li>Emusak window is now resizable but minimum width / height is <code>960x1280</code>.</li>
           <li>Fix an UI bug where table headers may be on two lines instead one.</li>
-          <li><b><u>Never</u> ask for emusak support in official Ryujinx channels (discord, reddit, ...)</b></li>
+          <li>Fix some mods not installing (pchtxt mods)</li>
+          <li>Fix emusak stuck in infinite loop when you moved or removed your ryujinx configuration before remove it from emusak</li>
+          <li>Fix window height on initial startup too high</li>
+          <li>Uploaded tons of new mods</li>
         </ul>
         <br/>
         <p>
