@@ -96,7 +96,7 @@ app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     mainWindow.webContents.on('did-finish-load', function () {
-      mainWindow.setSize(960, 1280);
+      mainWindow.setSize(1280, 960);
       mainWindow.center();
       mainWindow.show()  // show the window now since everything is ready
 

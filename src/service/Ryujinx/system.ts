@@ -185,7 +185,7 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
   const modBuffer = await downloadMod(titleID, pickedVersion, modName, modFileName);
 
   if (kind === 'pchtxt') {
-    await fs.promises.writeFile(path.resolve(modPath, modName), modBuffer, 'utf-8');
+    await fs.promises.writeFile(path.resolve(modPath, `${modName}.pchtxt`), modBuffer, 'utf-8');
   } else {
     const archive = new Zip(modBuffer);
     archive.extractAllTo(modPath, true);
