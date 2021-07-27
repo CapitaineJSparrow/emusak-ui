@@ -12,6 +12,7 @@ import { getSavesList, listMods } from "./api/emusak";
 import { IDownloadState, IEmusakMod, IEmusakSaves } from "./types";
 import FilePickerComponent from "./components/ui/FilePickerComponent";
 import ChangelogComponent from "./components/ChangelogComponent";
+import YuzuContainer from "./containers/YuzuContainer";
 
 const theme = createMuiTheme({
   palette: {
@@ -78,7 +79,12 @@ const App = () => {
               />
             )
             : (
-              <p>Yazoo</p>
+                <YuzuContainer
+                    threshold={threshold}
+                    firmwareVersion={firmwareVersion}
+                    emusakSaves={emusakSaves}
+                    emusakMods={emusakMods}
+                />
             )
         }
         <DownloadProgressComponent />
