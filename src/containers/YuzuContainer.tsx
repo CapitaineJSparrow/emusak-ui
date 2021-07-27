@@ -18,16 +18,26 @@ interface IRyujinxContainerProps {
 const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IRyujinxContainerProps) => {
   const [games, setGames] = React.useState([]);
 
+  const triggerError = () => {
+    Swal.fire({
+      icon: 'error',
+      title: "error",
+      html: 'Emusak cannot found any games for yuzu, please run yuzu one time first. <b>Please note emusak does not support portable mode for yuzu yet</b>'
+    })
+  }
+
   const loadPageData = async () => {
     const g = await getYuzuGames();
+
+    if (!g) {
+      triggerError();
+      return false;
+    }
+
     setGames(g);
 
     if (g.length === 0) {
-      Swal.fire({
-        icon: 'error',
-        title: "error",
-        html: 'Emusak cannot found any games for yuzu. <b>Please note emusak does not support portable mode for yuzu yet</b>'
-      })
+      triggerError();
     }
   }
 

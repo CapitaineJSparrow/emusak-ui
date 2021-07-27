@@ -43,14 +43,19 @@ export const installFirmware = async () => {
 }
 
 export const getYuzuGames = async () => {
-  const cachePath = getYuzuPath(null, 'cache', 'game_list');
-  const dirents = await readDir(cachePath);
-  const files = dirents.filter(d => d.isFile()).map(d => d.name.replace('.pv.txt', '').toUpperCase());
+  try {
 
-  return files.map(f => ({
-    id: f,
-    shadersCount: 0
-  }))
+    const cachePath = getYuzuPath(null, 'cache', 'game_list');
+    const dirents = await readDir(cachePath);
+    const files = dirents.filter(d => d.isFile()).map(d => d.name.replace('.pv.txt', '').toUpperCase());
+
+    return files.map(f => ({
+      id: f,
+      shadersCount: 0
+    }))
+  } catch(e) {
+    return false;
+  }
 }
 
 export const installMod = async (titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
