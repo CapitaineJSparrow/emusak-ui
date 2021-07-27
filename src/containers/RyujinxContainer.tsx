@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Backdrop, Box, CircularProgress, Divider, makeStyles, Modal } from "@material-ui/core";
-import RyujinxHeaderComponent from "../components/ryu/RyujinxHeaderComponent";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
 import {
@@ -16,6 +15,7 @@ import { installShadersToGame, shareShader } from "../service/Ryujinx/shaders";
 import { downloadSave } from "../service/shared/saves";
 import electron from "electron";
 import { titleIdToName } from "../service/EshopDBService";
+import EmulatorHeaderComponent from "../components/EmulatorHeaderComponent";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -102,7 +102,7 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
 
   return (
     <Box p={3}>
-      <RyujinxHeaderComponent
+      <EmulatorHeaderComponent
         threshold={threshold}
         onRyuFolderAdd={onRyuFolderAdd}
       />
