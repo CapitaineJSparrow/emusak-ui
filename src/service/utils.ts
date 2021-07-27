@@ -42,3 +42,10 @@ export const spawnChild = async (command: string, args: string[]) => {
   }
   return data;
 }
+
+export const asyncExtract = (source: string, dest: string): Promise<void> => new Promise((resolve, reject) => {
+  const archive = new zip(source);
+  archive.extractAllToAsync(dest, true, () => {
+    resolve();
+  });
+})

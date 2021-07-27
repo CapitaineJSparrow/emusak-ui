@@ -42,7 +42,6 @@ app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
         spawnUpdate(['--createShortcut', exeName]);
         return false;
       case '--squirrel-updated':
-        spawnUpdate(['--createShortcut', exeName]);
         setTimeout(app.quit, 1000);
         return true;
       case '--squirrel-uninstall':

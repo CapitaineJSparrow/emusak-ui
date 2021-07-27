@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { AppBar, Box, Button, Chip, Grid, IconButton, Tab, Tabs, TextField } from "@material-ui/core";
 import { DeleteOutline } from "@material-ui/icons";
 import ShadersListComponent from "../components/features/ShadersListComponent";
-import { IEmusakEmulatorConfig, IEmusakGame, IEmusakMod, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
+import { IEmusakEmulatorConfig, IEmusakMod, IEmusakSaves, IEmusakShaders, IRyujinxConfig } from "../types";
 import { titleIdToName } from "../service/EshopDBService";
 import SavesListComponent from "../components/features/SavesListComponent";
 import AutorenewIcon from '@material-ui/icons/Autorenew';
@@ -26,6 +26,7 @@ interface IFeaturesContainerProps {
   onShareShaders: Function;
   emusakMods: IEmusakMod[];
   threshold: number;
+  emulator: 'ryu' | 'yuzu';
 }
 
 const FeaturesContainer = ({
@@ -43,22 +44,13 @@ const FeaturesContainer = ({
   onModsDownload,
   emusakMods,
   onShareShaders,
-  threshold
+  threshold,
+  emulator
 }: IFeaturesContainerProps) => {
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const [tabIndex, setTabIndex] = React.useState(emulator === 'ryu' ? 0 : 2);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
   const [games, setGames] = React.useState([]);
   const amdWarningKey = 'amd-warning';
-
-  const filterGames = (games: IEmusakGame[]) => {
-    if (!filterTerm) {
-      return games;
-    }
-
-    return games.filter(g => {
-      return g.name.toLowerCase().includes(filterTerm.toLowerCase());
-    });
-  };
 
   /**
    * Since we receive only title IDs from emulator config, find real title name from different databases and sort list alphabetically
@@ -70,13 +62,20 @@ const FeaturesContainer = ({
         ...g,
         name: titleIdToName(g.id)
       }))
+      .filter(g => {
+        if (!filterTerm) {
+          return g;
+        }
+
+        return g.name.toLowerCase().includes(filterTerm.toLowerCase())
+      })
       .sort((a, b) => a.name.localeCompare(b.name))
     )
-  }, [config]);
+  }, [config, filterTerm]);
 
   // Warn user using without nvidia graphics cards that shaders are unstable on this vendor
   useEffect(() => {
-    if(!localStorage.getItem(amdWarningKey)) {
+    if(!localStorage.getItem(amdWarningKey) && emulator !== "yuzu") {
       OSQueryFactory
         .hasNvidiaGPU()
         .then(hasNvidiaGPU => {
@@ -96,20 +95,20 @@ const FeaturesContainer = ({
       case 0:
         return <ShadersListComponent
           emusakShaders={emusakShaders}
-          games={filterGames(games)}
+          games={games}
           onShadersDownload={(id) => onShadersDownload(id)}
           onShareShaders={onShareShaders}
           threshold={threshold}
         />;
       case 1:
         return <SavesListComponent
-          games={filterGames(games)}
+          games={games}
           onSaveDownload={(id: string, saveIndex: number, fileName: string) => onSaveDownload(id, saveIndex, fileName)}
           emusakSaves={emusakSaves}
         />;
       case 2:
         return <ModsListComponent
-          games={filterGames(games)}
+          games={games}
           emusakMods={emusakMods}
           onModsDownload={onModsDownload}
         />;
@@ -126,21 +125,40 @@ const FeaturesContainer = ({
   return (
     <>
       <Grid container spacing={2} style={{display: 'flex', alignItems: 'center'}}>
-        <Grid item xs={4}>
-          <Box display="flex" justifyContent="start" alignItems="center">
-            <h3 style={{lineHeight: '24px'}}>
-              <IconButton
-                size="small"
-                color="secondary"
-                component="span"
-                onClick={() => onEmuConfigDelete(config)}
-              >
-                <DeleteOutline/>
-              </IconButton>
-            </h3>
-            <h3><small>{config.path}</small></h3>
-          </Box>
-        </Grid>
+        {
+          (config && config.path)
+            ? (
+              (
+                <Grid item xs={4}>
+                  <Box display="flex" justifyContent="start" alignItems="center">
+                    <h3 style={{lineHeight: '24px'}}>
+                      <IconButton
+                        size="small"
+                        color="secondary"
+                        component="span"
+                        onClick={() => onEmuConfigDelete(config as any)}
+                      >
+                        <DeleteOutline/>
+                      </IconButton>
+                    </h3>
+                    <h3><small>{config.path}</small></h3>
+                  </Box>
+                </Grid>
+              )
+            )
+          : (
+              <Grid item xs={4}>
+                <Box display="flex" justifyContent="start" alignItems="center">
+                  <h3><small>AppData/Roaming/yuzu</small></h3>
+                </Box>
+              </Grid>
+            )
+        }
+        {
+          !config.path && (
+            <Grid item xs={3}>&nbsp;</Grid>
+          )
+        }
         <Grid item xs={3}>
           <Button
             onClick={() => onFirmwareDownload()}
@@ -163,27 +181,32 @@ const FeaturesContainer = ({
             Download keys
           </Button>
         </Grid>
-        <Grid item xs={3} style={{textAlign: 'right'}}>
-          Is Portable
-          <Chip
-            label={config.isPortable ? 'yes' : 'no'}
-            color="primary"
-            style={{ marginLeft: 12 }}
-          />
-          {
-            !config.isPortable && (
-              <Button
-                style={{ marginLeft: 12 }}
-                size="small"
+        {
+          config.path && (
+
+            <Grid item xs={3} style={{textAlign: 'right'}}>
+              Is Portable
+              <Chip
+                label={config.isPortable ? 'yes' : 'no'}
                 color="primary"
-                variant="contained"
-                onClick={() => onPortableButtonClick()}
-              >
-                Make portable
-              </Button>
-            )
-          }
-        </Grid>
+                style={{ marginLeft: 12 }}
+              />
+              {
+                (!config.isPortable) && (
+                  <Button
+                    style={{ marginLeft: 12 }}
+                    size="small"
+                    color="primary"
+                    variant="contained"
+                    onClick={() => onPortableButtonClick()}
+                  >
+                    Make portable
+                  </Button>
+                )
+              }
+            </Grid>
+          )
+        }
       </Grid>
 
       <Box display="flex" alignItems="center">
@@ -214,7 +237,7 @@ const FeaturesContainer = ({
           <AppBar style={{marginTop: 20}} position="static">
             <Box display="flex" alignItems="center" justifyContent="space-between" paddingRight="12px">
               <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)} aria-label="simple tabs example">
-                <Tab label="Shaders"/>
+                <Tab disabled={emulator === "yuzu"} label={`Shaders ${emulator === "yuzu" ? '(not ready yet)': ''}`} />
                 <Tab label="Saves"/>
                 <Tab label="Mods"/>
               </Tabs>

@@ -1,13 +1,14 @@
-import React from "react";
+import * as React from "react";
 import { Button, Grid, IconButton, Tooltip } from "@material-ui/core";
 import HelpIcon from "@material-ui/icons/Help";
 
-interface IRyujinxHeaderProps {
+interface IYuzuHeaderProps {
   threshold: number;
-  onRyuFolderAdd: Function;
+  onFolderAdd?: Function;
+  emulator?: 'yuzu' | 'ryu';
 }
 
-const RyujinxHeaderComponent = ({ threshold, onRyuFolderAdd }: IRyujinxHeaderProps) => (
+const EmulatorHeaderComponent = ({ threshold, onFolderAdd, emulator = 'ryu' }: IYuzuHeaderProps) => (
   <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
     <Grid item xs={10}>
       Shaders threshold <code>{ threshold >= 1E6 ? 'Share shaders temporary disabled': threshold }</code>
@@ -23,17 +24,21 @@ const RyujinxHeaderComponent = ({ threshold, onRyuFolderAdd }: IRyujinxHeaderPro
         </IconButton>
       </Tooltip>
     </Grid>
-    <Grid item xs={2}>
-      <Button
-        color="primary"
-        fullWidth
-        variant="contained"
-        onClick={() => onRyuFolderAdd()}
-      >
-        Add Ryujinx folder
-      </Button>
-    </Grid>
+    {
+      onFolderAdd && (
+        <Grid item xs={2}>
+          <Button
+            color="primary"
+            fullWidth
+            variant="contained"
+            onClick={() => onFolderAdd()}
+          >
+            Add { emulator === 'ryu' ? 'Ryujinx': 'Yuzu' } folder
+          </Button>
+        </Grid>
+      )
+    }
   </Grid>
 );
 
-export default RyujinxHeaderComponent;
+export default EmulatorHeaderComponent;
