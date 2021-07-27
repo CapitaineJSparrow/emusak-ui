@@ -36,14 +36,13 @@ const ChangelogComponent = () => {
         <br />
         <ul style={{ marginLeft: 20 }}>
           <li><b><u>Never</u> ask for emusak support in official Ryujinx channels (discord, reddit, ...)</b></li>
-          <li>Add yuzu support !</li>
-          <li>Add tabs in header to switch emulator and save tab choice for further emusak launches</li>
-          <li>Add the firmware and keys download for yuzu</li>
-          <li>Add saves download for yuzu</li>
-          <li>Add saves mods download for yuzu</li>
-          <li>Resolve some memory leaks due to event listener never unbind</li>
-          <li>Rendering performances improvements by removing filtering & titleID matching from render calls to useEffect</li>
-          <li>Do not create a desktop folder at every update (should work for next update)</li>
+          <li>Yuzu support was added !</li>
+          <li>Adds tabs in header to switch emulator and save tab choice for further emusak launches</li>
+          <li>Adds the option to download firmware and keys for Yuzu</li>
+          <li>You can now download Saves & Mods for Yuzu</li>
+          <li>Some  memory leaks were resolves - Those could happen due to event listener never unbind</li>
+          <li>The rendering performances was improved by removing filtering & titleID matching from render calls to <code>useEffect</code></li>
+          <li>EmuSAK will now stop creating a desktop folder (should work for next update)</li>
         </ul>
         <br/>
         <p>
