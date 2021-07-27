@@ -16,7 +16,7 @@ export interface IEmusakGame {
 }
 
 export interface IEmusakEmulatorConfig {
-  path: string;
+  path?: string;
   isPortable: boolean;
   games: IEmusakGame[];
 }

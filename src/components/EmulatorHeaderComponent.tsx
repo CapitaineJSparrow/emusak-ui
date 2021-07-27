@@ -4,11 +4,11 @@ import HelpIcon from "@material-ui/icons/Help";
 
 interface IYuzuHeaderProps {
   threshold: number;
-  onRyuFolderAdd: Function;
+  onFolderAdd?: Function;
   emulator?: 'yuzu' | 'ryu';
 }
 
-const EmulatorHeaderComponent = ({ threshold, onRyuFolderAdd, emulator = 'ryu' }: IYuzuHeaderProps) => (
+const EmulatorHeaderComponent = ({ threshold, onFolderAdd, emulator = 'ryu' }: IYuzuHeaderProps) => (
   <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
     <Grid item xs={10}>
       Shaders threshold <code>{ threshold >= 1E6 ? 'Share shaders temporary disabled': threshold }</code>
@@ -24,16 +24,20 @@ const EmulatorHeaderComponent = ({ threshold, onRyuFolderAdd, emulator = 'ryu' }
         </IconButton>
       </Tooltip>
     </Grid>
-    <Grid item xs={2}>
-      <Button
-        color="primary"
-        fullWidth
-        variant="contained"
-        onClick={() => onRyuFolderAdd()}
-      >
-        Add { emulator === 'ryu' ? 'Ryujinx': 'Yuzu' } folder
-      </Button>
-    </Grid>
+    {
+      onFolderAdd && (
+        <Grid item xs={2}>
+          <Button
+            color="primary"
+            fullWidth
+            variant="contained"
+            onClick={() => onFolderAdd()}
+          >
+            Add { emulator === 'ryu' ? 'Ryujinx': 'Yuzu' } folder
+          </Button>
+        </Grid>
+      )
+    }
   </Grid>
 );
 

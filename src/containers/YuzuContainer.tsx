@@ -25,7 +25,6 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
     <Box p={3}>
       <EmulatorHeaderComponent
         threshold={threshold}
-        onRyuFolderAdd={() => {}}
         emulator="yuzu"
       />
 
@@ -37,7 +36,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
         (isAppReady)
           ? (
             <FeaturesContainer
-              config={{ path: '', isPortable: false, games: [] }}
+              config={{ isPortable: false, games: [] }}
               key={`yuzu`}
               onFirmwareDownload={() => {}}
               firmwareVersion={firmwareVersion}

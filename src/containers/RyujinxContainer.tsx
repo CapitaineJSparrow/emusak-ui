@@ -104,7 +104,7 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
     <Box p={3}>
       <EmulatorHeaderComponent
         threshold={threshold}
-        onRyuFolderAdd={onRyuFolderAdd}
+        onFolderAdd={onRyuFolderAdd}
       />
       <br/>
       <Divider/>
