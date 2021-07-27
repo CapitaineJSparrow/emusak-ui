@@ -75,7 +75,7 @@ const FeaturesContainer = ({
 
   // Warn user using without nvidia graphics cards that shaders are unstable on this vendor
   useEffect(() => {
-    if(!localStorage.getItem(amdWarningKey)) {
+    if(!localStorage.getItem(amdWarningKey) && emulator !== "yuzu") {
       OSQueryFactory
         .hasNvidiaGPU()
         .then(hasNvidiaGPU => {

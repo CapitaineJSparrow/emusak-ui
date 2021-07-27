@@ -2,9 +2,9 @@ import * as React from "react";
 import { IEmusakMod, IEmusakSaves } from "../types";
 import FeaturesContainer from "./FeaturesContainer";
 import { downloadSave } from "../service/shared/saves";
-import { Box, CircularProgress, Divider } from "@material-ui/core";
+import { Box, CircularProgress } from "@material-ui/core";
 import electron from "electron";
-import EmulatorHeaderComponent from "../components/EmulatorHeaderComponent";
+import { installKeysToYuzu } from "../service/yuzu/system";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -31,7 +31,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
               key={`yuzu`}
               onFirmwareDownload={() => {}}
               firmwareVersion={firmwareVersion}
-              onKeysDownload={() => {}}
+              onKeysDownload={installKeysToYuzu}
               emusakShaders={{}}
               onShadersDownload={() => {}}
               onEmuConfigDelete={() => {}}
