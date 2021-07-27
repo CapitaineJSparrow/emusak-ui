@@ -26,6 +26,7 @@ interface IFeaturesContainerProps {
   onShareShaders: Function;
   emusakMods: IEmusakMod[];
   threshold: number;
+  emulator: 'ryu' | 'yuzu';
 }
 
 const FeaturesContainer = ({
@@ -43,9 +44,10 @@ const FeaturesContainer = ({
   onModsDownload,
   emusakMods,
   onShareShaders,
-  threshold
+  threshold,
+  emulator
 }: IFeaturesContainerProps) => {
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const [tabIndex, setTabIndex] = React.useState(emulator === 'ryu' ? 0 : 2);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
   const [games, setGames] = React.useState([]);
   const amdWarningKey = 'amd-warning';
@@ -152,6 +154,11 @@ const FeaturesContainer = ({
               </Grid>
             )
         }
+        {
+          !config.path && (
+            <Grid item xs={3}>&nbsp;</Grid>
+          )
+        }
         <Grid item xs={3}>
           <Button
             onClick={() => onFirmwareDownload()}
@@ -174,27 +181,32 @@ const FeaturesContainer = ({
             Download keys
           </Button>
         </Grid>
-        <Grid item xs={3} style={{textAlign: 'right'}}>
-          Is Portable
-          <Chip
-            label={config.isPortable ? 'yes' : 'no'}
-            color="primary"
-            style={{ marginLeft: 12 }}
-          />
-          {
-            !config.isPortable && (
-              <Button
-                style={{ marginLeft: 12 }}
-                size="small"
+        {
+          config.path && (
+
+            <Grid item xs={3} style={{textAlign: 'right'}}>
+              Is Portable
+              <Chip
+                label={config.isPortable ? 'yes' : 'no'}
                 color="primary"
-                variant="contained"
-                onClick={() => onPortableButtonClick()}
-              >
-                Make portable
-              </Button>
-            )
-          }
-        </Grid>
+                style={{ marginLeft: 12 }}
+              />
+              {
+                (!config.isPortable) && (
+                  <Button
+                    style={{ marginLeft: 12 }}
+                    size="small"
+                    color="primary"
+                    variant="contained"
+                    onClick={() => onPortableButtonClick()}
+                  >
+                    Make portable
+                  </Button>
+                )
+              }
+            </Grid>
+          )
+        }
       </Grid>
 
       <Box display="flex" alignItems="center">
@@ -225,7 +237,7 @@ const FeaturesContainer = ({
           <AppBar style={{marginTop: 20}} position="static">
             <Box display="flex" alignItems="center" justifyContent="space-between" paddingRight="12px">
               <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)} aria-label="simple tabs example">
-                <Tab label="Shaders"/>
+                <Tab disabled={emulator === "yuzu"} label={`Shaders ${emulator === "yuzu" ? '(not ready yet)': ''}`} />
                 <Tab label="Saves"/>
                 <Tab label="Mods"/>
               </Tabs>

@@ -154,29 +154,33 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
 
       {
         (isAppReady)
-          ? directories.map(config => (
-            <FeaturesContainer
-              config={config}
-              key={`ryu-${config.path}`}
-              onFirmwareDownload={installFirmware}
-              firmwareVersion={firmwareVersion}
-              onKeysDownload={() => downloadKeys(config)}
-              emusakShaders={emusakShaders}
-              onShadersDownload={id => onRyuShadersDownload(config, id)}
-              onEmuConfigDelete={onRyuConfigRemove}
-              emusakSaves={emusakSaves}
-              emusakMods={emusakMods}
-              threshold={threshold}
-              onRefresh={() => refreshPageData()}
-              onSaveDownload={downloadSave}
-              onShareShaders={(titleId: string, localCount: number, emusakCount: number) => {
-                setCurrentGame(titleIdToName(titleId));
-                shareShader(config, titleId, localCount, emusakCount, onRyuOpen, onRyujinxClose, onShareFinish);
-              }}
-              onModsDownload={(titleId: string, version: string, modName: string, modId: string) => installMod(config, titleId, version, modName, modId)}
-              onPortableButtonClick={() => onPortableButtonClick(config)}
-            />
-          ))
+          ? directories.map(config => {
+            const conf = { path: config.path, isPortable: config.isPortable, games: config.games };
+            return (
+              <FeaturesContainer
+                config={conf}
+                key={`ryu-${conf.path}`}
+                onFirmwareDownload={installFirmware}
+                firmwareVersion={firmwareVersion}
+                onKeysDownload={() => downloadKeys(conf)}
+                emusakShaders={emusakShaders}
+                onShadersDownload={id => onRyuShadersDownload(conf, id)}
+                onEmuConfigDelete={onRyuConfigRemove}
+                emusakSaves={emusakSaves}
+                emusakMods={emusakMods}
+                threshold={threshold}
+                emulator="ryu"
+                onRefresh={() => refreshPageData()}
+                onSaveDownload={downloadSave}
+                onShareShaders={(titleId: string, localCount: number, emusakCount: number) => {
+                  setCurrentGame(titleIdToName(titleId));
+                  shareShader(conf, titleId, localCount, emusakCount, onRyuOpen, onRyujinxClose, onShareFinish);
+                }}
+                onModsDownload={(titleId: string, version: string, modName: string, modId: string) => installMod(conf, titleId, version, modName, modId)}
+                onPortableButtonClick={() => onPortableButtonClick(conf)}
+              />
+            );
+          })
           : (
             <Box mt={3} style={{textAlign: 'center'}}>
               <CircularProgress/>
@@ -184,8 +188,7 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
               <br/>
               <h3>Loading data from emusak. If this process never finish, emusak might be temporary down or something is
                 wrong with your network.</h3>
-              <h4>You can check emusak status by clicking this link <a href="#"
-                                                                       onClick={() => electron.shell.openExternal("https://emusak.betteruptime.com/")}>https://emusak.betteruptime.com</a>
+              <h4>You can check emusak status by clicking this link <a href="#" onClick={() => electron.shell.openExternal("https://emusak.betteruptime.com/")}>https://emusak.betteruptime.com</a>
               </h4>
             </Box>
           )

@@ -23,15 +23,6 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
 
   return (
     <Box p={3}>
-      <EmulatorHeaderComponent
-        threshold={threshold}
-        emulator="yuzu"
-      />
-
-      <br/>
-      <Divider/>
-      <br/>
-
       {
         (isAppReady)
           ? (
@@ -52,6 +43,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
               onShareShaders={() => {}}
               onModsDownload={() => {}}
               onPortableButtonClick={() => {}}
+              emulator="yuzu"
             />
           )
           : (
