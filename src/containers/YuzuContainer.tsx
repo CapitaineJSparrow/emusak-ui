@@ -30,7 +30,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
     const g = await getYuzuGames();
 
     if (!g) {
-      alert('Make sure you have launched yuzu one time first');
+      alert('Make sure you have launched yuzu one time first or firmware, keys and mods downloads will not work');
       return false;
     }
 
