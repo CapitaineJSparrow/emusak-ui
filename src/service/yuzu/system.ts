@@ -1,11 +1,12 @@
 import * as fs from "fs";
 import path from "path";
-import { downloadFirmwareWithProgress, getKeysContent } from "../../api/emusak";
+import { downloadFirmwareWithProgress, downloadMod, getKeysContent } from "../../api/emusak";
 import { IEmusakEmulatorConfig } from "../../types";
 import electron from "electron";
 import Swal from "sweetalert2";
-import zip from "adm-zip";
 import { asyncExtract } from "../utils";
+import { readDir } from "../FService";
+import Zip from "adm-zip";
 
 const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => path.resolve(electron.remote.app.getPath('appData'), 'yuzu', ...paths)
 
@@ -38,5 +39,48 @@ export const installFirmware = async () => {
     title: 'Job done !',
     html: `Extracted firmware content to ${firmwareInstallPath}`,
     width: 600
+  });
+}
+
+export const getYuzuGames = async () => {
+  const cachePath = getYuzuPath(null, 'cache', 'game_list');
+  const dirents = await readDir(cachePath);
+  const files = dirents.filter(d => d.isFile()).map(d => d.name.replace('.pv.txt', '').toUpperCase());
+
+  return files.map(f => ({
+    id: f,
+    shadersCount: 0
+  }))
+}
+
+export const installMod = async (titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
+  const kind = modFileName.toLowerCase().includes('.pchtxt') ? 'pchtxt' : 'archive';
+  let modPath: string;
+
+  if (kind === 'pchtxt') {
+    modPath = getYuzuPath(null, 'load', titleID, modName, 'exefs');
+  } else {
+    modPath = getYuzuPath(null, 'load', titleID);
+  }
+
+  const exists = await fs.promises.access(modPath).then(() => true).catch(() => false);
+
+  if (!exists) {
+    await fs.promises.mkdir(modPath, { recursive: true });
+  }
+
+  const modBuffer = await downloadMod(titleID, pickedVersion, modName, modFileName);
+
+  if (kind === 'pchtxt') {
+    await fs.promises.writeFile(path.resolve(modPath, `${modName}.pchtxt`), modBuffer, 'utf-8');
+  } else {
+    const archive = new Zip(modBuffer);
+    archive.extractAllTo(modPath, true);
+  }
+
+  const { value } = await Swal.fire({
+    icon: 'success',
+    title: 'Job done !',
+    text: `Mod installed to ${modPath}`
   });
 }

@@ -4,7 +4,9 @@ import FeaturesContainer from "./FeaturesContainer";
 import { downloadSave } from "../service/shared/saves";
 import { Box, CircularProgress } from "@material-ui/core";
 import electron from "electron";
-import { installFirmware, installKeysToYuzu } from "../service/yuzu/system";
+import { getYuzuGames, installFirmware, installKeysToYuzu, installMod } from "../service/yuzu/system";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -14,6 +16,24 @@ interface IRyujinxContainerProps {
 }
 
 const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IRyujinxContainerProps) => {
+  const [games, setGames] = React.useState([]);
+
+  const loadPageData = async () => {
+    const g = await getYuzuGames();
+    setGames(g);
+
+    if (g.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: "error",
+        html: 'Emusak cannot found any games for yuzu. <b>Please note emusak does not support portable mode for yuzu yet</b>'
+      })
+    }
+  }
+
+  useEffect(() => {
+    loadPageData();
+  }, []);
 
   // App is ready once saves, mods and shaders data are fetched, as well with firmware version and threshold values
   const isAppReady = Object.keys(emusakSaves).length > 0
@@ -27,7 +47,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
         (isAppReady)
           ? (
             <FeaturesContainer
-              config={{ isPortable: false, games: [] }}
+              config={{ isPortable: false, games }}
               key={`yuzu`}
               onFirmwareDownload={installFirmware}
               firmwareVersion={firmwareVersion}
@@ -38,10 +58,10 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
               emusakSaves={emusakSaves}
               emusakMods={emusakMods}
               threshold={threshold}
-              onRefresh={() => {}}
+              onRefresh={loadPageData}
               onSaveDownload={downloadSave}
               onShareShaders={() => {}}
-              onModsDownload={() => {}}
+              onModsDownload={installMod}
               onPortableButtonClick={() => {}}
               emulator="yuzu"
             />
