@@ -4,7 +4,7 @@ import FeaturesContainer from "./FeaturesContainer";
 import { downloadSave } from "../service/shared/saves";
 import { Box, CircularProgress } from "@material-ui/core";
 import electron from "electron";
-import { installKeysToYuzu } from "../service/yuzu/system";
+import { installFirmware, installKeysToYuzu } from "../service/yuzu/system";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -29,7 +29,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
             <FeaturesContainer
               config={{ isPortable: false, games: [] }}
               key={`yuzu`}
-              onFirmwareDownload={() => {}}
+              onFirmwareDownload={installFirmware}
               firmwareVersion={firmwareVersion}
               onKeysDownload={installKeysToYuzu}
               emusakShaders={{}}
