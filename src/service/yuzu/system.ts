@@ -8,7 +8,21 @@ import { asyncExtract } from "../utils";
 import { readDir } from "../FService";
 import Zip from "adm-zip";
 
-const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => path.resolve(electron.remote.app.getPath('appData'), 'yuzu', ...paths)
+const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => path.resolve(electron.remote.app.getPath('appData'), 'yuzu', ...paths);
+
+export const isValidFileSystem = async (): Promise<boolean> => {
+  const yuzuAppDataPath = fs.promises.access(getYuzuPath(null)).then(() => true).catch(() => false);
+  const firmwarePath = getYuzuPath(null, 'nand', 'system', 'Contents', 'registered');
+  const keyPath = getYuzuPath(null, 'keys');
+
+  const result = await Promise.all([
+    yuzuAppDataPath,
+    firmwarePath,
+    keyPath
+  ]);
+
+  return !result.includes(false);
+}
 
 export const installKeysToYuzu = async () => {
   const keysContent = await getKeysContent();

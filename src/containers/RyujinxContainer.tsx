@@ -178,6 +178,7 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
                 }}
                 onModsDownload={(titleId: string, version: string, modName: string, modId: string) => installMod(conf, titleId, version, modName, modId)}
                 onPortableButtonClick={() => onPortableButtonClick(conf)}
+                isValid={true}
               />
             );
           })
