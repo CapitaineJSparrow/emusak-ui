@@ -14,19 +14,20 @@ interface IFeaturesContainerProps {
   config: IEmusakEmulatorConfig;
   onFirmwareDownload: () => void;
   onKeysDownload: () => void;
-  onEmuConfigDelete: (config: IRyujinxConfig) => void;
+  onEmuConfigDelete?: (config: IRyujinxConfig) => void;
   firmwareVersion: string;
   emusakShaders: IEmusakShaders;
   onShadersDownload: (id: string) => void;
   emusakSaves: IEmusakSaves;
   onRefresh: Function;
-  onPortableButtonClick: Function;
+  onPortableButtonClick?: Function;
   onSaveDownload: Function;
   onModsDownload: Function;
   onShareShaders: Function;
   emusakMods: IEmusakMod[];
   threshold: number;
   emulator: 'ryu' | 'yuzu';
+  isValid: boolean;
 }
 
 const FeaturesContainer = ({
@@ -45,7 +46,8 @@ const FeaturesContainer = ({
   emusakMods,
   onShareShaders,
   threshold,
-  emulator
+  emulator,
+  isValid
 }: IFeaturesContainerProps) => {
   const [tabIndex, setTabIndex] = React.useState(emulator === 'ryu' ? 0 : 2);
   const [filterTerm, setFilterTerm] = React.useState<string>(null);
@@ -126,7 +128,7 @@ const FeaturesContainer = ({
     <>
       <Grid container spacing={2} style={{display: 'flex', alignItems: 'center'}}>
         {
-          (config && config.path)
+          (onEmuConfigDelete)
             ? (
               (
                 <Grid item xs={4}>
@@ -165,7 +167,7 @@ const FeaturesContainer = ({
             fullWidth
             variant="contained"
             color="primary"
-            disabled={!firmwareVersion}
+            disabled={!firmwareVersion || !isValid}
           >
             Download firmware {firmwareVersion}
           </Button>
@@ -176,7 +178,7 @@ const FeaturesContainer = ({
             fullWidth
             variant="contained"
             color="primary"
-            disabled={!firmwareVersion}
+            disabled={!firmwareVersion || !isValid}
           >
             Download keys
           </Button>
@@ -192,7 +194,7 @@ const FeaturesContainer = ({
                 style={{ marginLeft: 12 }}
               />
               {
-                (!config.isPortable) && (
+                (onPortableButtonClick) && (
                   <Button
                     style={{ marginLeft: 12 }}
                     size="small"

@@ -35,7 +35,8 @@ const ChangelogComponent = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li><b><u>Never</u> ask for emusak support in official Ryujinx channels (discord, reddit, ...)</b></li>
+          <li><b><u>Never</u> ask for emusak support in official Ryujinx or Yuzu channels (discord, reddit, ...)</b></li>
+          <li>Improve user experience when user never launched yuzu to created required files on disk</li>
           <li>Yuzu support was added !</li>
           <li>Adds tabs in header to switch emulator and save tab choice for further emusak launches</li>
           <li>Adds the option to download firmware and keys for Yuzu</li>
