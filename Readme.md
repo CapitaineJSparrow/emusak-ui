@@ -8,7 +8,7 @@
 Emusak-ui is a graphical mod for [Emusak](https://github.com/sinscove/EmuSAK). This is a tool which allows you to download saves and shaders for Nintendo Switch emulators using a compatible Emusak backend supported by both Linux and Windows.
 
 <p align="center">
-  <img width="80%" alt="screenshot" src="https://raw.githubusercontent.com/stromcon/emusak-ui/main/screenshot_2.jpg?raw=true&id=01" />
+  <img width="80%" alt="screenshot" src="https://raw.githubusercontent.com/stromcon/emusak-ui/main/screenshot_1.png?raw=true&id=01" />
 </p>
 
 
@@ -53,7 +53,11 @@ Download the `.AppImage` file, then mark it as executable and run it.
 
 Todo :
 
-- [ ] Add Yuzu support
+- [ ] Add shaders download for yuzu
+- [ ] Add cloud saves using Google drive if possible
+- [ ] Add ryujinx PTC sharing
+- [ ] Amiibos for yuzu
+- [ ] Notify when there is a game update
 - [ ] Add PPA for Ubuntu users
 
 ### Contributing
@@ -70,7 +74,7 @@ Set a valid EmuSAK CDN URL in a variable :
 (bash): export EMUSAK_URL = 'http://...'
 ```
 
-Install & run 
+Install & run
 
 ```
 yarn install
@@ -78,7 +82,7 @@ yarn dump-games
 yarn dev
 ```
 
-### Thanks 
+### Thanks
 
 * Sin for creating a nice community and init the ideas
 * Niwu for testing, suggestions and help me to match Switch title IDs to game name
