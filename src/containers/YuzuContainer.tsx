@@ -19,28 +19,22 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
   const [games, setGames] = React.useState<IEmusakGame[]>([]);
   const [isValid, setIsValid] = React.useState(false);
 
-  const triggerError = () => {
-    Swal.fire({
-      icon: 'error',
-      title: "error",
-      html: 'Emusak cannot found any games for yuzu, please run yuzu one time first. <b>Please note emusak does not support portable mode for yuzu yet</b>'
-    })
-  }
-
   const loadPageData = async () => {
-    const isValidFS = await isValidFileSystem();
-    const g = await getYuzuGames();
+    setTimeout(async () => {
+      const isValidFS = await isValidFileSystem();
+      const g = await getYuzuGames();
 
-    if (!isValidFS) {
-      Swal.fire({
-        icon: 'error',
-        text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu one time to let it create required folders on your disk. Please note emusak does not portable mode for yuzu at the moment. Once you ran yuzu, please use the reload button near the "Filter game list" input'
-      })
-      return false;
-    }
+      if (!isValidFS) {
+        Swal.fire({
+          icon: 'error',
+          text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu one time to let it create required folders on your disk. Please note emusak does not portable mode for yuzu at the moment. Once you ran yuzu, please use the reload button near the "Filter game list" input'
+        })
+        return false;
+      }
 
-    setIsValid(true);
-    setGames(g || []);
+      setIsValid(true);
+      setGames(g || []);
+    }, 1000); // Delay rendering to avoid too many tasks on CPU at the same time
   }
 
   useEffect(() => {
