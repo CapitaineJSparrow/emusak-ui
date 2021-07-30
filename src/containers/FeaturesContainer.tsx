@@ -194,7 +194,7 @@ const FeaturesContainer = ({
                 style={{ marginLeft: 12 }}
               />
               {
-                (onPortableButtonClick) && (
+                (onPortableButtonClick && !config.isPortable) && (
                   <Button
                     style={{ marginLeft: 12 }}
                     size="small"

@@ -44,6 +44,8 @@ const ChangelogComponent = () => {
           <li>Some  memory leaks were resolves - Those could happen due to event listener never unbind</li>
           <li>The rendering performances was improved by removing filtering & titleID matching from render calls to <code>useEffect</code></li>
           <li>EmuSAK will now stop creating a desktop folder (should work for next update)</li>
+          <li>Fix "make portable" button always showing even ryujinx is already portable</li>
+          <li>Delay some tasks to avoid CPU load on startup</li>
         </ul>
         <br/>
         <p>
