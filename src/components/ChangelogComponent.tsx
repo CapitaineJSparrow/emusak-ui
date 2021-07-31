@@ -36,6 +36,7 @@ const ChangelogComponent = () => {
         <br />
         <ul style={{ marginLeft: 20 }}>
           <li><b><u>Never</u> ask for emusak support in official Ryujinx or Yuzu channels (discord, reddit, ...)</b></li>
+          <li>Fix a linux specific bug where yuzu filesystem path was wrong</li>
           <li>Improve user experience when user never launched yuzu to created required files on disk</li>
           <li>Yuzu support was added !</li>
           <li>Adds tabs in header to switch emulator and save tab choice for further emusak launches</li>

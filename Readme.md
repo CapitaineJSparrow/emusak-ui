@@ -70,8 +70,8 @@ Requirements :
 Set a valid EmuSAK CDN URL in a variable :
 
 ```
-(powershell): $Env:EMUSAK_URL = 'http://...'
-(bash): export EMUSAK_URL = 'http://...'
+(powershell): $Env:EMUSAK_CDN = 'http://...'
+(bash): export EMUSAK_CDN = 'http://...'
 ```
 
 Install & run
