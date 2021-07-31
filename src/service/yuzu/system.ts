@@ -8,7 +8,14 @@ import { asyncExtract } from "../utils";
 import { readDir } from "../FService";
 import Zip from "adm-zip";
 
-const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => path.resolve(electron.remote.app.getPath('appData'), 'yuzu', ...paths);
+const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => {
+
+  if (!(process.platform === "win32")) {
+    return path.resolve(electron.remote.app.getPath('home'), '.local', 'share', 'yuzu', ...paths);
+  }
+
+  return path.resolve(electron.remote.app.getPath('appData'), 'yuzu', ...paths);
+}
 
 export const isValidFileSystem = async (): Promise<boolean> => {
   const yuzuAppDataPath = fs.promises.access(getYuzuPath(null)).then(() => true).catch(() => false);
