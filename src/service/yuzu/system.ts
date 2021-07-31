@@ -64,6 +64,18 @@ export const installFirmware = async () => {
 }
 
 export const getYuzuGames = async () => {
+
+  if (!(process.platform === "win32")) {
+    const loadPath = getYuzuPath(null, 'load');
+    const dirents = await readDir(loadPath);
+    const games = dirents.filter(d => d.isDirectory()).map(d => d.name.trim().toUpperCase());
+
+    return games.map(g => ({
+      id: g,
+      shadersCount: 0
+    }))
+  }
+
   try {
 
     const cachePath = getYuzuPath(null, 'cache', 'game_list');
