@@ -27,7 +27,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
       if (!isValidFS) {
         Swal.fire({
           icon: 'error',
-          text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu one time to let it create required folders on your disk. Please note emusak does not portable mode for yuzu at the moment. Once you ran yuzu, please use the reload button near the "Filter game list" input'
+          text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu one time to let it create required folders on your disk. Please note emusak does not support portable mode for yuzu at the moment. Once you ran yuzu, please use the reload button near the "Filter game list" input'
         })
         return false;
       }
