@@ -48,13 +48,15 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
   const [backdropOpen, setBackdropOpen] = React.useState(false);
   const [currentGame, setCurrentGame] = React.useState('');
   const [ryujinxLogsModalOpen, setRyujinxLogsModalOpen] = React.useState(false);
+  const [loaded, setLoaded] = React.useState(false);
 
   const refreshPageData = async () => {
     setTimeout(async () => {
       const configs = await RyujinxModel.getDirectories();
       listGamesWithNameAndShadersCount(configs).then(setDirectories);
       getRyujinxShadersCount().then(setEmusakShaders);
-    }, 1000); // Delay rendering to avoid too many tasks on CPU at the same time
+      setLoaded(true);
+    }, loaded ? 0 : 1000); // Delay rendering to avoid too many tasks on CPU at the same time
   }
 
   // On component mount

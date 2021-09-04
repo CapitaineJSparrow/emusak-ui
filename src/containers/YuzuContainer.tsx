@@ -18,6 +18,7 @@ interface IRyujinxContainerProps {
 const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IRyujinxContainerProps) => {
   const [games, setGames] = React.useState<IEmusakGame[]>([]);
   const [isValid, setIsValid] = React.useState(false);
+  const [loaded, setLoaded] = React.useState(false);
 
   const loadPageData = async () => {
     setTimeout(async () => {
@@ -34,7 +35,8 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
 
       setIsValid(true);
       setGames(g || []);
-    }, 1000); // Delay rendering to avoid too many tasks on CPU at the same time
+      setLoaded(true);
+    }, loaded ? 0 : 1000); // Delay rendering to avoid too many tasks on CPU at the same time
   }
 
   useEffect(() => {

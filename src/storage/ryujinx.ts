@@ -8,7 +8,6 @@ class RyujinxModel implements IEmulatorStorageInterface {
   protected readonly LS_DIRECTORIES_KEY = "ryu-dir"
 
   public async getDirectories(): Promise<IRyujinxConfig[]> {
-    console.log('a');
     const d = localStorage.getItem(this.LS_DIRECTORIES_KEY);
     let directories = d ? JSON.parse(d) : [];
 
