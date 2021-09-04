@@ -36,17 +36,10 @@ const ChangelogComponent = () => {
         <br />
         <ul style={{ marginLeft: 20 }}>
           <li><b><u>Never</u> ask for emusak support in official Ryujinx or Yuzu channels (discord, reddit, ...)</b></li>
-          <li>Fix a linux specific bug where yuzu filesystem path was wrong</li>
-          <li>Improve user experience when user never launched yuzu to created required files on disk</li>
-          <li>Yuzu support was added !</li>
-          <li>Adds tabs in header to switch emulator and save tab choice for further emusak launches</li>
-          <li>Adds the option to download firmware and keys for Yuzu</li>
-          <li>You can now download Saves & Mods for Yuzu</li>
-          <li>Some  memory leaks were resolves - Those could happen due to event listener never unbind</li>
-          <li>The rendering performances was improved by removing filtering & titleID matching from render calls to <code>useEffect</code></li>
-          <li>EmuSAK will now stop creating a desktop folder (should work for next update)</li>
-          <li>Fix "make portable" button always showing even ryujinx is already portable</li>
-          <li>Delay some tasks to avoid CPU load on startup</li>
+          <li>Reduce startup loading time</li>
+          <li>Improve responsiveness to UI once filesystem is updated (using the reload button, downloading shaders, ...)</li>
+          <li>Add 660 chmod on linux when emusak install mod on disk (there were no chmod before, causing emulator crash)</li>
+          <li>Fix the matching between title IDs to game names</li>
         </ul>
         <br/>
         <p>
