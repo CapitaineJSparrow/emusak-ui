@@ -111,12 +111,13 @@ export const installMod = async (titleID: string, pickedVersion: string, modName
 
   if (kind === 'pchtxt') {
     await fs.promises.writeFile(path.resolve(modPath, `${modName}.pchtxt`), modBuffer, 'utf-8');
+    await fs.promises.chmod(path.resolve(modPath, `${modName}.pchtxt`), 660);
   } else {
     const archive = new Zip(modBuffer);
     archive.extractAllTo(modPath, true);
   }
 
-  const { value } = await Swal.fire({
+  await Swal.fire({
     icon: 'success',
     title: 'Job done !',
     text: `Mod installed to ${modPath}`

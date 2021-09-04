@@ -1,6 +1,7 @@
 import { data } from "../assets/tinfoil_database.json";
-import customDatabase from "../assets/custom_database.json";
 import nswdb from "../assets/nswdb.json";
+
+let customDatabase = {};
 
 export const matchIdFromTinfoil = (id: string): string => {
   let tinFoilName: any = data.find(d => d.id.toUpperCase() === id);
@@ -21,3 +22,9 @@ export const matchIdFromCustomDatabase = (id: string): string => ( customDatabas
 export const matchIdFromNswdb = (id: string): string => nswdb.find(entry => entry.id === id)?.title
 
 export const titleIdToName = (id: string) => matchIdFromCustomDatabase(id) || matchIdFromTinfoil(id) || matchIdFromNswdb(id) || id
+
+// Download custom database remotely
+fetch('https://raw.githubusercontent.com/CapitaineJSparrow/emusak-ui/main/src/assets/custom_database.json')
+  .then(r => r.json())
+  .then(d => customDatabase = d);
+
