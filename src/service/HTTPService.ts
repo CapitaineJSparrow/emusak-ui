@@ -58,7 +58,7 @@ export const httpRequestWithProgress = async (url: string, destPath?: string) =>
     chunks.push(value);
     receivedLength += value.length;
     const mbps = receivedLength / (1024 * 1024);
-    downloadSpeed = Date.now() - startTime === 0 ? downloadSpeed : MB/s / ((Date.now() - startTime) / 1000);
+    downloadSpeed = Date.now() - startTime === 0 ? downloadSpeed : mbps / ((Date.now() - startTime) / 1000);
     const currentTimestamp = +new Date();
 
     progressEvent.addEventListener('progress-cancel', () => {
