@@ -36,10 +36,11 @@ const ChangelogComponent = () => {
         <br />
         <ul style={{ marginLeft: 20 }}>
           <li><b><u>Never</u> ask for emusak support in official Ryujinx or Yuzu channels (discord, reddit, ...)</b></li>
-          <li>Reduce startup loading time</li>
-          <li>Improve responsiveness to UI once filesystem is updated (using the reload button, downloading shaders, ...)</li>
-          <li>Add 660 chmod on linux when emusak install mod on disk (there were no chmod before, causing emulator crash)</li>
-          <li>Fix the matching between title IDs to game names</li>
+          <li>Fix a crash on linux when yuzu was not installed</li>
+          <li>Detecting yuzu path when installed with snap package manager on debian (ubuntu, popos, ...)</li>
+          <li>"Shaders" tab has been renamed to "OpenGL shaders"</li>
+          <li>mbps speed has been replaced by "MB/s"</li>
+          <li>Allow to add yuzu portable</li>
         </ul>
         <br/>
         <p>

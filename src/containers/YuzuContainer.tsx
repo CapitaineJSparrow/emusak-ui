@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IEmusakEmulatorConfig, IEmusakGame, IEmusakMod, IEmusakSaves } from "../types";
+import { IEmusakEmulatorConfig, IEmusakGame, IEmusakMod, IEmusakSaves, IRyujinxConfig } from "../types";
 import FeaturesContainer from "./FeaturesContainer";
 import { downloadSave } from "../service/shared/saves";
 import { Box, CircularProgress, Divider } from "@material-ui/core";
@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import EmulatorHeaderComponent from "../components/EmulatorHeaderComponent";
 import YuzuModel from "../storage/yuzu";
 import yuzu from "../storage/yuzu";
+import RyujinxModel from "../storage/ryujinx";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -56,6 +57,11 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
 
   const addYuzuFolderOnClick = async () => {
     await addYuzuFolder();
+    loadPageData();
+  }
+
+  const onYuzuConfigRemove = (config: IRyujinxConfig) => {
+    YuzuModel.deleteDirectory(config);
     loadPageData();
   }
 
@@ -119,6 +125,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
                   onModsDownload={(titleID: string, pickedVersion: string, modName: string, modFileName: string) => installMod(config, titleID, pickedVersion, modName, modFileName)}
                   emulator="yuzu"
                   isValid={isValid}
+                  onEmuConfigDelete={onYuzuConfigRemove}
                 />
               ))
           )
