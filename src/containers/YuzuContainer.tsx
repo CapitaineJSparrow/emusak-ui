@@ -38,10 +38,15 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
         return false;
       }
 
+      const d = await Promise.all(yuzuDirectories.map(async d => {
+        const games = await getYuzuGames(d as any);
+        return  ({ ...d, games });
+      }))
+
       setIsValid(true);
       setGames(g || []);
       setLoaded(true);
-      setDirectories(yuzuDirectories.map(d => ({ ...d, games: [] })));
+      setDirectories(d);
     }, loaded ? 0 : 500); // Delay rendering to avoid too many tasks on CPU at the same time
   }
 
@@ -111,7 +116,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
                   onRefresh={loadPageData}
                   onSaveDownload={downloadSave}
                   onShareShaders={() => {}}
-                  onModsDownload={installMod}
+                  onModsDownload={(titleID: string, pickedVersion: string, modName: string, modFileName: string) => installMod(config, titleID, pickedVersion, modName, modFileName)}
                   emulator="yuzu"
                   isValid={isValid}
                 />

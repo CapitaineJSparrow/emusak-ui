@@ -78,10 +78,10 @@ export const installFirmware = async (config: IEmusakEmulatorConfig = null) => {
   });
 }
 
-export const getYuzuGames = async () => {
+export const getYuzuGames = async (config: IEmusakEmulatorConfig = null) => {
 
   if (!(process.platform === "win32")) {
-    const loadPath = getYuzuPath(null, 'load');
+    const loadPath = getYuzuPath(config, 'load');
 
     if (!fs.existsSync(loadPath)) {
       return [];
@@ -98,7 +98,7 @@ export const getYuzuGames = async () => {
 
   try {
 
-    const cachePath = getYuzuPath(null, 'cache', 'game_list');
+    const cachePath = getYuzuPath(config, 'cache', 'game_list');
     const dirents = await readDir(cachePath);
     const files = dirents.filter(d => d.isFile()).map(d => d.name.replace('.pv.txt', '').toUpperCase());
 
@@ -107,7 +107,7 @@ export const getYuzuGames = async () => {
       shadersCount: 0
     }))
   } catch(e) {
-    return false;
+    return [];
   }
 }
 
@@ -153,14 +153,14 @@ export const addYuzuFolder = async () => {
   await YuzuModel.addDirectory({ isPortable: true, path });
 }
 
-export const installMod = async (titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
+export const installMod = async (config: IEmusakEmulatorConfig = null, titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
   const kind = modFileName.toLowerCase().includes('.pchtxt') ? 'pchtxt' : 'archive';
   let modPath: string;
 
   if (kind === 'pchtxt') {
-    modPath = getYuzuPath(null, 'load', titleID, modName, 'exefs');
+    modPath = getYuzuPath(config, 'load', titleID, modName, 'exefs');
   } else {
-    modPath = getYuzuPath(null, 'load', titleID);
+    modPath = getYuzuPath(config, 'load', titleID);
   }
 
   const exists = await fs.promises.access(modPath).then(() => true).catch(() => false);
@@ -182,6 +182,6 @@ export const installMod = async (titleID: string, pickedVersion: string, modName
   await Swal.fire({
     icon: 'success',
     title: 'Job done !',
-    text: `Mod installed to ${modPath}`
+    html: `Mod installed to <code>${modPath}</code>`
   });
 }
