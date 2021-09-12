@@ -11,6 +11,16 @@ import Zip from "adm-zip";
 const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => {
 
   if (!(process.platform === "win32")) {
+    /**
+     * If user installed yuzu with snap on ubuntu, path in located in ~/snap/yuzu
+     */
+    const home = electron.remote.app.getPath('home');
+    const installedWithSnap = fs.existsSync(path.resolve(home, 'snap', 'yuzu', 'common', '.local', 'share', 'yuzu'));
+
+    if (installedWithSnap) {
+      return path.resolve(home, 'snap', 'yuzu', 'common', '.local', 'share', 'yuzu', ...paths);
+    }
+
     return path.resolve(electron.remote.app.getPath('home'), '.local', 'share', 'yuzu', ...paths);
   }
 
@@ -67,6 +77,11 @@ export const getYuzuGames = async () => {
 
   if (!(process.platform === "win32")) {
     const loadPath = getYuzuPath(null, 'load');
+
+    if (!fs.existsSync(loadPath)) {
+      return [];
+    }
+
     const dirents = await readDir(loadPath);
     const games = dirents.filter(d => d.isDirectory()).map(d => d.name.trim().toUpperCase());
 

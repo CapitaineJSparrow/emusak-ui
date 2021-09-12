@@ -239,7 +239,7 @@ const FeaturesContainer = ({
           <AppBar style={{marginTop: 20}} position="static">
             <Box display="flex" alignItems="center" justifyContent="space-between" paddingRight="12px">
               <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)} aria-label="simple tabs example">
-                <Tab disabled={emulator === "yuzu"} label={`Shaders ${emulator === "yuzu" ? '(not ready yet)': ''}`} />
+                <Tab wrapped={emulator === "yuzu"} disabled={emulator === "yuzu"} label={`OpenGL Shaders ${emulator === "yuzu" ? '(not ready yet)': ''}`} />
                 <Tab label="Saves"/>
                 <Tab label="Mods"/>
               </Tabs>
