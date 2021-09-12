@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IEmusakGame, IEmusakMod, IEmusakSaves } from "../types";
+import { IEmusakEmulatorConfig, IEmusakGame, IEmusakMod, IEmusakSaves } from "../types";
 import FeaturesContainer from "./FeaturesContainer";
 import { downloadSave } from "../service/shared/saves";
 import { Box, CircularProgress, Divider } from "@material-ui/core";
@@ -8,6 +8,8 @@ import { addYuzuFolder, getYuzuGames, installFirmware, installKeysToYuzu, instal
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 import EmulatorHeaderComponent from "../components/EmulatorHeaderComponent";
+import YuzuModel from "../storage/yuzu";
+import yuzu from "../storage/yuzu";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -18,15 +20,17 @@ interface IRyujinxContainerProps {
 
 const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IRyujinxContainerProps) => {
   const [games, setGames] = React.useState<IEmusakGame[]>([]);
+  const [directories, setDirectories] = React.useState<IEmusakEmulatorConfig[]>([]);
   const [isValid, setIsValid] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
 
   const loadPageData = async () => {
     setTimeout(async () => {
+      const yuzuDirectories = await YuzuModel.getDirectories();
       const isValidFS = await isValidFileSystem();
       const g = await getYuzuGames();
 
-      if (!isValidFS) {
+      if (!isValidFS && yuzuDirectories.length === 0) {
         Swal.fire({
           icon: 'error',
           text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu one time to let it create required folders on your disk. Once you ran yuzu, please use the reload button near the "Filter game list" input. If you are using yuzu with portable mode, use the "Add yuzu folder" above.'
@@ -37,12 +41,18 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
       setIsValid(true);
       setGames(g || []);
       setLoaded(true);
+      setDirectories(yuzuDirectories.map(d => ({ ...d, games: [] })));
     }, loaded ? 0 : 500); // Delay rendering to avoid too many tasks on CPU at the same time
   }
 
   useEffect(() => {
     loadPageData();
   }, []);
+
+  const addYuzuFolderOnClick = async () => {
+    await addYuzuFolder();
+    loadPageData();
+  }
 
   // App is ready once saves, mods and shaders data are fetched, as well with firmware version and threshold values
   const isAppReady = Object.keys(emusakSaves).length > 0
@@ -54,7 +64,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
     <Box p={3}>
       <EmulatorHeaderComponent
         threshold={threshold}
-        onFolderAdd={addYuzuFolder}
+        onFolderAdd={addYuzuFolderOnClick}
         emulator="yuzu"
       />
       <br/>
@@ -63,24 +73,49 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
       {
         (isAppReady)
           ? (
-            <FeaturesContainer
-              config={{ isPortable: false, games }}
-              key={`yuzu`}
-              onFirmwareDownload={installFirmware}
-              firmwareVersion={firmwareVersion}
-              onKeysDownload={installKeysToYuzu}
-              emusakShaders={{}}
-              onShadersDownload={() => {}}
-              emusakSaves={emusakSaves}
-              emusakMods={emusakMods}
-              threshold={threshold}
-              onRefresh={loadPageData}
-              onSaveDownload={downloadSave}
-              onShareShaders={() => {}}
-              onModsDownload={installMod}
-              emulator="yuzu"
-              isValid={isValid}
-            />
+            directories.length == 0
+              ?
+                (
+                  <FeaturesContainer
+                    config={{ isPortable: false, games }}
+                    key={`yuzu`}
+                    onFirmwareDownload={installFirmware}
+                    firmwareVersion={firmwareVersion}
+                    onKeysDownload={installKeysToYuzu}
+                    emusakShaders={{}}
+                    onShadersDownload={() => {}}
+                    emusakSaves={emusakSaves}
+                    emusakMods={emusakMods}
+                    threshold={threshold}
+                    onRefresh={loadPageData}
+                    onSaveDownload={downloadSave}
+                    onShareShaders={() => {}}
+                    onModsDownload={installMod}
+                    emulator="yuzu"
+                    isValid={isValid}
+                  />
+                )
+              :
+              directories.map((config, index) => (
+                <FeaturesContainer
+                  config={config}
+                  key={`yuzu-${index}`}
+                  onFirmwareDownload={() => installFirmware(config)}
+                  firmwareVersion={firmwareVersion}
+                  onKeysDownload={() => installKeysToYuzu(config)}
+                  emusakShaders={{}}
+                  onShadersDownload={() => {}}
+                  emusakSaves={emusakSaves}
+                  emusakMods={emusakMods}
+                  threshold={threshold}
+                  onRefresh={loadPageData}
+                  onSaveDownload={downloadSave}
+                  onShareShaders={() => {}}
+                  onModsDownload={installMod}
+                  emulator="yuzu"
+                  isValid={isValid}
+                />
+              ))
           )
           : (
             <Box mt={3} style={{textAlign: 'center'}}>

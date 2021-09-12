@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import path from "path";
 import { downloadFirmwareWithProgress, downloadMod, getKeysContent } from "../../api/emusak";
-import { IEmusakEmulatorConfig } from "../../types";
+import { IEmusakEmulatorConfig, IYuzuConfig } from "../../types";
 import electron from "electron";
 import Swal from "sweetalert2";
 import { asyncExtract } from "../utils";
@@ -10,6 +10,10 @@ import Zip from "adm-zip";
 import YuzuModel from "../../storage/yuzu";
 
 const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => {
+
+  if (config) {
+    return path.resolve(config.path, 'user', ...paths);
+  }
 
   if (!(process.platform === "win32")) {
     /**
@@ -42,9 +46,9 @@ export const isValidFileSystem = async (): Promise<boolean> => {
   return !result.includes(false);
 }
 
-export const installKeysToYuzu = async () => {
+export const installKeysToYuzu = async (config: IEmusakEmulatorConfig = null) => {
   const keysContent = await getKeysContent();
-  const keysPath = getYuzuPath(null, 'keys', 'prod.keys');
+  const keysPath = getYuzuPath(config, 'keys', 'prod.keys');
   await fs.promises.writeFile(keysPath, keysContent, 'utf-8');
 
   await Swal.fire({
@@ -55,9 +59,9 @@ export const installKeysToYuzu = async () => {
   });
 };
 
-export const installFirmware = async () => {
+export const installFirmware = async (config: IEmusakEmulatorConfig = null) => {
   const firmwareDestPath = path.resolve((electron.app || electron.remote.app).getPath('temp'), 'firmware.zip');
-  const firmwareInstallPath = getYuzuPath(null, 'nand', 'system', 'Contents', 'registered');
+  const firmwareInstallPath = getYuzuPath(config, 'nand', 'system', 'Contents', 'registered');
   const result = await downloadFirmwareWithProgress(firmwareDestPath);
 
   if (!result) {
@@ -69,7 +73,7 @@ export const installFirmware = async () => {
   await Swal.fire({
     icon: 'success',
     title: 'Job done !',
-    html: `Extracted firmware content to ${firmwareInstallPath}`,
+    html: `Extracted firmware content to <code>${firmwareInstallPath}</code>`,
     width: 600
   });
 }

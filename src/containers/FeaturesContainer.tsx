@@ -151,7 +151,7 @@ const FeaturesContainer = ({
           : (
               <Grid item xs={4}>
                 <Box display="flex" justifyContent="start" alignItems="center">
-                  <h3><small>AppData/Roaming/yuzu</small></h3>
+                  <h3><small>{config.path ? config.path : 'AppData/Roaming/yuzu'}</small></h3>
                 </Box>
               </Grid>
             )
