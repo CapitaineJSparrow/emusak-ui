@@ -9,6 +9,11 @@ export interface IRyujinxConfig {
   path: string;
 }
 
+export interface IYuzuConfig {
+  isPortable: boolean;
+  path: string;
+}
+
 export interface IEmusakGame {
   id: string;
   shadersCount: number;

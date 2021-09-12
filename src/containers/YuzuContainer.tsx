@@ -2,11 +2,12 @@ import * as React from "react";
 import { IEmusakGame, IEmusakMod, IEmusakSaves } from "../types";
 import FeaturesContainer from "./FeaturesContainer";
 import { downloadSave } from "../service/shared/saves";
-import { Box, CircularProgress } from "@material-ui/core";
+import { Box, CircularProgress, Divider } from "@material-ui/core";
 import electron from "electron";
-import { getYuzuGames, installFirmware, installKeysToYuzu, installMod, isValidFileSystem } from "../service/yuzu/system";
+import { addYuzuFolder, getYuzuGames, installFirmware, installKeysToYuzu, installMod, isValidFileSystem } from "../service/yuzu/system";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
+import EmulatorHeaderComponent from "../components/EmulatorHeaderComponent";
 
 interface IRyujinxContainerProps {
   threshold: number;
@@ -28,7 +29,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
       if (!isValidFS) {
         Swal.fire({
           icon: 'error',
-          text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu one time to let it create required folders on your disk. Please note emusak does not support portable mode for yuzu at the moment. Once you ran yuzu, please use the reload button near the "Filter game list" input'
+          text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu one time to let it create required folders on your disk. Once you ran yuzu, please use the reload button near the "Filter game list" input. If you are using yuzu with portable mode, use the "Add yuzu folder" above.'
         })
         return false;
       }
@@ -51,6 +52,14 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
 
   return (
     <Box p={3}>
+      <EmulatorHeaderComponent
+        threshold={threshold}
+        onFolderAdd={addYuzuFolder}
+        emulator="yuzu"
+      />
+      <br/>
+      <Divider/>
+      <br/>
       {
         (isAppReady)
           ? (

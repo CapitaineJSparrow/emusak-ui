@@ -5,8 +5,9 @@ import { IEmusakEmulatorConfig } from "../../types";
 import electron from "electron";
 import Swal from "sweetalert2";
 import { asyncExtract } from "../utils";
-import { readDir } from "../FService";
+import { pickOneFolder, readDir } from "../FService";
 import Zip from "adm-zip";
+import YuzuModel from "../../storage/yuzu";
 
 const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => {
 
@@ -104,6 +105,48 @@ export const getYuzuGames = async () => {
   } catch(e) {
     return false;
   }
+}
+
+export const addYuzuFolder = async () => {
+  const { value: accept } = await Swal.fire({
+    icon: 'info',
+    text: 'You must pick a valid Yuzu folder where "yuzu.exe" or "yuzu" (for linux users) is located. You can add multiple yuzu instances by clicking again this button',
+    showCancelButton: true,
+    cancelButtonText: 'later'
+  });
+
+  if (!accept) {
+    return false;
+  }
+
+  const path = await pickOneFolder();
+
+  if (!path) {
+    return false;
+  }
+
+  const dirents = await readDir(path);
+  const files = dirents.filter(d => d.isFile()).map(d => d.name);
+
+  if (!files.includes('yuzu.exe') && files.includes('yuzu')) {
+    Swal.fire({
+      icon: 'error',
+      text: 'No Yuzu.exe (or yuzu for linux users) has been found'
+    });
+    return;
+  }
+
+  const folders = dirents.filter(d => !d.isFile()).map(d => d.name.toLowerCase());
+
+  if (!folders.includes('user')) {
+    Swal.fire({
+      icon: 'error',
+      text: 'this is not a portable yuzu path'
+    });
+    return;
+  }
+
+  await YuzuModel.addDirectory({ isPortable: true, path });
 }
 
 export const installMod = async (titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
