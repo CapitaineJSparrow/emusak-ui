@@ -101,7 +101,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
                     onRefresh={loadPageData}
                     onSaveDownload={downloadSave}
                     onShareShaders={() => {}}
-                    onModsDownload={installMod}
+                    onModsDownload={(titleID: string, pickedVersion: string, modName: string, modFileName: string) => installMod(null, titleID, pickedVersion, modName, modFileName)}
                     emulator="yuzu"
                     isValid={isValid}
                   />

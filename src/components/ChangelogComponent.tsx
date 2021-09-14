@@ -41,6 +41,7 @@ const ChangelogComponent = () => {
           <li>"Shaders" tab has been renamed to "OpenGL shaders"</li>
           <li>mbps speed has been replaced by "MB/s"</li>
           <li>Allow to add yuzu portable</li>
+          <li>Fix mods not installed for yuzu in certain circumstances</li>
         </ul>
         <br/>
         <p>
