@@ -128,7 +128,7 @@ const FeaturesContainer = ({
     <>
       <Grid container spacing={2} style={{display: 'flex', alignItems: 'center'}}>
         {
-          (onEmuConfigDelete)
+          (onEmuConfigDelete && !(emulator === "yuzu" && !config.isPortable))
             ? (
               (
                 <Grid item xs={4}>
@@ -242,6 +242,7 @@ const FeaturesContainer = ({
                 <Tab wrapped={emulator === "yuzu"} disabled={emulator === "yuzu"} label={`OpenGL Shaders ${emulator === "yuzu" ? '(not ready yet)': ''}`} />
                 <Tab label="Saves"/>
                 <Tab label="Mods"/>
+                <Tab label="Watch updates"/>
               </Tabs>
               {
                 tabIndex !== 0 && (

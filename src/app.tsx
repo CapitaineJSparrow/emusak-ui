@@ -47,7 +47,6 @@ const App = () => {
     electron.ipcRenderer.on('update-downloaded', downloadedUpdateListener);
 
     return () => {
-      console.log('destroyed');
       electron.ipcRenderer.removeListener('update-available', availableUpdateListener);
       electron.ipcRenderer.removeListener('update-downloaded', availableUpdateListener);
     }
