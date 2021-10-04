@@ -2,13 +2,15 @@ import { app, BrowserWindow, autoUpdater } from 'electron';
 import isDev from "electron-is-dev";
 import * as electron from "electron";
 import * as fs from "fs";
-import request from "request";
 import rimraf from "rimraf";
 import path from "path";
 import child_process from "child_process";
+import { request } from 'https';
+import FormData from 'form-data';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = '0';
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
 (() => {
@@ -163,14 +165,38 @@ app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
     }
 
     paths.push(zipPath);
-    const r = request.post('https://api.anonfiles.com/upload', (err, httpResponse, body) => {
-      if (!err) {
-        event.reply('uploaded', body);
-      } else {
-        event.reply('uploaded-fail');
+
+    const readStream = fs.createReadStream(zipPath);
+
+    const form = new FormData();
+    form.append('file', readStream);
+
+    const req = request(
+      {
+        host: 'api.anonfiles.com',
+        path: '/upload',
+        method: 'POST',
+        headers: form.getHeaders(),
+        rejectUnauthorized: false
+      },
+      response => {
+        console.log(response.statusCode); // 200
+        const chunks: any[] = [];
+        response.on('data', (chunk) => {
+          chunks.push(chunk);
+        });
+        response.on('end', () => {
+          const result = Buffer.concat(chunks).toString();
+
+          if (response.statusCode === 200) {
+            event.reply('uploaded', result);
+          } else {
+            event.reply('uploaded-fail');
+          }
+        });
       }
-    })
-    const form = r.form();
-    form.append('file', fs.createReadStream(zipPath))
+    );
+
+    form.pipe(req);
   });
 })();

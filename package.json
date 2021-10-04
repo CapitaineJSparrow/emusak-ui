@@ -1,7 +1,7 @@
 {
   "name": "emusak",
   "productName": "emusak",
-  "version": "1.0.100",
+  "version": "1.0.101",
   "description": "Saves, shaders, firmwares and keys manager for switch emulators",
   "main": ".webpack/main",
   "repository": "https://github.com/stromcon/emusak-ui.git",
@@ -126,6 +126,7 @@
     "electron-icon-builder": "^2.0.1",
     "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
+    "form-data": "^4.0.0",
     "glob": "^7.1.7",
     "isomorphic-fetch": "^3.0.0",
     "p-retry": "^4.5.0",
