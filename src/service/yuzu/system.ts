@@ -9,9 +9,9 @@ import { pickOneFolder, readDir } from "../FService";
 import Zip from "adm-zip";
 import YuzuModel from "../../storage/yuzu";
 
-const getYuzuPath = (config: IEmusakEmulatorConfig, ...paths: string[]) => {
+const getYuzuPath = (config: IEmusakEmulatorConfig = null, ...paths: string[]) => {
 
-  if (config) {
+  if (config && config.isPortable) {
     return path.resolve(config.path, 'user', ...paths);
   }
 

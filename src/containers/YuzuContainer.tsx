@@ -93,10 +93,9 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
             directories.length > 0 && (
               directories.map((config, index) => {
                 return (
-                  <>
+                  <div key={`yuzu-container-${index}`}>
                     <FeaturesContainer
                       config={config}
-                      key={`yuzu-${index}`}
                       onFirmwareDownload={() => installFirmware(config)}
                       firmwareVersion={firmwareVersion}
                       onKeysDownload={() => installKeysToYuzu(config)}
@@ -114,7 +113,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
                       onEmuConfigDelete={onYuzuConfigRemove}
                     />
                     <br />
-                  </>
+                  </div>
                 )
               })
             )
