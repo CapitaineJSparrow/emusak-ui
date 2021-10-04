@@ -15,7 +15,7 @@ import { titleIdToName } from "../EshopDBService";
 const paths: string[] = [];
 
 export const countShadersFromGames = (titleIds: string[], config: IRyujinxConfig) => Promise.all(titleIds.map(async id => {
-  let shaderZipPath = getRyujinxPath(config, 'games', id, 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  let shaderZipPath = getRyujinxPath(config, 'games', id.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
   const exists = await fs.promises.access(shaderZipPath).then(() => true).catch(() => false);
 
   if (exists) { // To get shaders count, we just have to count files in zip archive
