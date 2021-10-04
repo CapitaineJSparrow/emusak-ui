@@ -166,7 +166,8 @@ export const makeRyujinxPortable = async (config: IRyujinxConfig) => {
 }
 
 // In emusak backend, mod are either "pchtxt" mods (text file) or zip archive
-export const installMod = async (config: IRyujinxConfig, titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
+export const installMod = async (config: IRyujinxConfig, t: string, pickedVersion: string, modName: string, modFileName: string) => {
+  const titleID = t.toLocaleLowerCase();
   const kind = modFileName.toLowerCase().includes('.pchtxt') ? 'pchtxt' : 'archive';
   let modPath: string;
 
@@ -182,7 +183,7 @@ export const installMod = async (config: IRyujinxConfig, titleID: string, picked
     await fs.promises.mkdir(modPath, { recursive: true });
   }
 
-  const modBuffer = await downloadMod(titleID, pickedVersion, modName, modFileName);
+  const modBuffer = await downloadMod(titleID.toUpperCase(), pickedVersion, modName, modFileName);
 
   if (kind === 'pchtxt') {
     await fs.promises.writeFile(path.resolve(modPath, `${modName}.pchtxt`), modBuffer, 'utf-8');

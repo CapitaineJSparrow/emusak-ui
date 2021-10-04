@@ -153,7 +153,8 @@ export const addYuzuFolder = async () => {
   await YuzuModel.addDirectory({ isPortable: true, path });
 }
 
-export const installMod = async (config: IEmusakEmulatorConfig = null, titleID: string, pickedVersion: string, modName: string, modFileName: string) => {
+export const installMod = async (config: IEmusakEmulatorConfig = null, t: string, pickedVersion: string, modName: string, modFileName: string) => {
+  const titleID = t.toLocaleLowerCase();
   const kind = modFileName.toLowerCase().includes('.pchtxt') ? 'pchtxt' : 'archive';
   let modPath: string;
 
@@ -169,7 +170,7 @@ export const installMod = async (config: IEmusakEmulatorConfig = null, titleID: 
     await fs.promises.mkdir(modPath, { recursive: true });
   }
 
-  const modBuffer = await downloadMod(titleID, pickedVersion, modName, modFileName);
+  const modBuffer = await downloadMod(titleID.toUpperCase(), pickedVersion, modName, modFileName);
 
   if (kind === 'pchtxt') {
     await fs.promises.writeFile(path.resolve(modPath, `${modName}.pchtxt`), modBuffer, 'utf-8');
