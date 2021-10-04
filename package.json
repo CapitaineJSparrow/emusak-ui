@@ -126,6 +126,7 @@
     "electron-icon-builder": "^2.0.1",
     "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
+    "form-data": "^4.0.0",
     "glob": "^7.1.7",
     "isomorphic-fetch": "^3.0.0",
     "p-retry": "^4.5.0",
@@ -135,6 +136,7 @@
     "request": "^2.88.2",
     "rimraf": "^3.0.2",
     "sweetalert2": "^10.16.6",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "unirest": "^0.6.0"
   }
 }
