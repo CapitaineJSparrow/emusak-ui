@@ -1,7 +1,7 @@
 {
   "name": "emusak",
   "productName": "emusak",
-  "version": "1.0.100",
+  "version": "1.0.101",
   "description": "Saves, shaders, firmwares and keys manager for switch emulators",
   "main": ".webpack/main",
   "repository": "https://github.com/stromcon/emusak-ui.git",
@@ -136,7 +136,6 @@
     "request": "^2.88.2",
     "rimraf": "^3.0.2",
     "sweetalert2": "^10.16.6",
-    "ts-node": "^9.1.1",
-    "unirest": "^0.6.0"
+    "ts-node": "^9.1.1"
   }
 }
