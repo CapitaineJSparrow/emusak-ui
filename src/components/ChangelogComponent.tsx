@@ -42,6 +42,7 @@ const ChangelogComponent = () => {
           <li>mbps speed has been replaced by "MB/s"</li>
           <li>Allow to add yuzu portable</li>
           <li>Fix mods not installed for yuzu in certain circumstances</li>
+          <li>Fix linux specific issue where mods are downloaded at wrong location</li>
         </ul>
         <br/>
         <p>
