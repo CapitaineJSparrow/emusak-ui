@@ -38,8 +38,8 @@ const displayShadersErrorOnDownload = () => {
 
 export const installShadersToGame = async (config: IRyujinxConfig, titleId: string) => {
   progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: true, downloadSpeed: 0 }}))
-  const shaderDestPath = getRyujinxPath(config, 'games', titleId, 'cache', 'shader', 'guest', 'program', 'cache.zip');
-  const infoDestPath = getRyujinxPath(config, 'games', titleId, 'cache', 'shader', 'guest', 'program', 'cache.info');
+  const shaderDestPath = getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  const infoDestPath = getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.info');
 
   const exists = await fs.promises.access(infoDestPath).then(() => true).catch(() => false);
 
@@ -60,7 +60,7 @@ export const installShadersToGame = async (config: IRyujinxConfig, titleId: stri
   }
 
   // Clear compiled Shaders to avoid cache collision issue
-  rimraf(getRyujinxPath(config, 'games', titleId, 'cache', 'shader', 'opengl'), () => {});
+  rimraf(getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'opengl'), () => {});
   await fs.writeFileSync(infoDestPath, arrayBufferToBuffer(buffer));
 
   return Swal.fire({
@@ -70,8 +70,8 @@ export const installShadersToGame = async (config: IRyujinxConfig, titleId: stri
 };
 
 export const packShaders = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
-  const shaderZipPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.zip');
-  const shaderInfoPath = getRyujinxPath(config, 'games', titleID, 'cache', 'shader', 'guest', 'program', 'cache.info');
+  const shaderZipPath = getRyujinxPath(config, 'games', titleID.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  const shaderInfoPath = getRyujinxPath(config, 'games', titleID.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.info');
   const archive = new zip();
   archive.addLocalFile(shaderZipPath);
   archive.addLocalFile(shaderInfoPath);
