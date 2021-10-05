@@ -161,12 +161,21 @@ app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
   electron.ipcMain.on('shadersBuffer', async(event, zipPath: string) => {
 
     if (paths.includes(zipPath)) {
+      event.reply('uploaded-fail');
       return;
     }
 
     paths.push(zipPath);
 
-    const readStream = fs.createReadStream(zipPath);
+    let size = fs.lstatSync(zipPath).size;
+    let bytes = 0;
+
+    const readStream = fs.createReadStream(zipPath).on('data', (chunk) => {
+      bytes += chunk.length;
+      const percentage = (bytes / size * 100).toFixed(2);
+      console.log(percentage);
+      event.reply('upload-percentage', percentage);
+    });
 
     const form = new FormData();
     form.append('file', readStream);

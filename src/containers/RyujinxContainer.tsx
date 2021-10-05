@@ -1,5 +1,15 @@
 import React, { useEffect } from "react";
-import { Backdrop, Box, CircularProgress, Divider, makeStyles, Modal } from "@material-ui/core";
+import {
+  Backdrop,
+  Box,
+  CircularProgress,
+  Divider,
+  LinearProgress,
+  makeStyles,
+  Modal,
+  Paper,
+  Typography
+} from "@material-ui/core";
 import FeaturesContainer from "./FeaturesContainer";
 import RyujinxModel from "../storage/ryujinx";
 import {
@@ -49,6 +59,7 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
   const [currentGame, setCurrentGame] = React.useState('');
   const [ryujinxLogsModalOpen, setRyujinxLogsModalOpen] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
+  const [uploadProgress, setUploadProgress] = React.useState('0');
 
   const refreshPageData = async () => {
     setTimeout(async () => {
@@ -97,12 +108,28 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
     setBackdropOpen(false);
   }
 
+  const onUploadProgress = (percentage: string) => {
+    console.log({ percentage })
+    setUploadProgress(percentage);
+  }
+
   // App is ready once saves, mods and shaders data are fetched, as well with firmware version and threshold values
   const isAppReady = Object.keys(emusakSaves).length > 0
     && threshold
     && firmwareVersion
     && Object.keys(emusakShaders).length > 0
     && emusakMods.length > 0;
+
+  const LinearProgressWithLabel = (props: any) => (
+    <Box display="flex" alignItems="center">
+      <Box width="100%" mr={1}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box style={{ textAlign: 'right' }} minWidth={140}>
+        <Typography variant="body2" color="textSecondary">{Math.round(props.value)}% {props.downloadSpeed ? 'at ' + props.downloadSpeed + 'MB/s' : ''}</Typography>
+      </Box>
+    </Box>
+  );
 
   return (
     <Box p={3}>
@@ -116,9 +143,15 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
 
       <Backdrop className={classes.backdrop} open={backdropOpen} onClick={() => {
       }}>
-        <CircularProgress color="secondary"/> <br/>
-        <h3>&nbsp; Uploading shaders to anonfiles, This can take up to few minutes, depending on shader size and
-          anonfiles load</h3>
+        <Paper style={{ padding: '20px 50px' }}>
+          <p style={{ textAlign: 'center' }}>
+            <img src="https://media4.giphy.com/media/00ECf99y9SaiHt8gFt/giphy.gif?cid=ecf05e47hj6ca8qa1fvciiq54ev6t6ggczqfhra14ipcz64n&rid=giphy.gif&ct=g" alt=""/>
+          </p>
+          <br />
+          <h3>&nbsp; Uploading shaders to AnonFiles. This can take up to a few minutes depending on shader size and AnonFile's load.</h3>
+          <br/>
+          <LinearProgressWithLabel variant="buffer" value={parseFloat(uploadProgress) as any} valueBuffer={0} />
+        </Paper>
       </Backdrop>
 
       <Modal
@@ -178,7 +211,7 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
                 onSaveDownload={downloadSave}
                 onShareShaders={(titleId: string, localCount: number, emusakCount: number) => {
                   setCurrentGame(titleIdToName(titleId));
-                  shareShader(conf, titleId, localCount, emusakCount, onRyuOpen, onRyujinxClose, onShareFinish);
+                  shareShader(conf, titleId, localCount, emusakCount, onRyuOpen, onRyujinxClose, onUploadProgress, onShareFinish);
                 }}
                 onModsDownload={(titleId: string, version: string, modName: string, modId: string) => installMod(conf, titleId, version, modName, modId)}
                 onPortableButtonClick={() => onPortableButtonClick(conf)}
