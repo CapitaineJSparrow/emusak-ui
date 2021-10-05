@@ -173,7 +173,6 @@ app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
     const readStream = fs.createReadStream(zipPath).on('data', (chunk) => {
       bytes += chunk.length;
       const percentage = (bytes / size * 100).toFixed(2);
-      console.log(percentage);
       event.reply('upload-percentage', percentage);
     });
 

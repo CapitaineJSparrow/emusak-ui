@@ -219,7 +219,6 @@ export const shareShader = async (
   electron.ipcRenderer.send('shadersBuffer', shadersPath);
 
   electron.ipcRenderer.on('upload-percentage', (_, percentage) => {
-    console.log(typeof percentage, percentage);
     onUploadProgress(percentage);
   })
 
