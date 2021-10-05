@@ -18,21 +18,21 @@ jobs:
           view_top: 1
       - name: "Update PKGVER in PKGBUILD"
         run: sed -i '/pkgver=/s/$/'$(echo '${{ steps.latestrelease.outputs.tag_name }}' |  sed 's/v//g')'/' AUR/PKGBUILD
+      - run: cp AUR/PKGBUILD .
       - name: "Update PKGBUILD Checksums and generate SRCINFO"
         uses: datakrama/archlinux-package-action@v1.0.3
-        with:
-          path: AUR/    
+        with: 
           updpkgsums: true
           srcinfo: true
           namcap: false
           flags: ''
-      - run: cat AUR/PKGBUILD
-      - run: cat AUR/.SRCINFO
+      - run: cat PKGBUILD
+      - run: cat .SRCINFO
       - name: "Push to AUR"
         uses: KSXGitHub/github-actions-deploy-aur@v2.2.5
         with:
           pkgname: emusak-bin
-          pkgbuild: AUR/PKGBUILD
+          pkgbuild: PKGBUILD
           commit_username: ${{ secrets.AUR_USERNAME }}
           commit_email: ${{ secrets.AUR_EMAIL }}
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
