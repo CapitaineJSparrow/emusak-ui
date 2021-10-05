@@ -133,6 +133,7 @@ export const shareShader = async (
   emusakCount: number = 0,
   onRyujinxOpen: Function,
   onRyujinxClose: Function,
+  onUploadProgress: Function,
   done: Function
 ) => {
 
@@ -216,6 +217,12 @@ export const shareShader = async (
 
   const shadersPath = await packShaders(config, titleID);
   electron.ipcRenderer.send('shadersBuffer', shadersPath);
+
+  electron.ipcRenderer.on('upload-percentage', (_, percentage) => {
+    console.log(typeof percentage, percentage);
+    onUploadProgress(percentage);
+  })
+
   electron.ipcRenderer.on('uploaded', async (_, body) => {
 
     // IPC can trigger multiple time for same event, we just want to be sure it triggers only one time
