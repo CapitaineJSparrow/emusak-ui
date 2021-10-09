@@ -5,7 +5,7 @@ const PATHS = {
   FIRMWARE: `${process.env.EMUSAK_CDN}/firmware/firmware.zip`,
   KEYS: `${process.env.EMUSAK_CDN}/firmware/prod.keys`,
 
-  SHADERS_COUNT: `${process.env.EMUSAK_CDN}/bo/api/shaders/ryujinx/count`,
+  SHADERS_COUNT: `${process.env.EMUSAK_CDN}/v2/shaders/ryujinx/count`,
   SHADERS_INFO: `${process.env.EMUSAK_CDN}/ryu/{id}.info`,
   SHADERS_ZIP: `${process.env.EMUSAK_CDN}/ryu/{id}.zip`,
 
