@@ -36,13 +36,8 @@ const ChangelogComponent = () => {
         <br />
         <ul style={{ marginLeft: 20 }}>
           <li><b><u>Never</u> ask for emusak support in official Ryujinx or Yuzu channels (discord, reddit, ...)</b></li>
-          <li>Fix a crash on linux when yuzu was not installed</li>
-          <li>Detecting yuzu path when installed with snap package manager on debian (ubuntu, popos, ...)</li>
-          <li>"Shaders" tab has been renamed to "OpenGL shaders"</li>
-          <li>mbps speed has been replaced by "MB/s"</li>
-          <li>Allow to add yuzu portable</li>
-          <li>Fix mods not installed for yuzu in certain circumstances</li>
-          <li>Fix linux specific issue where mods are downloaded at wrong location</li>
+          <li>Improve backend reliability</li>
+          <li>Fix github actions to push emusak updates to AUR (archlinux packages repository). Thanks <code>LiveLM</code> !</li>
         </ul>
         <br/>
         <p>
