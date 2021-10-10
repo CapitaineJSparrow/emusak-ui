@@ -9,14 +9,14 @@ const PATHS = {
   SHADERS_INFO: `${process.env.EMUSAK_CDN}/ryu/{id}.info`,
   SHADERS_ZIP: `${process.env.EMUSAK_CDN}/ryu/{id}.zip`,
 
-  SAVES_LIST: `${process.env.EMUSAK_CDN}/bo/api/saves`,
+  SAVES_LIST: `${process.env.EMUSAK_CDN}/v2/saves`,
   MODS_LIST: `${process.env.EMUSAK_CDN}/mods/`,
   MODS_VERSION_LIST: `${process.env.EMUSAK_CDN}/mods/{id}/`,
   MODS_LIST_BY_VERSION: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/`,
   MODS_LIST_BY_MOD: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/{modName}/`,
 
   MOD_DOWNLOAD: `${process.env.EMUSAK_CDN}/mods/{id}/{version}/{modName}/{modId}`,
-  SAVES_DOWNLOAD: `${process.env.EMUSAK_CDN}/bo/api/saves?id={id}&index={index}`,
+  SAVES_DOWNLOAD: `${process.env.EMUSAK_CDN}/v2/saves?id={id}&index={index}`,
 }
 
 export const getKeysContent = (): Promise<string> => httpRequest(PATHS.KEYS).then(r => r.text());
