@@ -38,6 +38,7 @@ const ChangelogComponent = () => {
           <li><b><u>Never</u> ask for emusak support in official Ryujinx or Yuzu channels (discord, reddit, ...)</b></li>
           <li>Improve backend reliability</li>
           <li>Fix github actions to push emusak updates to AUR (archlinux packages repository). Thanks <code>LiveLM</code> !</li>
+          <li>Fix an issue preventing users to display "Download keys" or "firmware" buttons when they have never launched any game in yuzu.</li>
         </ul>
         <br/>
         <p>
