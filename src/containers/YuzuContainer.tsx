@@ -45,7 +45,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
       /**
        * Yuzu an be installed globally unlike ryujinx, so we need to display on top of portable config the global config
        */
-      if ((g || []).length > 0) {
+      if (g) {
         yuzuConfigs.unshift({
           path: 'AppData\\Roaming\\yuzu',
           isPortable: false,
