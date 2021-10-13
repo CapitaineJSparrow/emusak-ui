@@ -20,8 +20,11 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Did you used fitgirl repack to install Ryujinx**
+[Yes/no]
+
 **Screenshots**
-If applicable, add screenshots to help explain your problem.
+Add screenshots to help explain your problem. Even it seems to be irrelevant this can probably help
 
 **Desktop (please complete the following information):**
  - OS: [e.g. windows or linux]
