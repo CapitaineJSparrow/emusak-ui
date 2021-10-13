@@ -31,7 +31,14 @@ export const isRyujinxPortableMode = async (path: string): Promise<boolean> => {
 /**
  * Util function to get path in same way if ryu is portable or not
  */
-export const getRyujinxPath = (config: IRyujinxConfig, ...paths: string[]): string => {
+export const getRyujinxPath = async (config: IRyujinxConfig, ...paths: string[]): Promise<string> => {
+
+  const isFitgirlRepack = fs.promises.stat(path.resolve(config.path, '..', 'data', 'games')).then(() => true).catch(() => false);
+
+  if (isFitgirlRepack) {
+    return path.resolve(config.path, '..', 'data', ...paths);
+  }
+
   if (config.isPortable) {
     return path.resolve(config.path, 'portable', ...paths);
   }
@@ -89,7 +96,7 @@ export const installFirmware = async () => {
 
 export const downloadKeys = async (config: IRyujinxConfig, withAlert = true) => {
   const keysContent = await getKeysContent();
-  const systemPath = getRyujinxPath(config, 'system');
+  const systemPath = await getRyujinxPath(config, 'system');
   const exists = await fs.promises.stat(systemPath).catch(() => null);
 
   if (!exists) {
@@ -113,7 +120,7 @@ export const downloadKeys = async (config: IRyujinxConfig, withAlert = true) => 
 }
 
 export const listGamesWithNameAndShadersCount = async (configs: IRyujinxConfig[]): Promise<IEmusakEmulatorConfig[]> => Promise.all(configs.map(async config => {
-  const gameDirectory = getRyujinxPath(config, 'games');
+  const gameDirectory = await getRyujinxPath(config, 'games');
   const exists = await fs.promises.stat(gameDirectory).catch(() => null);
 
   if (!exists) {
@@ -172,9 +179,9 @@ export const installMod = async (config: IRyujinxConfig, t: string, pickedVersio
   let modPath: string;
 
   if (kind === 'pchtxt') {
-    modPath = getRyujinxPath(config, 'mods', 'contents', titleID, modName, 'exefs');
+    modPath = await getRyujinxPath(config, 'mods', 'contents', titleID, modName, 'exefs');
   } else {
-    modPath = getRyujinxPath(config, 'mods', 'contents', titleID);
+    modPath = await getRyujinxPath(config, 'mods', 'contents', titleID);
   }
 
   const exists = await fs.promises.access(modPath).then(() => true).catch(() => false);
@@ -204,7 +211,7 @@ export const installMod = async (config: IRyujinxConfig, t: string, pickedVersio
 
   // Clear PTC cache as asked
   if (value) {
-    const ptcCachePath = getRyujinxPath(config, 'games', titleID, 'cache', 'cpu');
+    const ptcCachePath = await getRyujinxPath(config, 'games', titleID, 'cache', 'cpu');
     const cacheFiles = await asyncGlob(`${ptcCachePath}/**/*.cache`).catch(() => []) as string[];
     await Promise.all(cacheFiles.map(file => fs.promises.unlink(file)));
     await Swal.fire({
