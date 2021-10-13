@@ -15,7 +15,7 @@ import { titleIdToName } from "../EshopDBService";
 const paths: string[] = [];
 
 export const countShadersFromGames = (titleIds: string[], config: IRyujinxConfig) => Promise.all(titleIds.map(async id => {
-  let shaderZipPath = getRyujinxPath(config, 'games', id.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  let shaderZipPath = await getRyujinxPath(config, 'games', id.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
   const exists = await fs.promises.access(shaderZipPath).then(() => true).catch(() => false);
 
   if (exists) { // To get shaders count, we just have to count files in zip archive
@@ -38,8 +38,8 @@ const displayShadersErrorOnDownload = () => {
 
 export const installShadersToGame = async (config: IRyujinxConfig, titleId: string) => {
   progressEvent.dispatchEvent(new CustomEvent('progress', { detail: { progress: 0, open: true, downloadSpeed: 0 }}))
-  const shaderDestPath = getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
-  const infoDestPath = getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.info');
+  const shaderDestPath = await getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  const infoDestPath = await getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.info');
 
   const exists = await fs.promises.access(infoDestPath).then(() => true).catch(() => false);
 
@@ -60,7 +60,7 @@ export const installShadersToGame = async (config: IRyujinxConfig, titleId: stri
   }
 
   // Clear compiled Shaders to avoid cache collision issue
-  rimraf(getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'opengl'), () => {});
+  rimraf(await getRyujinxPath(config, 'games', titleId.toLowerCase(), 'cache', 'shader', 'opengl'), () => {});
   await fs.writeFileSync(infoDestPath, arrayBufferToBuffer(buffer));
 
   return Swal.fire({
@@ -70,8 +70,8 @@ export const installShadersToGame = async (config: IRyujinxConfig, titleId: stri
 };
 
 export const packShaders = async (config: IRyujinxConfig, titleID: string): Promise<any> => {
-  const shaderZipPath = getRyujinxPath(config, 'games', titleID.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
-  const shaderInfoPath = getRyujinxPath(config, 'games', titleID.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.info');
+  const shaderZipPath = await getRyujinxPath(config, 'games', titleID.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.zip');
+  const shaderInfoPath = await getRyujinxPath(config, 'games', titleID.toLowerCase(), 'cache', 'shader', 'guest', 'program', 'cache.info');
   const archive = new zip();
   archive.addLocalFile(shaderZipPath);
   archive.addLocalFile(shaderInfoPath);
@@ -161,9 +161,9 @@ export const shareShader = async (
     return;
   }
 
-  const ldnConfigPath = getRyujinxPath(config, 'LDNConfig.json');
+  const ldnConfigPath = await getRyujinxPath(config, 'LDNConfig.json');
   const hasLdnConfigFile = await fs.promises.access(ldnConfigPath).then(() => true).catch(() => false);
-  const standardConfigPath = getRyujinxPath(config, 'Config.json');
+  const standardConfigPath = await getRyujinxPath(config, 'Config.json');
   const hasStandardConfigFile = await fs.promises.access(standardConfigPath).then(() => true).catch(() => false);
 
   if (hasLdnConfigFile) {
