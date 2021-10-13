@@ -113,7 +113,7 @@ const ModsListComponent = ({ games, emusakMods, onModsDownload }: IModsListCompo
                           disabled={disabled}
                           onClick={() => onDownloadModButtonClick(g.id.toUpperCase())}
                         >
-                          { disabled ? 'No mods data' : 'Download mods' }
+                          { disabled ? 'No mod data' : 'Download mods' }
                         </Button>
                       </Box>
                     </TableCell>

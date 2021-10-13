@@ -84,7 +84,7 @@ export const httpRequestWithProgress = async (url: string, destPath?: string) =>
   if (receivedLength !== contentLength) {
     await Swal.fire({
       icon: 'error',
-      text: 'For an unknown reason, downloaded content has been corrupted during transfer. Please retry.'
+      text: 'For an unknown reason, the downloaded content has been corrupted during transfer. Please retry.'
     });
     sendDownloadFinishedEvent();
     return Promise.reject(`Received bytes length does not match content length`);

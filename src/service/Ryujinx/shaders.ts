@@ -65,7 +65,7 @@ export const installShadersToGame = async (config: IRyujinxConfig, titleId: stri
 
   return Swal.fire({
     icon: 'success',
-    text: 'Shaders successfully installed. Please note, to avoid "cache collision" issue, you will have to rebuild all shaders from scratch on next launch for that game (emusak cleared precompiled shaders)'
+    text: 'Shaders successfully installed. Please note, to avoid "cache collision" issues, you will have to rebuild all shaders from scratch on your next launch for that game (EmuSAK cleared precompiled shaders)'
   });
 };
 
@@ -144,15 +144,15 @@ export const shareShader = async (
     Swal.fire({
       icon: 'error',
       title: 'error',
-      text: 'You already shared those shaders, thanks !'
+      text: 'You already shared those shaders, thanks!'
     });
     return false;
   }
 
   const { value } = await Swal.fire({
     icon: "info",
-    html: `To be sure your submission is valid, emusak will do a sanity check. Ryujinx will be open and you'll have to run <b>${gameName}</b> to make sure no errors are encountered while compiling shaders before share them to everyone. <br /> <br /> <b style="color: #e74c3c">Please close any opened Ryujinx instance before continue</b>. Emusak will automatically close Ryujinx when shaders compilation is finished`,
-    confirmButtonText: "I'm ready, let's go !",
+    html: `To be sure your submission is valid, EmuSAK will do a sanity check. Ryujinx will be open and you'll have to run <b>${gameName}</b> to make sure no errors are encountered while compiling the shaders before you share them to everyone. <br /> <br /> <b style="color: #e74c3c">Please close any opened Ryujinx instances before continuing</b>. EmuSAK will automatically close Ryujinx when shader compilation is finished`,
+    confirmButtonText: "I'm ready, let's go!",
     cancelButtonText: "Later",
     showCancelButton: true
   });
@@ -192,7 +192,7 @@ export const shareShader = async (
     done();
     await Swal.fire({
       icon: 'error',
-      text: 'You either closed Ryujinx before running the game or Ryujinx crashed'
+      text: 'You either closed Ryujinx before running the game or Ryujinx crashed.'
     })
     return;
   }
@@ -201,7 +201,7 @@ export const shareShader = async (
     done();
     await Swal.fire({
       icon: 'error',
-      text: `You ran the wrong game ! You had to launch ${gameName}`
+      text: `You ran the wrong game! You had to launch ${gameName}`
     })
     return;
   }
@@ -210,7 +210,7 @@ export const shareShader = async (
     done();
     await Swal.fire({
       icon: 'error',
-      text: `You have ${localCount} on your cache but Ryujinx compiled ${result.compiledShadersCount}. That means some shaders are either corrupted or rejected. This probably not your fault, that maybe means you build shaders since a long time ago and Ryujinx choose to reject them because they changed something in the code and the game probably run fine. But because we share shaders to everyone, we choose to reject your submission to avoid any conflict because we are not sure at 100% this will not cause issue to anyone`
+      text: `You have ${localCount} on your cache but Ryujinx compiled ${result.compiledShadersCount}. That means that some shaders are either corrupted or rejected. This probably isn't your fault, it probably means you build shaders a longer time ago and Ryujinx chose to reject them because they changed something in their code. The game probably run fine, but because we share shaders to everyone, we chose to reject your submission to avoid any conflict as we aren't 100% sure if this will cause issue to anyone.`
     })
     return;
   }
@@ -233,7 +233,7 @@ export const shareShader = async (
     paths.push(key);
 
     const json = JSON.parse(body);
-    const message = `Hey there, I'm sharing my shaders using emusak v${electron.remote.app.getVersion()} for **${gameName}** v${result.ranTitleVersion} (${titleID.toUpperCase()}). I have ${localCount} shaders while emusak has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
+    const message = `Hey there, I'm sharing my shaders using EmuSAK v${electron.remote.app.getVersion()} for **${gameName}** v${result.ranTitleVersion} (${titleID.toUpperCase()}). I have ${localCount} shaders while EmuSAK has ${emusakCount} shaders. Download them from here : \`${btoa(json.data.file.url.short)}\``;
     const response = await postEmusakShaderShare(message);
     try {
       rimraf(shadersPath, () => {});
@@ -246,13 +246,13 @@ export const shareShader = async (
       Swal.fire({
         icon: 'success',
         title: 'Success !',
-        text: 'You shaders has been submitted ! You can find them in #ryu-shaders channel. Once approved it will be shared to everyone !'
+        text: 'You shaders have been submitted! You can find them in #ryu-shaders channel. Once approved they will be shared to everyone!'
       });
     } else {
       Swal.fire({
         icon: 'error',
         title: 'rate limit',
-        text: 'You shared too many times shaders. Please retry a bit later we just want to avoid spam'
+        text: 'You shared too many times shaders. Please retry a bit later, we just want to avoid spam.'
       });
     }
   });
@@ -262,7 +262,7 @@ export const shareShader = async (
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'An error occurred during the upload process. Anonfiles is maybe down or not available in your country. Please retry a bit later'
+      text: 'An error occurred during the upload process. AnonFiles could be down or not available in your country. Please retry a bit later.'
     });
   })
 }

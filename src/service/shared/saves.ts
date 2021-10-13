@@ -12,7 +12,7 @@ export const downloadSave = async (id: string, saveIndex: number, filename: stri
   await Swal.fire({
     icon: 'success',
     title: 'Job done !',
-    html: `Emusak downloaded save to your <i>Documents</i> folder and will open windows explorer. If file or explorer does not show up, try to add an exception for emusak to your antivirus`
+    html: `EmuSAK downloaded the save to your <i>Documents</i> folder and will open Windows Explorer. If file or explorer does not show up, try to add an exception for EmuSAK to your Antivirus`
   })
   electron.shell.showItemInFolder(documentsPath);
 }

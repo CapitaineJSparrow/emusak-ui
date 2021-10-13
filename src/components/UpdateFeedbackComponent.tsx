@@ -22,7 +22,7 @@ const UpdateFeedbackComponent = ({
     if (downloadState === 'DOWNLOADED') {
       Swal.fire({
         icon: 'success',
-        text: 'Update has been downloaded ! Do you want to restart to apply ?',
+        text: 'Update has been downloaded! Do you want to restart to apply?',
         showCancelButton: true
       })
       .then(({ value }) => {
@@ -41,7 +41,7 @@ const UpdateFeedbackComponent = ({
         return (
           <div style={{ padding: 20 }}>
             <Alert severity="info">
-              You have version v{currentVersion}, please consider update to latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (v{latestVersion})
+              You have version v{currentVersion}, please consider updating to the latest version from <a href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (v{latestVersion})
             </Alert>
           </div>
         );
@@ -52,9 +52,9 @@ const UpdateFeedbackComponent = ({
 
     switch (downloadState) {
       case 'DOWNLOADING':
-        return (<div style={{ padding: 20 }}><Alert severity="info">A new emusak version is downloading in background ! Please do not close application until it is complete.</Alert></div>);
+        return (<div style={{ padding: 20 }}><Alert severity="info">A new EmuSAK version is downloading in the background! Please do not close EmuSAK until it is complete.</Alert></div>);
       case 'DOWNLOADED':
-        return (<div style={{ padding: 20 }}><Alert severity="info">Emusak update has been downloaded and will be applied on next launch.</Alert></div>);
+        return (<div style={{ padding: 20 }}><Alert severity="info">EmuSAK update has been downloaded and will be applied on next launch.</Alert></div>);
     }
 
     return null;

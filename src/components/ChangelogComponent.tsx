@@ -35,15 +35,15 @@ const ChangelogComponent = () => {
         <h1 style={{ textAlign: 'center' }}>What's new ? v{version}</h1>
         <br />
         <ul style={{ marginLeft: 20 }}>
-          <li><b><u>Never</u> ask for emusak support in official Ryujinx or Yuzu channels (discord, reddit, ...)</b></li>
+          <li><b><u>Never</u> ask for EmuSAK support in the official Ryujinx or yuzu channels (Discord, Reddit, etc.)</b></li>
           <li>Improve backend reliability</li>
-          <li>Fix github actions to push emusak updates to AUR (archlinux packages repository). Thanks <code>LiveLM</code> !</li>
-          <li>Fix an issue preventing users to display "Download keys" or "firmware" buttons when they have never launched any game in yuzu.</li>
-          <li>Add fitgirl repacks support, I don't recommend to use them but it's mainly to avoid people asking for support.</li>
+          <li>Fix Github Actions to push EmuSAK updates to AUR (Arch User Repository). Thanks <code>LiveLM</code> !</li>
+          <li>Fix an issue preventing users to display "Download keys" or "firmware" buttons when they have never launched any game in Yuzu.</li>
+          <li>Add FitGirl Repacks support, I don't recommend to use them but it's mainly to avoid people asking for support.</li>
         </ul>
         <br/>
         <p>
-          As always, thanks for testing this software. If you have more shaders than Emusak, please share them using the button. If you have any suggestion or issues, please hang me <code style={{ display: 'inline' }}>Capitaine J. Sparrow#0096</code> on discord, or feel free to create an issue on <a
+          As always, thanks for testing this software. If you have more shaders than EmuSAK, please share them using the button. If you have any suggestion or issues, please message me <code style={{ display: 'inline' }}>Capitaine J. Sparrow#0096</code> on Discord, or feel free to create an issue on <a
           href="#" onClick={() => electron.shell.openExternal("https://github.com/stromcon/emusak-ui")}>Github</a> (or create a pull request !)
         </p>
       </div>

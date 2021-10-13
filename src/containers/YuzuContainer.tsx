@@ -30,7 +30,7 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
       if (!isValidFS && yuzuDirectories.length === 0) {
         Swal.fire({
           icon: 'error',
-          text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu one time to let it create required folders on your disk. Once you ran yuzu, please use the reload button near the "Filter game list" input. If you are using yuzu with portable mode, use the "Add yuzu folder" above.'
+          text: 'Cannot find a valid filesystem for yuzu. You need to run yuzu once to let it create required folders on your disk. Once you ran yuzu, please use the reload button near the "Filter game list" input. If you are using yuzu with portable mode, use the "Add yuzu folder" above.'
         })
         return false;
       }
@@ -123,9 +123,9 @@ const YuzuContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}: IR
               <CircularProgress/>
               <br/>
               <br/>
-              <h3>Loading data from emusak. If this process never finish, emusak might be temporary down or
+              <h3>Loading data from EmuSAK. If this process never finish, EmuSAK might be temporary down or
                 something is wrong with your network.</h3>
-              <h4>You can check emusak status by clicking this link <a href="#" onClick={() => electron.shell.openExternal("https://emusak.betteruptime.com/")}>https://emusak.betteruptime.com</a>
+              <h4>You can check EmuSAK's status by clicking this link <a href="#" onClick={() => electron.shell.openExternal("https://emusak.betteruptime.com/")}>https://emusak.betteruptime.com</a>
               </h4>
             </Box>
           )

@@ -20,7 +20,7 @@ class RyujinxModel implements IEmulatorStorageInterface {
         await Swal.fire({
           icon: 'error',
           title: 'Configuration cleared',
-          text: `Path: ${path} does not exists anymore, so emusak cleared configuration. You must add again all your ryujinx instances using "Add Ryujinx folder" button again.`
+          text: `Path: ${path} doesn't exist anymore, so EmuSAK cleared your configuration. You must add all your Ryujinx instances again using "Add Ryujinx folder" button.`
         });
         return false;
       }
