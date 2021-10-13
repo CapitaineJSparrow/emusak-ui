@@ -33,7 +33,7 @@ export const isRyujinxPortableMode = async (path: string): Promise<boolean> => {
  */
 export const getRyujinxPath = async (config: IRyujinxConfig, ...paths: string[]): Promise<string> => {
 
-  const isFitgirlRepack = fs.promises.stat(path.resolve(config.path, '..', 'data', 'games')).then(() => true).catch(() => false);
+  const isFitgirlRepack = await fs.promises.stat(path.resolve(config.path, '..', 'data', 'games')).then(() => true).catch(() => false);
 
   if (isFitgirlRepack) {
     return path.resolve(config.path, '..', 'data', ...paths);
