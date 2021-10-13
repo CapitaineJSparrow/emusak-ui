@@ -224,9 +224,9 @@ const RyujinxContainer = ({threshold, firmwareVersion, emusakSaves, emusakMods}:
               <CircularProgress/>
               <br/>
               <br/>
-              <h3>Loading data from emusak. If this process never finish, emusak might be temporary down or something is
+              <h3>Loading data from EmuSAK. If this process never finishes, EmuSAK might be temporary down or something is
                 wrong with your network.</h3>
-              <h4>You can check emusak status by clicking this link <a href="#" onClick={() => electron.shell.openExternal("https://emusak.betteruptime.com/")}>https://emusak.betteruptime.com</a>
+              <h4>You can check EmuSAK's status by clicking this link <a href="#" onClick={() => electron.shell.openExternal("https://emusak.betteruptime.com/")}>https://emusak.betteruptime.com</a>
               </h4>
             </Box>
           )

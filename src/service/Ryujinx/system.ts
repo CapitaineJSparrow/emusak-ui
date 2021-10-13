@@ -49,7 +49,7 @@ export const getRyujinxPath = async (config: IRyujinxConfig, ...paths: string[])
 export const addRyujinxFolder = async () => {
   const { value: accept } = await Swal.fire({
     icon: 'info',
-    text: 'You must pick a valid Ryujinx folder where "Ryujinx.exe" or "Ryujinx" (for linux users) is located. If you are using portable mode, you can add multiple Ryujinx instances by clicking again this button',
+    text: 'You must pick a valid Ryujinx folder where "Ryujinx.exe" or "Ryujinx" (for Linux users) is located. If you are using portable mode, you can add multiple Ryujinx instances by clicking this button again.',
     showCancelButton: true,
     cancelButtonText: 'later'
   });
@@ -68,7 +68,7 @@ export const addRyujinxFolder = async () => {
   if (!isValid) {
     await Swal.fire({
       icon: 'error',
-      text: '"Ryujinx.exe" or "Ryujinx" (for linux users) was not found in this location'
+      text: '"Ryujinx.exe" or "Ryujinx" (for Linux users) was not found in this location'
     });
     return false
   }
@@ -88,7 +88,7 @@ export const installFirmware = async () => {
   await Swal.fire({
     icon: 'success',
     title: 'Job done !',
-    html: 'Emusak downloaded firmware to your <i>Documents</i> folder and will open windows explorer. If file or explorer does not show up, try to add an exception for emusak to your antivirus. To install firmware, Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file'
+    html: 'EmuSAK downloaded firmware to your <i>Documents</i> folder and will open Windows Explorer. If file or explorer does not show up, try to add an exception for EmumSAK to your Antivirus. To install firmware, Go to Ryujinx ⇾ Tools ⇾ Install Firmware ⇾ "Install Firmware from xci or zip" and select the downloaded file'
   });
 
   electron.shell.showItemInFolder(firmwareDestPath);
@@ -157,12 +157,12 @@ export const makeRyujinxPortable = async (config: IRyujinxConfig) => {
     icon: 'success',
     // html: `Emusak created a "portable" directory at <code>${portableDirectoryPath}</code> and installed keys. Ryujinx will create the filesystem structures at this location when you launch any game next time, so please run a game and use the "reload" button (near the filter search) or relaunch emusak then. You will also need to re-install firmware : Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file (or use the "download firmware button" if you don't have archive yet)`
     html: `<ul style="list-style: none; text-align: left">
-        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> Emusak created a "portable" directory at <code>${portableDirectoryPath}</code></li>
-        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> Emusak downloaded keys</li>
-        <li><b style="color: #3498db; font-size: 1.4em">?</b> You'll need to install firmware again, if you don't have firmware archive use the "Download firmware" button then : Go to Ryujinx ⇾ tools ⇾ install firmware ⇾ "Install Firmware from xci or zip" and select downloaded file</li>
-        <li><b style="color: #3498db; font-size: 1.4em">?</b> You configuration is now empty, Go to "options" ⇾ settings and update your settings again (such as controllers or game directories)</li>
-        <li><b style="color: #3498db; font-size: 1.4em">?</b> Ryujinx will create the right file structure in portable directory when you run any game next time, so launch any title and either restart emusak or use the reload button near the filter input</li>
-        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> To revert this changes, just delete the portable directory</li>
+        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> EmuSAK created a "portable" directory at <code>${portableDirectoryPath}</code></li>
+        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> EmuSAK downloaded keys</li>
+        <li><b style="color: #3498db; font-size: 1.4em">?</b> You'll need to install firmware again, if you don't have a firmware archive use the "Download firmware" button, after that: Go to Ryujinx ⇾ Tools ⇾ Install firmware ⇾ "Install Firmware from xci or zip" and select the downloaded file</li>
+        <li><b style="color: #3498db; font-size: 1.4em">?</b> Your configuration is now empty, Go to "options" ⇾ settings and update your settings again (such as controllers or game directories)</li>
+        <li><b style="color: #3498db; font-size: 1.4em">?</b> Ryujinx will create the right file structure in the portable directory when you run any game next time, so launch any title and either restart EmuSAK or use the reload button near the filter input</li>
+        <li><b style="color: #2ecc71; font-size: 1.4em">✓</b> To revert this change, just delete the portable directory</li>
     </ul>`
   });
 
@@ -202,8 +202,8 @@ export const installMod = async (config: IRyujinxConfig, t: string, pickedVersio
 
   const { value } = await Swal.fire({
     icon: 'success',
-    title: 'Job done !',
-    html: `<p>Successfully installed "${modName}" mod at <code>${modPath}</code>. You can manage your mods in ryujinx by opening it ⇾ Right click the game ⇾ Open mods directory.</p> <br /> <p>Some mods require to clear PTC cache to be stable (mostly 60FPS or resolution mods). Do you want emusak clear your PTC cache ? This action will not destroy it but you will need to rebuild it on next launch.</p>`,
+    title: 'Job done!',
+    html: `<p>Successfully installed "${modName}" mod at <code>${modPath}</code>. You can manage your mods in Ryujinx by opening it ⇾ Right click the game ⇾ Open mods directory.</p> <br /> <p>Some mods require to clear PTC cache to be stable (mostly 60FPS or resolution mods). Do you want emusak clear your PTC cache ? This action will not destroy it but you will need to rebuild it on next launch.</p>`,
     cancelButtonText: 'No, thanks',
     showCancelButton: true,
     confirmButtonText: 'Clear PTC cache'
@@ -216,7 +216,7 @@ export const installMod = async (config: IRyujinxConfig, t: string, pickedVersio
     await Promise.all(cacheFiles.map(file => fs.promises.unlink(file)));
     await Swal.fire({
       icon: 'success',
-      title: 'Job done !',
+      title: 'Job done!',
       text: 'PTC cache cleared'
     })
   }

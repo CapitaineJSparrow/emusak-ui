@@ -85,7 +85,7 @@ const FeaturesContainer = ({
             localStorage.setItem(amdWarningKey, 'true'); // Display warning only 1 time
             Swal.fire({
               icon: 'info',
-              text: 'Emusak Shaders may not work on AMD graphics cards due to strange behavior with OpenGL x AMD on windows and can cause crash when you compile shaders on first run.'
+              text: 'EmuSAK shaders may not work on AMD graphics cards due to strange behavior with OpenGL AMD on Windows and can cause a crash when you compile shaders on the first run.'
             })
           }
         })
@@ -120,7 +120,7 @@ const FeaturesContainer = ({
   const onSaveOrModSubmissionClick = () => {
     Swal.fire({
       icon: 'info',
-      html: 'To submit a save or a mod, please join the discord server on top right then post it in <code style="white-space: nowrap">#switch-mods-saves</code> channel. Please specify game title and version.'
+      html: 'To submit a save or a mod, please join the Discord server on the top right then post it in the <code style="white-space: nowrap">#switch-mods-saves</code> channel. Please specify game title and version.'
     })
   }
 

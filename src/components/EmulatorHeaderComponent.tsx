@@ -11,7 +11,7 @@ interface IYuzuHeaderProps {
 const EmulatorHeaderComponent = ({ threshold, onFolderAdd, emulator = 'ryu' }: IYuzuHeaderProps) => (
   <Grid container spacing={2} style={{ display: 'flex', alignItems: 'center' }}>
     <Grid item xs={10}>
-      Shaders threshold <code>{ threshold >= 1E6 ? 'Share shaders temporary disabled': threshold }</code>
+      Shaders threshold <code>{ threshold >= 1E6 ? 'Share shaders temporarily disabled': threshold }</code>
       <Tooltip
         placement="right"
         arrow

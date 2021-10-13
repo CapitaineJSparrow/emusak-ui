@@ -53,8 +53,8 @@ export const installKeysToYuzu = async (config: IEmusakEmulatorConfig = null) =>
 
   await Swal.fire({
     icon: 'success',
-    title: 'Job done !',
-    html: `Created or replaced keys at : <code>${keysPath}</code>`,
+    title: 'Job done!',
+    html: `Created or replaced keys at: <code>${keysPath}</code>`,
     width: 600
   });
 };
@@ -72,7 +72,7 @@ export const installFirmware = async (config: IEmusakEmulatorConfig = null) => {
   await fs.promises.unlink(firmwareDestPath);
   await Swal.fire({
     icon: 'success',
-    title: 'Job done !',
+    title: 'Job done!',
     html: `Extracted firmware content to <code>${firmwareInstallPath}</code>`,
     width: 600
   });
@@ -114,7 +114,7 @@ export const getYuzuGames = async (config: IEmusakEmulatorConfig = null) => {
 export const addYuzuFolder = async () => {
   const { value: accept } = await Swal.fire({
     icon: 'info',
-    text: 'You must pick a valid Yuzu folder where "yuzu.exe" or "yuzu" (for linux users) is located. You can add multiple yuzu instances by clicking again this button',
+    text: 'You must pick a valid yuzu folder where "yuzu.exe" or "yuzu" (for Linux users) is located. You can add multiple yuzu instances by clicking this button again',
     showCancelButton: true,
     cancelButtonText: 'later'
   });
@@ -135,7 +135,7 @@ export const addYuzuFolder = async () => {
   if (!files.includes('yuzu.exe') && files.includes('yuzu')) {
     Swal.fire({
       icon: 'error',
-      text: 'No Yuzu.exe (or yuzu for linux users) has been found'
+      text: 'No "yuzu.exe" (or "yuzu" for Linux users) has been found'
     });
     return;
   }
@@ -145,7 +145,7 @@ export const addYuzuFolder = async () => {
   if (!folders.includes('user')) {
     Swal.fire({
       icon: 'error',
-      text: 'this is not a portable yuzu path'
+      text: 'This is not a portable yuzu path'
     });
     return;
   }
@@ -182,7 +182,7 @@ export const installMod = async (config: IEmusakEmulatorConfig = null, t: string
 
   await Swal.fire({
     icon: 'success',
-    title: 'Job done !',
+    title: 'Job done!',
     html: `Mod installed to <code>${modPath}</code>`
   });
 }
