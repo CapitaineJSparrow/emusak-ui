@@ -89,3 +89,4 @@ yarn start
 * Niwu for testing, suggestions and help me to match Switch title IDs to game name
 * Joshi for updating the backend to create a nice software
 * LiveLM for putting some love to Arch Linux users
+
