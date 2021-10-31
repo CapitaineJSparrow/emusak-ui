@@ -62,6 +62,8 @@ Todo :
 
 ### Contributing
 
+> Please note this code is discontinued, please checkout WIP [EmuSAK V2 code](https://github.com/CapitaineJSparrow/emusak-ui/tree/emusak-v2)
+
 Requirements :
 
 * NodeJS v14+
