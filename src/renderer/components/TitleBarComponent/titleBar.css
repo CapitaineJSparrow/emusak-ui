@@ -3,6 +3,10 @@
   --title-bar-buttons-width: 185px;
 }
 
+body {
+  padding-top: var(--title-bar-height)
+}
+
 .title-bar {
   height: var(--title-bar-height);
   text-align: center;
@@ -13,7 +17,12 @@
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: #121212;
+  z-index: 3;
 }
 
 .title-bar-title {
@@ -31,6 +40,7 @@
   top: 0;
   right: 0;
   bottom: 0;
+  padding-right: 5px;
 }
 
 .title-bar .MuiButtonBase-root {

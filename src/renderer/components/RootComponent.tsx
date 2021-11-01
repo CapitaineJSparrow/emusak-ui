@@ -58,7 +58,7 @@ const RootComponent = () => {
     if (filteredConfig.length > 0 && !selectedConfig) {
       setSelectConfigAction(filteredConfig[0]);
     }
-  }, [filteredConfig, currentEmu]);
+  }, [filteredConfig]);
 
   const renderEmulatorPathSelector = () => (
     <Grid container spacing={2}>
