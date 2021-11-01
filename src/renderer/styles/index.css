@@ -1,0 +1,66 @@
+/**
+https://stackoverflow.com/questions/21367441/make-scroll-bar-take-no-space
+Fix masonry bug where layout can shift in an infinite loop due to scrollbar appear / disappear
+ */
+html {
+  overflow-y: auto;
+  overflow-y: overlay;
+}
+
+:root {
+  /*
+  line left
+  line right
+  line bottom
+  line top
+  arrow left
+  arrow right
+  arrow diagonal
+  */
+  --icon-external-link: url('data:image/svg+xml,\
+	<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20"> \
+		<g style="stroke:rgb(68, 238, 255);stroke-width:1"> \
+			<line x1="5" y1="5" x2="5" y2="14" /> \
+			<line x1="14" y1="9" x2="14" y2="14" /> \
+			<line x1="5" y1="14" x2="14" y2="14" /> \
+			<line x1="5" y1="5" x2="9" y2="5"  /> \
+			<line x1="10" y1="2" x2="17" y2="2"  /> \
+			<line x1="17" y1="2" x2="17" y2="9" /> \
+			<line x1="10" y1="9" x2="17" y2="2" style="stroke-width:1.5" /> \
+		</g> \
+	</svg>');
+  --primary-color: #448AFF;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+a {
+  color: #448AFF;
+  font-weight: normal;
+}
+
+a[target="_blank"]:not(.no-blank-icon)::after {
+  content: '';
+  background: no-repeat var(--icon-external-link);
+  padding-right: 1em;
+}
+
+::-webkit-scrollbar-track
+{
+  border-radius: 0;
+  background-color: #b3b3b3;
+}
+
+::-webkit-scrollbar
+{
+  width: 10px;
+  background-color: #8b8b8b;
+}
+
+::-webkit-scrollbar-thumb
+{
+  border-radius: 0;
+  background-color: #343434;
+}

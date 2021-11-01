@@ -1,0 +1,34 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: stromcon
+
+---
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Did you used fitgirl repack to install Ryujinx**
+[Yes/no]
+
+**Screenshots**
+Add screenshots to help explain your problem. Even it seems to be irrelevant this can probably help
+
+**Desktop (please complete the following information):**
+- OS: [e.g. windows or linux]
+- Version [e.g. 1.0.72]
+
+**Additional context**
+Add any other context about the problem here.

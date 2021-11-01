@@ -1,0 +1,18 @@
+{
+  "emusak": "EmuSAK",
+  "tos": "By using EmuSAK, you agree to never ask for support or talk about it in official emulators channels (reddit, discord, ...). Emusak is like fight club, you already know the rule #1. Use the discord link on top right if you need help instead",
+  "agree": "I agree",
+  "loading_data": "Loading data, if this process never finish please visit <a target=\"_blank\" href=\"https://emusak.betteruptime.com/\">EmuSAK status</a> page.",
+  "configuration": "Configuration",
+  "dl_firmware": "Download firmware",
+  "dl_keys": "Download keys",
+  "addConfiguration": "Add new configuration",
+  "pickRyuBin": "Please pick up \"Ryujinx.exe\" (or Ryujinx binary for linux users)",
+  "addConfigTitle": "Add a name to your new configuration",
+  "addConfigEg": "e.g \"Vulkan PR\", \"mainline\", \"custom build\", ...",
+  "mode": "Mode",
+  "readingDataPath": "EmuSAK is reading data from",
+  "OPERATION_CANCELED": "You canceled the operation.",
+  "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",
+  "EMULATOR_PATH_ALREADY_EXISTS": "You already added this path to EmuSAK."
+}

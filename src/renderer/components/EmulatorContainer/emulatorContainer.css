@@ -1,0 +1,16 @@
+.masonry img {
+  position: relative;
+}
+
+.masonry img:before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  min-height: 272px;
+  width: 100%;
+  background: #424141;
+}
+
+.MuiMasonry-root {
+  margin: 0 !important;
+}

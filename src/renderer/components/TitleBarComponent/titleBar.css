@@ -1,0 +1,51 @@
+:root {
+  --title-bar-height: 38px;
+  --title-bar-buttons-width: 185px;
+}
+
+.title-bar {
+  height: var(--title-bar-height);
+  text-align: center;
+  line-height: var(--title-bar-height);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: relative;
+}
+
+.title-bar-title {
+  flex: 0 0 120px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.title-bar-buttons {
+  -webkit-app-region: no-drag;
+  flex: 0 0 var(--title-bar-buttons-width);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.title-bar .MuiButtonBase-root {
+  border-radius: 0 !important;
+}
+
+.title-bar [class*="MuiIconButton-root"] {
+  height: 100%;
+}
+
+
+.title-bar [class*="MuiIconButton-root"]:hover {
+  background-color: var(--primary-color);
+}
+
+.title-bar [class*="title-bar-close-button"]:hover {
+  background-color: #f44336;
+}
