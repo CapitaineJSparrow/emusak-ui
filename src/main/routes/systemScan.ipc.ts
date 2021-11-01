@@ -30,13 +30,30 @@ const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> =
   }
 }
 
+const getYuzuMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
+  const portableDataPath = path.resolve(binaryPath, '..', 'user');
+  const isPortable = await fs.stat(portableDataPath).then(() => true).catch(() => false);
+
+  if (isPortable) {
+    return {
+      mode: 'portable',
+      dataPath: portableDataPath
+    }
+  }
+
+  return {
+    mode: 'global',
+    dataPath: path.resolve(app.getPath('appData'), 'yuzu')
+  }
+}
+
 const systemScanIpc = async (kind: EmusakEmulatorsKind, binaryPath: string): Promise<EmusakEmulatorMode> => {
   if (!binaryPath) {
     throw new Error('You must pass binaryPath');
   }
 
   if (kind === 'yuzu') {
-    throw new Error('Not implemented');
+    return getYuzuMode(binaryPath);
   }
 
   return getRyujinxMode(binaryPath);
