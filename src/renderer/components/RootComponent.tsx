@@ -46,13 +46,19 @@ const RootComponent = () => {
     return false;
   }
 
-  // If user did not picked a config yet and there is at least 1 stored, pick up the first one
-  // Otherwise, build defaults ones
+  // Build defaults configs if there is none
   useEffect(() => {
     if (filteredConfig.length === 0) {
       createDefaultConfig();
     }
   }, [currentEmu]);
+
+  // If there is a config and user did not picked one already, choose the first one for him
+  useEffect(() => {
+    if (filteredConfig.length > 0 && !selectedConfig) {
+      setSelectConfigAction(filteredConfig[0]);
+    }
+  }, [filteredConfig, currentEmu]);
 
   const renderEmulatorPathSelector = () => (
     <Grid container spacing={2}>
@@ -67,7 +73,7 @@ const RootComponent = () => {
           >
             <MenuItem value={''}><i>{ t('addConfiguration') }</i></MenuItem>
             {
-              emulatorBinariesPath.map((item, index) => (
+              filteredConfig.map((item, index) => (
                 <MenuItem key={`emulator-select-path-item-${index}`} value={item.path}>{ item.name }</MenuItem>
               ))
             }

@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { i18n } from '../app';
 import { ITitleBar } from "./titleBar.actions";
 
-interface IEmulatorConfig {
+export interface IEmulatorConfig {
   addNewEmulatorConfigAction: () => PartialState<IEmulatorConfig>;
   emulatorBinariesPath: EmusakEmulatorConfig[];
   selectedConfig: EmusakEmulatorConfig;

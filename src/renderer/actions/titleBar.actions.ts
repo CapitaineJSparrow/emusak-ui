@@ -1,6 +1,7 @@
 import { PartialState, SetState } from "zustand/vanilla";
 import { ipcRenderer } from "electron";
 import { EmusakEmulatorsKind } from "../../types";
+import { IEmulatorConfig } from "./emulatorConfig.action";
 
 export interface ITitleBar {
   version: string,
@@ -11,7 +12,7 @@ export interface ITitleBar {
   currentEmu: EmusakEmulatorsKind;
 }
 
-const createTitleBarSlice = (set: SetState<ITitleBar>) => ({
+const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig>) => ({
   version: '',
   currentEmu: 'ryu' as EmusakEmulatorsKind,
   getVersionAction: async () => {
@@ -28,7 +29,7 @@ const createTitleBarSlice = (set: SetState<ITitleBar>) => ({
     await ipcRenderer.invoke('title-bar-action', 'maximize');
   },
   switchEmuAction: (currentEmu: EmusakEmulatorsKind) => {
-    return set({ currentEmu });
+    return set({ currentEmu, selectedConfig: null });
   }
 });
 
