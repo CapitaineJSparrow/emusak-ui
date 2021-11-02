@@ -9,6 +9,7 @@ import useStore from "../../actions/state";
 import { Chip, Grid, IconButton, Tooltip } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { useTranslation } from "react-i18next";
+import { ipcRenderer } from "electron";
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;
@@ -29,10 +30,16 @@ const Label = styled(Paper)(({ theme }) => ({
 const GameListing = ({ config }: IEmulatorContainer) => {
   const { t } = useTranslation();
   const [mode, setMode] = useState<EmusakEmulatorMode>(null);
-  const [getModeForBinary] = useStore(state => [state.getModeForBinary]);
+  const [getModeForBinary, currentEmu] = useStore(s => [s.getModeForBinary, s.currentEmu]);
+  const [games, setGames] = useState<{ title: string, img: string }[]>([]);
 
   useEffect(() => {
-    getModeForBinary(config.path).then(setMode);
+    getModeForBinary(config.path).then(m => {
+      setMode(m);
+      ipcRenderer
+        .invoke('scan-games', m.dataPath, currentEmu)
+        .then(g => setGames(g.map((i: string) => ({ title: i, img: 'https://img-eshop.cdn.nintendo.net/i/16259342084f704aa52da956cf1b1a9c2ad1f88b3de6c3e263c350813e7ccd1f.jpg' }))));
+    });
   }, []);
 
   return (
@@ -52,19 +59,23 @@ const GameListing = ({ config }: IEmulatorContainer) => {
               </Grid>
             </Grid>
 
-            <Masonry columns={5} spacing={4}>
-              {itemData.map((item, index) => (
+            <Masonry columns={Math.min(Math.max(games.length, 3), 5)} spacing={4}>
+              {games.map((item, index) => (
                 <Stack key={index}>
                   <Label>{item.title.length > 29 ? `${item.title.slice(0, 29)}...` : item.title}</Label>
                   <img
                     referrerPolicy="no-referrer"
-                    src={`${item.img}`}
+                    src={item.img}
                     alt={item.title}
                     loading="lazy"
                     style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}
                   />
                 </Stack>
               ))}
+              {
+                // create an empty item to render nicely masonry in case there is < 3 items
+                games.length < 3 && (<Stack><p>&nbsp;</p></Stack>)
+              }
             </Masonry>
           </Stack>
         )
@@ -72,36 +83,5 @@ const GameListing = ({ config }: IEmulatorContainer) => {
     </>
   );
 }
-
-const itemData = [
-  {
-    img: 'https://img-eshop.cdn.nintendo.net/i/16259342084f704aa52da956cf1b1a9c2ad1f88b3de6c3e263c350813e7ccd1f.jpg',
-    title: 'Breath of the wild',
-  },
-  {
-    img: 'https://img-eshop.cdn.nintendo.net/i/a0af3e5f59b543af010e54c664c53fa17f66c37098418ba73b45aa6b43ac6f0d.jpg',
-    title: 'Splatoon 2',
-  },
-  {
-    img: 'https://img-eshop.cdn.nintendo.net/i/10f565a04c2183b9c9a31365fd7885b991706e7c511e1388d8f1a930504d4edf.jpg',
-    title: 'Monster Hunter Rise',
-  },
-  {
-    img: 'https://img-eshop.cdn.nintendo.net/i/22fa52ed91f3cb5cf8ccba24ec495035903a2534ef4020406358c716b7c4e261.jpg',
-    title: 'Mario Party Superstars',
-  },
-  {
-    img: 'https://img-eshop.cdn.nintendo.net/i/08af58551a19df2a73ccb36f720388434a1965776b34675c6f69af3f93280330.jpg',
-    title: 'Smash bros ultimate',
-  },
-  {
-    img: 'https://img-eshop.cdn.nintendo.net/i/b6b0744c90d5df8a5070b09503f22f30a8847d00b3fa32a35504cddb36000256.jpg',
-    title: 'Fast RMX',
-  },
-  {
-    img: 'https://img-eshop.cdn.nintendo.net/i/ef21d2a1a6e009e85148cef6791b3824d9865edc03482ab39f5995cd5aa3afbe.jpg',
-    title: 'Hyrule Warriors: Definitive Edition',
-  },
-];
 
 export default GameListing;

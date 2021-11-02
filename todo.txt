@@ -1,0 +1,7 @@
+* Yuzu portable
+* Télécharger les fichiers de https://github.com/blawar/titledb/blob/master/FR.fr.json
+* Firmware + keys
+* Mise à jour auto
+* Icon prod ?
+* Auto refresh listing avec un listener FS
+* Listing image manquante

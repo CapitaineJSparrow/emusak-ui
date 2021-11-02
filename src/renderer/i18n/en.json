@@ -6,7 +6,7 @@
   "configuration": "Configuration",
   "dl_firmware": "Download firmware",
   "dl_keys": "Download keys",
-  "addConfiguration": "Add new configuration",
+  "addConfiguration": "Add portable configuration",
   "pickRyuBin": "Please pick up \"Ryujinx.exe\" (or Ryujinx binary for linux users)",
   "addConfigTitle": "Add a name to your new configuration",
   "addConfigEg": "e.g \"Vulkan PR\", \"mainline\", \"custom build\", ...",
