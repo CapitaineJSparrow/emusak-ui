@@ -15,5 +15,5 @@
   "OPERATION_CANCELED": "You canceled the operation.",
   "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",
   "EMULATOR_PATH_ALREADY_EXISTS": "You already added this path to EmuSAK.",
-  "launchRyujinx": "<a href=\"https://ryujinx.org/download\" target=\"_blank\">Download</a> and launch any game in Ryujinx first, all your games should show up here automatically then. Ryujinx is not behind a paywall."
+  "launchRyujinx": "<a href=\"https://ryujinx.org/download\" target=\"_blank\">Download Ryujinx</a> and launch any game first, all your games should show up here automatically then. Ryujinx is not behind a paywall. If you are using a portable installation, use the \"Configuration\" button on the top left."
 }

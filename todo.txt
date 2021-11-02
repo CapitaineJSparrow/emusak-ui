@@ -4,4 +4,4 @@
 * Mise à jour auto
 * Icon prod ?
 * Auto refresh listing avec un listener FS
-* Listing image manquante
+* Refacto mode computing to be case insensitive
