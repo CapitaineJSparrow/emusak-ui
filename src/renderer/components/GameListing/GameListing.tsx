@@ -6,10 +6,11 @@ import { styled } from '@mui/material/styles';
 import './gameListing.css'
 import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
 import useStore from "../../actions/state";
-import { Chip, Grid, IconButton, Tooltip } from "@mui/material";
+import { Chip, Divider, Grid, IconButton, Tooltip } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { useTranslation } from "react-i18next";
 import { ipcRenderer } from "electron";
+import jackSober from '../../resources/jack_sober.png';
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;
@@ -24,7 +25,8 @@ const Label = styled(Paper)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   padding: '8px 0',
-  color: '#FFF'
+  color: '#FFF',
+  zIndex: 1
 }));
 
 const GameListing = ({ config }: IEmulatorContainer) => {
@@ -59,24 +61,39 @@ const GameListing = ({ config }: IEmulatorContainer) => {
               </Grid>
             </Grid>
 
-            <Masonry columns={Math.min(Math.max(games.length, 3), 5)} spacing={4}>
-              {games.map((item, index) => (
-                <Stack key={index}>
-                  <Label>{item.title.length > 29 ? `${item.title.slice(0, 29)}...` : item.title}</Label>
-                  <img
-                    referrerPolicy="no-referrer"
-                    src={item.img}
-                    alt={item.title}
-                    loading="lazy"
-                    style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}
-                  />
-                </Stack>
-              ))}
-              {
-                // create an empty item to render nicely masonry in case there is < 3 items
-                games.length < 3 && (<Stack><p>&nbsp;</p></Stack>)
-              }
-            </Masonry>
+            {
+              games.length > 0
+                ? (
+                  <Masonry columns={/** Clamp between 3 and 5 the value **/ Math.min(Math.max(games.length, 3), 5)} spacing={4}>
+                    {games.map((item, index) => (
+                      <Stack key={index}>
+                        <Label>{item.title.length > 29 ? `${item.title.slice(0, 29)}...` : item.title}</Label>
+                        <img
+                          referrerPolicy="no-referrer"
+                          src={item.img}
+                          alt={item.title}
+                          loading="lazy"
+                          data-name={item.title}
+                          style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4, minHeight: 214 }}
+                        />
+                      </Stack>
+                    ))}
+                    {
+                      // create an empty item to render nicely masonry in case there is < 3 items
+                      games.length < 3 && (<Stack><p>&nbsp;</p></Stack>)
+                    }
+                  </Masonry>
+                )
+              : (
+                <div style={{ textAlign: 'center', width: '50%', margin: '0 auto' }}>
+                  <p>
+                    <img width="100%" src={jackSober} alt=""/>
+                  </p>
+                  <Divider />
+                  <h4 dangerouslySetInnerHTML={{ __html: t('launchRyujinx') }} />
+                </div>
+              )
+            }
           </Stack>
         )
       }

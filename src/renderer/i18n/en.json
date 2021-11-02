@@ -14,5 +14,6 @@
   "readingDataPath": "EmuSAK is reading data from",
   "OPERATION_CANCELED": "You canceled the operation.",
   "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",
-  "EMULATOR_PATH_ALREADY_EXISTS": "You already added this path to EmuSAK."
+  "EMULATOR_PATH_ALREADY_EXISTS": "You already added this path to EmuSAK.",
+  "launchRyujinx": "<a href=\"https://ryujinx.org/download\" target=\"_blank\">Download</a> and launch any game in Ryujinx first, all your games should show up here automatically then. Ryujinx is not behind a paywall."
 }

@@ -3,12 +3,14 @@
 }
 
 .masonry img:before {
-  content: ' ';
+  content: attr(data-name);
   display: block;
   position: absolute;
-  min-height: 272px;
+  min-height: 214px;
   width: 100%;
   background: #424141;
+  text-align: center;
+  padding: 10px;
 }
 
 .MuiMasonry-root {
