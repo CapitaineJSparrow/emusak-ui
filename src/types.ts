@@ -23,3 +23,5 @@ export type EmusakEmulatorMode = {
   mode: 'global' | 'portable' | 'fitgirl' | 'pinejinx' | 'pinejinxLdn',
   dataPath: string
 }
+
+export type EmusakEmulatorGames = string[]

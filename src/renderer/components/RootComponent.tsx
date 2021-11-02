@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import useStore from "../actions/state";
-import EmulatorContainer from "./EmulatorContainer/EmulatorContainer";
+import EmulatorContainer from "./GameListing/GameListing";
 import {
   Button,
   Container,

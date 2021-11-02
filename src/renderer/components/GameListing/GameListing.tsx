@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Masonry from '@mui/lab/Masonry';
 import { styled } from '@mui/material/styles';
-import './emulatorContainer.css'
+import './gameListing.css'
 import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
 import useStore from "../../actions/state";
 import { Chip, Grid, IconButton, Tooltip } from "@mui/material";
@@ -26,7 +26,7 @@ const Label = styled(Paper)(({ theme }) => ({
   color: '#FFF'
 }));
 
-const EmulatorContainer = ({ config }: IEmulatorContainer) => {
+const GameListing = ({ config }: IEmulatorContainer) => {
   const { t } = useTranslation();
   const [mode, setMode] = useState<EmusakEmulatorMode>(null);
   const [getModeForBinary] = useStore(state => [state.getModeForBinary]);
@@ -104,4 +104,4 @@ const itemData = [
   },
 ];
 
-export default EmulatorContainer;
+export default GameListing;

@@ -1,7 +1,7 @@
 import path from "path";
 import * as fs from "fs/promises";
 import { app } from 'electron';
-import { EmusakEmulatorMode, EmusakEmulatorsKind } from "../../types";
+import { EmusakEmulatorGames, EmusakEmulatorMode, EmusakEmulatorsKind } from "../../types";
 
 const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
   const fitgirlDataPath = path.resolve(binaryPath, '..', '..', 'data', 'games');
@@ -59,4 +59,16 @@ const systemScanIpc = async (kind: EmusakEmulatorsKind, binaryPath: string): Pro
   return getRyujinxMode(binaryPath);
 }
 
-export default systemScanIpc;
+const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): Promise<EmusakEmulatorGames> => {
+  if (emu === 'yuzu') {
+    throw new Error('not implemented yet');
+  }
+
+  const directories = await fs.readdir(path.join(dataPath, 'games'), { withFileTypes: true });
+  return directories.filter(d => d.isDirectory()).map(d => d.name.toLowerCase());
+}
+
+export {
+  systemScanIpc,
+  scanGamesForConfig
+};

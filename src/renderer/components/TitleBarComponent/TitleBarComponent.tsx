@@ -32,7 +32,7 @@ const TitleBarComponent = () => {
 
   return (
     <div className="title-bar">
-      <div className="title-bar-icon" style={{ position: 'relative', top: 5, paddingLeft: 8 }}>
+      <div className="title-bar-icon" style={{ position: 'relative', top: 6, paddingLeft: 8 }}>
         <img src={logo} height={28} alt=""/>
       </div>
       <div className="title-bar-title">

@@ -10,7 +10,7 @@ body {
 .title-bar {
   height: var(--title-bar-height);
   text-align: center;
-  line-height: var(--title-bar-height);
+  line-height: calc(var(--title-bar-height) + 2px);
   -webkit-user-select: none;
   user-select: none;
   -webkit-app-region: drag;

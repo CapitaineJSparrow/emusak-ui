@@ -19,7 +19,7 @@ const addEmulatorConfigurationIpc = async (mainWindow: BrowserWindow) => {
   return filePaths[0];
 }
 
-const createDefaultConfigForEmu = (emu: EmusakEmulatorsKind): EmusakEmulatorConfig => {
+const createDefaultConfigActionForEmu = (emu: EmusakEmulatorsKind): EmusakEmulatorConfig => {
   if (emu === 'yuzu') {
     if (process.platform !== "win32") {
       return {
@@ -45,5 +45,5 @@ const createDefaultConfigForEmu = (emu: EmusakEmulatorsKind): EmusakEmulatorConf
 
 export {
   addEmulatorConfigurationIpc,
-  createDefaultConfigForEmu
+  createDefaultConfigActionForEmu
 };
