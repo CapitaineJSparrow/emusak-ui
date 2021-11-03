@@ -1,8 +1,9 @@
 {
-  "name": "emusak-ui",
-  "productName": "emusak-ui",
+  "name": "emusak",
+  "productName": "EmuSAK",
   "version": "2.0.0",
-  "description": "My Electron application description",
+  "description": "Saves, shaders, firmwares and keys manager for switch emulators",
+  "repository": "https://github.com/CapitaineJSparrow/emusak-ui",
   "main": ".webpack/main",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron-forge start",
@@ -12,8 +13,8 @@
     "lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
-  "author": "sparrow",
-  "license": "MIT",
+  "author": "CapitaineJSparrow",
+  "license": "GPL-3.0",
   "config": {
     "forge": {
       "packagerConfig": {

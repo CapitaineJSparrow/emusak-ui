@@ -34,6 +34,7 @@ const GameListing = ({ config }: IEmulatorContainer) => {
   const [mode, setMode] = useState<EmusakEmulatorMode>(null);
   const [getModeForBinary, currentEmu] = useStore(s => [s.getModeForBinary, s.currentEmu]);
   const [games, setGames] = useState<{ title: string, img: string }[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     getModeForBinary(config.path).then(m => {
@@ -43,6 +44,11 @@ const GameListing = ({ config }: IEmulatorContainer) => {
         .then(async g => {
           const gamesCollection: { title: string, img: string }[]  = await Promise.all(g.map(async (i: string) => ipcRenderer.invoke('build-metadata-from-titleId', i)));
           setGames(gamesCollection)
+          setIsLoaded(true);
+        })
+        .catch(() => {
+
+          setIsLoaded(true);
         });
     });
   }, []);
@@ -65,8 +71,7 @@ const GameListing = ({ config }: IEmulatorContainer) => {
             </Grid>
 
             {
-              games.length > 0
-                ? (
+              (games.length > 0) && (
                   <Masonry columns={/** Clamp between 3 and 5 the value **/ Math.min(Math.max(games.length, 3), 5)} spacing={4}>
                     {games.map((item, index) => (
                       <Stack key={index}>
@@ -86,14 +91,19 @@ const GameListing = ({ config }: IEmulatorContainer) => {
                     }
                   </Masonry>
                 )
-              : (
-                <div style={{ textAlign: 'center', width: '50%', margin: '0 auto' }}>
-                  <p>
-                    <img width="100%" src={jackSober} alt=""/>
-                  </p>
-                  <Divider />
-                  <h4 dangerouslySetInnerHTML={{ __html: t('launchRyujinx') }} />
-                </div>
+            }
+
+            {
+              (isLoaded && games.length === 0) && (
+                (
+                  <div style={{ textAlign: 'center', width: '50%', margin: '0 auto' }}>
+                    <p>
+                      <img width="100%" src={jackSober} alt=""/>
+                    </p>
+                    <Divider />
+                    <h4 dangerouslySetInnerHTML={{ __html: t('launchRyujinx') }} />
+                  </div>
+                )
               )
             }
           </Stack>
