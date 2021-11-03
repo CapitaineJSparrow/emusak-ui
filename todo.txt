@@ -4,7 +4,6 @@
 * Auto refresh listing with a filesystem watcher
 * When computing dataPath, make fs scan case-insensitive
 * Linux pass
-* Save emulator tab
 * Env variable dans main
 * Store last config user per emu
 * Filter games
