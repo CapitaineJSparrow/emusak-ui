@@ -9,7 +9,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle('load-components', loadComponentIpcHandler);
   ipcMain.handle('get-app-version', async () => app.getVersion());
   ipcMain.handle('title-bar-action', async (_, action: 'maximize' | 'close' | 'minimize') => titleBarIpc(action, mainWindow));
-  ipcMain.handle('add-ryujinx-folder', async () => addEmulatorConfigurationIpc(mainWindow));
+  ipcMain.handle('add-emulator-folder', async (_, emuKind: EmusakEmulatorsKind) => addEmulatorConfigurationIpc(mainWindow, emuKind));
   ipcMain.handle('system-scan-for-config', async (_, emuKind: EmusakEmulatorsKind, path: string) => systemScanIpc(emuKind, path));
   ipcMain.handle('build-default-emu-config', async (_, emu: EmusakEmulatorsKind) => createDefaultConfigActionForEmu(emu));
   ipcMain.handle('scan-games', async (_, dataPath: string, emu: EmusakEmulatorsKind) => scanGamesForConfig(dataPath, emu));

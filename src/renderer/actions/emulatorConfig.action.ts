@@ -30,10 +30,10 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
   addNewEmulatorConfigAction: async () => {
     await Swal.fire({
       icon: 'info',
-      text: i18n.t('pickRyuBin')
+      text: get().currentEmu === "ryu" ? i18n.t('pickRyuBin') : i18n.t('pickYuzuBin')
     })
 
-    const response: { error: boolean, code: string } | string = await ipcRenderer.invoke('add-ryujinx-folder');
+    const response: { error: boolean, code: string } | string = await ipcRenderer.invoke('add-emulator-folder', get().currentEmu);
 
     if (typeof response === 'object') {
       get().openAlertAction('error', response.code);

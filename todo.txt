@@ -1,4 +1,3 @@
-* Handle Yuzu portable
 * Download files from https://github.com/blawar/titledb/blob/master/FR.fr.json
 * Firmware + keys
 * Setup auto-updates
@@ -8,3 +7,5 @@
 * Save emulator tab
 * Env variable dans main
 * Store last config user per emu
+* Filter games
+* Do not allow removing default configs

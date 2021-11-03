@@ -74,7 +74,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
                   <Masonry columns={/** Clamp between 3 and 5 the value **/ Math.min(Math.max(games.length, 3), 5)} spacing={4}>
                     {games.map((item, index) => (
                       <Stack key={index}>
-                        <Label>{item.title.length > 28 ? `${item.title.slice(0, 29)}...` : item.title}</Label>
+                        <Label>{item.title.length > 26 ? `${item.title.slice(0, 26)}...` : item.title}</Label>
                         <img
                           referrerPolicy="no-referrer"
                           src={item.img}

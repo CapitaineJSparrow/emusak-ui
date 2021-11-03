@@ -2,7 +2,7 @@ import { BrowserWindow, dialog, app } from "electron";
 import * as path from "path";
 import { EmusakEmulatorConfig, EmusakEmulatorsKind } from "../../types";
 
-const addEmulatorConfigurationIpc = async (mainWindow: BrowserWindow) => {
+const addEmulatorConfigurationIpc = async (mainWindow: BrowserWindow, emuKind: EmusakEmulatorsKind) => {
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ['openFile'] });
 
   if (canceled) {
@@ -11,9 +11,12 @@ const addEmulatorConfigurationIpc = async (mainWindow: BrowserWindow) => {
 
   const file = path.basename(filePaths[0]);
 
-  // Should be "Ryujinx.exe" on windows and "Ryujinx" on linux
-  if (!file.toLowerCase().includes('ryujinx')) {
+  if (emuKind === "ryu" && !file.toLowerCase().includes('ryujinx')) {
     return { error: true, code: 'INVALID_RYUJINX_BINARY' };
+  }
+
+  if (emuKind === "yuzu" && !file.toLowerCase().includes('yuzu')) {
+    return { error: true, code: 'INVALID_YUZU_BINARY' };
   }
 
   return filePaths[0];
