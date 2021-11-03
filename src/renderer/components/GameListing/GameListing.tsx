@@ -40,7 +40,10 @@ const GameListing = ({ config }: IEmulatorContainer) => {
       setMode(m);
       ipcRenderer
         .invoke('scan-games', m.dataPath, currentEmu)
-        .then(g => setGames(g.map((i: string) => ({ title: i, img: 'https://img-eshop.cdn.nintendo.net/i/16259342084f704aa52da956cf1b1a9c2ad1f88b3de6c3e263c350813e7ccd1f.jpg' }))));
+        .then(async g => {
+          const gamesCollection: { title: string, img: string }[]  = await Promise.all(g.map(async (i: string) => ipcRenderer.invoke('build-metadata-from-titleId', i)));
+          setGames(gamesCollection)
+        });
     });
   }, []);
 
@@ -79,7 +82,6 @@ const GameListing = ({ config }: IEmulatorContainer) => {
                       </Stack>
                     ))}
                     {
-                      // create an empty item to render nicely masonry in case there is < 3 items
                       games.length < 3 && (<Stack><p>&nbsp;</p></Stack>)
                     }
                   </Masonry>

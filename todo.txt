@@ -1,7 +1,9 @@
-* Yuzu portable
-* Télécharger les fichiers de https://github.com/blawar/titledb/blob/master/FR.fr.json
+* Handle Yuzu portable
+* Download files from https://github.com/blawar/titledb/blob/master/FR.fr.json
 * Firmware + keys
-* Mise à jour auto
-* Icon prod ?
-* Auto refresh listing avec un listener FS
-* Refacto mode computing to be case insensitive
+* Setup auto-updates
+* Auto refresh listing with a filesystem watcher
+* When computing dataPath, make fs scan case-insensitive
+* Linux pass
+* Save emulator tab
+* Env variable dans main
