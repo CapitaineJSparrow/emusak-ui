@@ -6,7 +6,7 @@ import { EmusakEmulatorsKind } from "../../types";
 import { addEmulatorConfigurationIpc, createDefaultConfigActionForEmu } from "./addEmulatorConfiguration.ipc";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
-  ipcMain.handle('load-components', loadComponentIpcHandler);
+  ipcMain.handle('load-components', async (_, url: string) => loadComponentIpcHandler(url));
   ipcMain.handle('get-app-version', async () => app.getVersion());
   ipcMain.handle('title-bar-action', async (_, action: 'maximize' | 'close' | 'minimize') => titleBarIpc(action, mainWindow));
   ipcMain.handle('add-emulator-folder', async (_, emuKind: EmusakEmulatorsKind) => addEmulatorConfigurationIpc(mainWindow, emuKind));

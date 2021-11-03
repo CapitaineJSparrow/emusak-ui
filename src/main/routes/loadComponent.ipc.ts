@@ -1,6 +1,7 @@
 import HttpService from "../services/HttpService";
 
-const loadComponentIpcHandler = async () => {
+const loadComponentIpcHandler = async (url: string) => {
+  HttpService.url = url;
   return Promise.all([
     HttpService.downloadRyujinxShaders(),
     HttpService.downloadSaves(),

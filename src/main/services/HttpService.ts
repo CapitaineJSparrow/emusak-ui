@@ -9,10 +9,10 @@ enum HTTP_PATHS {
 
 class HttpService {
 
-  private _url: string = process.env.EMUSAK_CDN;
+  public url: string = process.env.EMUSAK_CDN;
 
   // Trigger HTTP request using an exponential backoff strategy
-  protected _fetchAsJson(path: string, host: string = this._url, defaultValue = {}) {
+  protected _fetchAsJson(path: string, host: string = this.url, defaultValue = {}) {
     const url = new URL(path, host);
     return pRetry(
       async () => {

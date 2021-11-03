@@ -14,7 +14,7 @@ const createBootstrapSlice = (set: SetState<IBootstrap>) => ({
   saves: {},
   ryujinxShaders: {},
   bootstrapAppAction: async () => {
-    const [ryujinxShaders, saves] = await ipcRenderer.invoke('load-components');
+    const [ryujinxShaders, saves] = await ipcRenderer.invoke('load-components', process.env.EMUSAK_CDN);
     return set({ isAppInitialized: true, saves, ryujinxShaders });
   }
 });
