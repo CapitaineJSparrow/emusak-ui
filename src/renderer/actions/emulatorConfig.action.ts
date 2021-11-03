@@ -80,7 +80,7 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
     const index = configs.findIndex(item => item.path === path);
     configs.splice(index, 1);
     localStorage.setItem(LS_KEYS.CONFIG, JSON.stringify(configs));
-    return set({ emulatorBinariesPath: configs });
+    return set({ emulatorBinariesPath: configs, selectedConfig: configs.filter(c => c.emulator === get().currentEmu)[0] });
   },
   getModeForBinary: async (path: string): Promise<EmusakEmulatorMode> => {
     return ipcRenderer.invoke('system-scan-for-config', get().currentEmu, path);

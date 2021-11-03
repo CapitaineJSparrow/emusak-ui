@@ -37,7 +37,6 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    console.log(config.path);
     getModeForBinary(config.path).then(m => {
       setMode(m);
       ipcRenderer
@@ -48,7 +47,6 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
           setIsLoaded(true);
         })
         .catch(() => {
-
           setIsLoaded(true);
         });
     });
@@ -76,7 +74,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
                   <Masonry columns={/** Clamp between 3 and 5 the value **/ Math.min(Math.max(games.length, 3), 5)} spacing={4}>
                     {games.map((item, index) => (
                       <Stack key={index}>
-                        <Label>{item.title.length > 29 ? `${item.title.slice(0, 29)}...` : item.title}</Label>
+                        <Label>{item.title.length > 28 ? `${item.title.slice(0, 29)}...` : item.title}</Label>
                         <img
                           referrerPolicy="no-referrer"
                           src={item.img}
