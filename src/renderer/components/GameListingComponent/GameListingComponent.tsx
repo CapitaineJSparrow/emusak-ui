@@ -29,7 +29,7 @@ const Label = styled(Paper)(({ theme }) => ({
   zIndex: 1
 }));
 
-const GameListing = ({ config }: IEmulatorContainer) => {
+const GameListingComponent = ({ config }: IEmulatorContainer) => {
   const { t } = useTranslation();
   const [mode, setMode] = useState<EmusakEmulatorMode>(null);
   const [getModeForBinary, currentEmu] = useStore(s => [s.getModeForBinary, s.currentEmu]);
@@ -37,6 +37,7 @@ const GameListing = ({ config }: IEmulatorContainer) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    console.log(config.path);
     getModeForBinary(config.path).then(m => {
       setMode(m);
       ipcRenderer
@@ -51,7 +52,7 @@ const GameListing = ({ config }: IEmulatorContainer) => {
           setIsLoaded(true);
         });
     });
-  }, []);
+  }, [config]);
 
   return (
     <>
@@ -113,4 +114,4 @@ const GameListing = ({ config }: IEmulatorContainer) => {
   );
 }
 
-export default GameListing;
+export default GameListingComponent;
