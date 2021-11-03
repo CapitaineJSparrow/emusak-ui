@@ -7,4 +7,3 @@
 * Env variable dans main
 * Store last config user per emu
 * Filter games
-* Do not allow removing default configs

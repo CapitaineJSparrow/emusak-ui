@@ -86,7 +86,8 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
     return ipcRenderer.invoke('system-scan-for-config', get().currentEmu, path);
   },
   createDefaultConfig: async () => {
-    const config = await ipcRenderer.invoke('build-default-emu-config', get().currentEmu);
+    let config = await ipcRenderer.invoke('build-default-emu-config', get().currentEmu);
+    config = { ...config, ...{ isDefault: true }  };
     const configs = get().emulatorBinariesPath;
     configs.push(config);
     localStorage.setItem(LS_KEYS.CONFIG, JSON.stringify(configs));

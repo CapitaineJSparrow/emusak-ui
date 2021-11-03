@@ -81,7 +81,7 @@ const RootComponent = () => {
         </FormControl>
       </Grid>
       {
-        selectedConfig && (
+        (selectedConfig && !selectedConfig.isDefault) && (
           <Grid item xs={2} style={{ lineHeight: '52px' }}>
             <IconButton onClick={() => removeEmulatorConfigAction(selectedConfig.path)} color="error">
               <DeleteOutlineOutlinedIcon />
