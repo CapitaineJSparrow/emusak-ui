@@ -1,8 +1,8 @@
 * Download files from https://github.com/blawar/titledb/blob/master/FR.fr.json
-* Firmware + keys
+* Download keys
+* Download firmware
 * Setup auto-updates
 * Auto refresh listing with a filesystem watcher
 * When computing dataPath, make fs scan case-insensitive
 * Linux pass
 * Store last config user per emu
-* Filter games

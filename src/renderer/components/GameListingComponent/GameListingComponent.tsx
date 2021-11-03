@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import './gameListing.css'
 import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
 import useStore from "../../actions/state";
-import { Chip, Divider, Grid, IconButton, Tooltip } from "@mui/material";
+import { Chip, Divider, Grid, IconButton, TextField, Tooltip } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { useTranslation } from "react-i18next";
 import { ipcRenderer } from "electron";
@@ -35,6 +35,8 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
   const [getModeForBinary, currentEmu] = useStore(s => [s.getModeForBinary, s.currentEmu]);
   const [games, setGames] = useState<{ title: string, img: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [filteredGames, setFilteredGames] = useState<typeof games>([]);
 
   useEffect(() => {
     getModeForBinary(config.path).then(m => {
@@ -52,13 +54,21 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
     });
   }, [config]);
 
+  useEffect(() => {
+    if (searchTerm.length > 0) {
+      setFilteredGames(games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true))
+    } else {
+      setFilteredGames(games);
+    }
+  }, [games, searchTerm])
+
   return (
     <>
       {
         mode && (
           <Stack className="masonry" spacing={2}>
             <Grid container>
-              <Grid item xs={12}>
+              <Grid item xs={10}>
                 { t('mode') } <Chip color="primary" label={mode.mode} />
                 &nbsp;
                 <Tooltip placement="right" title={`${t('readingDataPath')} ${mode.dataPath}`}>
@@ -67,26 +77,29 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
                   </IconButton>
                 </Tooltip>
               </Grid>
+              <Grid item xs={2}>
+                <TextField onChange={e => setSearchTerm(e.target.value)} value={searchTerm} type="search" variant="standard" fullWidth placeholder={`Filter ${games.length} games`} />
+              </Grid>
             </Grid>
 
             {
-              (games.length > 0) && (
-                  <Masonry columns={/** Clamp between 3 and 5 the value **/ Math.min(Math.max(games.length, 3), 5)} spacing={4}>
-                    {games.map((item, index) => (
-                      <Stack key={index}>
-                        <Label>{item.title.length > 26 ? `${item.title.slice(0, 26)}...` : item.title}</Label>
-                        <img
-                          referrerPolicy="no-referrer"
-                          src={item.img}
-                          alt={item.title}
-                          loading="lazy"
-                          data-name={item.title}
-                          style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4, minHeight: 214 }}
-                        />
-                      </Stack>
-                    ))}
+              (filteredGames.length > 0) && (
+                  <Masonry columns={Math.min(Math.max(filteredGames.length, 4), 5)} spacing={4}>
                     {
-                      games.length < 3 && (<Stack><p>&nbsp;</p></Stack>)
+                      filteredGames
+                        .map((item, index) => (
+                        <Stack key={index}>
+                          <Label>{item.title.length > 26 ? `${item.title.slice(0, 26)}...` : item.title}</Label>
+                          <img
+                            referrerPolicy="no-referrer"
+                            src={item.img}
+                            alt={item.title}
+                            loading="lazy"
+                            data-name={item.title}
+                            style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4, minHeight: 214 }}
+                          />
+                        </Stack>
+                      ))
                     }
                   </Masonry>
                 )
