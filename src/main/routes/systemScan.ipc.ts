@@ -3,6 +3,7 @@ import * as fs from "fs/promises";
 import { app } from 'electron';
 import { EmusakEmulatorGames, EmusakEmulatorMode, EmusakEmulatorsKind } from "../../types";
 import eshopData from '../../assets/US.en.json';
+import customDatabase from '../../assets/custom_database.json';
 
 const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
   const fitgirlDataPath = path.resolve(binaryPath, '..', '..', 'data', 'games');
@@ -75,18 +76,25 @@ const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): P
 }
 
 const buildMetadataForTitleId = async (titleId: string) => {
-  const data = eshopData as {
-    [key: string]: {
-      id: string,
-      name: string,
-      iconUrl: string,
+  try {
+    const data = eshopData as {
+      [key: string]: {
+        id: string,
+        name: string,
+        iconUrl: string,
+      }
+    };
+    const keys = Object.keys(eshopData);
+    const item = keys.find((key) => data[key]?.id?.toLowerCase() === titleId.toLowerCase());
+    return {
+      title: data[item].name,
+      img: data[item].iconUrl,
     }
-  };
-  const keys = Object.keys(eshopData);
-  const item = keys.find((key) => data[key]?.id?.toLowerCase() === titleId.toLowerCase());
-  return {
-    title: data[item].name,
-    img: data[item].iconUrl,
+  } catch(e) {
+    return {
+      title: (customDatabase as { [key: string]: string })[titleId.toUpperCase()] || titleId,
+      img: ''
+    }
   }
 }
 

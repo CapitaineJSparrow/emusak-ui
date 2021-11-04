@@ -11,6 +11,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { useTranslation } from "react-i18next";
 import { ipcRenderer } from "electron";
 import jackSober from '../../resources/jack_sober.png';
+import defaultIcon from '../../resources/default_icon.jpg';
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;
@@ -31,8 +32,8 @@ const Label = styled(Paper)(({ theme }) => ({
 
 const GameListingComponent = ({ config }: IEmulatorContainer) => {
   const { t } = useTranslation();
-  const [mode, setMode] = useState<EmusakEmulatorMode>(null);
   const [getModeForBinary, currentEmu] = useStore(s => [s.getModeForBinary, s.currentEmu]);
+  const [mode, setMode] = useState<EmusakEmulatorMode>(null);
   const [games, setGames] = useState<{ title: string, img: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -45,7 +46,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
         .invoke('scan-games', m.dataPath, currentEmu)
         .then(async g => {
           const gamesCollection: { title: string, img: string }[]  = await Promise.all(g.map(async (i: string) => ipcRenderer.invoke('build-metadata-from-titleId', i)));
-          setGames(gamesCollection)
+          setGames(gamesCollection.filter(i => i.title !== '0000000000000000'))
           setIsLoaded(true);
         })
         .catch(() => {
@@ -55,11 +56,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
   }, [config]);
 
   useEffect(() => {
-    if (searchTerm.length > 0) {
-      setFilteredGames(games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true))
-    } else {
-      setFilteredGames(games);
-    }
+    setFilteredGames(searchTerm.length > 0 ? games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true) : games);
   }, [games, searchTerm])
 
   return (
@@ -87,13 +84,13 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
                   <Masonry columns={Math.min(Math.max(filteredGames.length, 4), 5)} spacing={4}>
                     {
                       filteredGames
-                        .sort((a, b) => a.title.localeCompare(b.title, 'en', { 'sensitivity': false }))
+                        .sort((a, b) => a.title.localeCompare(b.title))
                         .map((item, index) => (
                         <Stack key={index}>
                           <Label>{item.title.length > 26 ? `${item.title.slice(0, 26)}...` : item.title}</Label>
                           <img
                             referrerPolicy="no-referrer"
-                            src={item.img}
+                            src={item.img.length > 0 ? item.img : defaultIcon}
                             alt={item.title}
                             loading="lazy"
                             data-name={item.title}
@@ -114,7 +111,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
                       <img width="100%" src={jackSober} alt=""/>
                     </p>
                     <Divider />
-                    <h4 dangerouslySetInnerHTML={{ __html: t('launchRyujinx') }} />
+                    <h4 dangerouslySetInnerHTML={{ __html: currentEmu === "ryu" ? t('launchRyujinx') : t('launchYuzu') }} />
                   </div>
                 )
               )

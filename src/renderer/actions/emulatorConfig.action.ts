@@ -1,7 +1,7 @@
 import { GetState, PartialState, SetState } from "zustand/vanilla";
 import { ipcRenderer } from "electron";
 import { IAlert } from "./alert.action";
-import { EmusakEmulatorConfig, EmusakEmulatorMode, LS_KEYS } from "../../types";
+import { EmusakEmulatorConfig, EmusakEmulatorGame, EmusakEmulatorMode, LS_KEYS } from "../../types";
 import Swal from 'sweetalert2';
 import { i18n } from '../app';
 import { ITitleBar } from "./titleBar.actions";
@@ -13,12 +13,14 @@ export interface IEmulatorConfig {
   setSelectConfigAction: (selectedConfig: EmusakEmulatorConfig) => PartialState<IEmulatorConfig>,
   getModeForBinary: (binaryPath: string) => Promise<EmusakEmulatorMode>;
   createDefaultConfig: () => void;
+  emulatorGames: EmusakEmulatorGame[];
 }
 
 const configuredEmulators: IEmulatorConfig["emulatorBinariesPath"] = JSON.parse(localStorage.getItem(LS_KEYS.CONFIG)) || [];
 
 const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IAlert & IEmulatorConfig & ITitleBar>>) => ({
   emulatorBinariesPath: configuredEmulators,
+  emulatorGames: [] as EmusakEmulatorGame[],
   selectedConfig: null as EmusakEmulatorConfig,
   setSelectConfigAction: (selectedConfig: EmusakEmulatorConfig = null) => {
     if (!selectedConfig) {
@@ -92,7 +94,7 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
     configs.push(config);
     localStorage.setItem(LS_KEYS.CONFIG, JSON.stringify(configs));
     return set({ emulatorBinariesPath: configs, selectedConfig: config });
-  }
+  },
 });
 
 export default emulatorConfig;

@@ -27,3 +27,8 @@ export type EmusakEmulatorMode = {
 }
 
 export type EmusakEmulatorGames = string[]
+
+export type EmusakEmulatorGame = {
+  title: string,
+  img: string
+}
