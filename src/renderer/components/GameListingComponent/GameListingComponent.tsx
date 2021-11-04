@@ -87,6 +87,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
                   <Masonry columns={Math.min(Math.max(filteredGames.length, 4), 5)} spacing={4}>
                     {
                       filteredGames
+                        .sort((a, b) => a.title.localeCompare(b.title, 'en', { 'sensitivity': false }))
                         .map((item, index) => (
                         <Stack key={index}>
                           <Label>{item.title.length > 26 ? `${item.title.slice(0, 26)}...` : item.title}</Label>
