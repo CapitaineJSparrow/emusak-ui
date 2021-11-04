@@ -81,23 +81,32 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
 
             {
               (filteredGames.length > 0) && (
-                  <Masonry columns={Math.min(Math.max(filteredGames.length, 4), 5)} spacing={4}>
+                  <Masonry columns={Math.min(Math.max(filteredGames.length, 4), 6)} spacing={4}>
                     {
                       filteredGames
                         .sort((a, b) => a.title.localeCompare(b.title))
                         .map((item, index) => (
                         <Stack key={index}>
-                          <Label>{item.title.length > 26 ? `${item.title.slice(0, 26)}...` : item.title}</Label>
+                          <Label>{item.title.length > 20 ? `${item.title.slice(0, 20)}...` : item.title}</Label>
                           <img
                             referrerPolicy="no-referrer"
                             src={item.img.length > 0 ? item.img : defaultIcon}
                             alt={item.title}
                             loading="lazy"
                             data-name={item.title}
-                            style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4, minHeight: 214 }}
+                            style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}
                           />
                         </Stack>
                       ))
+                    }
+                    {
+                      filteredGames.length <= 3 && (
+                        <>
+                          <Stack><p>&nbsp;</p></Stack>
+                          <Stack><p>&nbsp;</p></Stack>
+                          <Stack><p>&nbsp;</p></Stack>
+                        </>
+                      )
                     }
                   </Masonry>
                 )

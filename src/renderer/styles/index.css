@@ -64,3 +64,8 @@ a[target="_blank"]:not(.no-blank-icon)::after {
   border-radius: 0;
   background-color: #343434;
 }
+
+.MuiInputLabel-root {
+  color: #FFF;
+  background: #121212;
+}
