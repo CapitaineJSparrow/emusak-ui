@@ -22,12 +22,16 @@ const Label = styled(Paper)(({ theme }) => ({
   border: '1px solid black',
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
-  display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: '8px 0',
+  padding: '8px 8px',
   color: '#FFF',
-  zIndex: 1
+  zIndex: 1,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  display: 'block',
+  textAlign: 'center'
 }));
 
 const GameListingComponent = ({ config }: IEmulatorContainer) => {
@@ -46,7 +50,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
     const m = await getModeForBinary(config.path);
     const titleIds = await ipcRenderer.invoke('scan-games', m.dataPath, currentEmu);
     const gamesCollection: { title: string, img: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke('build-metadata-from-titleId', i)));
-    setGames(gamesCollection.filter(i => i.title !== '0000000000000000'));
+    setGames(gamesCollection.filter(i => i.title !== '0000000000000000')); // Homebrew app
 
     setIsLoaded(true);
     setMode(m);
@@ -88,7 +92,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
                         .sort((a, b) => a.title.localeCompare(b.title))
                         .map((item, index) => (
                         <Stack key={index}>
-                          <Label title={item.title}>{item.title.length > 20 ? `${item.title.slice(0, 20)}...` : item.title}</Label>
+                          <Label title={item.title}>{item.title}</Label>
                           <img
                             referrerPolicy="no-referrer"
                             src={item.img.length > 0 ? item.img : defaultIcon}
