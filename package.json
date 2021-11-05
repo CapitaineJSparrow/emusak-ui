@@ -20,11 +20,23 @@
       "packagerConfig": {
         "icon": "./icons/win/icon.ico"
       },
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "stromcon",
+              "name": "emusak-ui"
+            }
+          }
+        }
+      ],
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "emusak_ui"
+            "name": "emusak_ui",
+            "loadingGif": "./icons/setup.gif"
           }
         },
         {
@@ -45,6 +57,13 @@
           "name": "electron-forge-maker-appimage",
           "platforms": [
             "linux"
+          ],
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "win32"
           ],
           "config": {}
         }
@@ -95,6 +114,7 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
+    "@electron-forge/publisher-github": "^6.0.0-beta.61",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@fontsource/roboto": "^4.5.1",

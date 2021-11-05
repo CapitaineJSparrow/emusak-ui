@@ -87,7 +87,7 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
                         .sort((a, b) => a.title.localeCompare(b.title))
                         .map((item, index) => (
                         <Stack key={index}>
-                          <Label>{item.title.length > 20 ? `${item.title.slice(0, 20)}...` : item.title}</Label>
+                          <Label title={item.title}>{item.title.length > 20 ? `${item.title.slice(0, 20)}...` : item.title}</Label>
                           <img
                             referrerPolicy="no-referrer"
                             src={item.img.length > 0 ? item.img : defaultIcon}
