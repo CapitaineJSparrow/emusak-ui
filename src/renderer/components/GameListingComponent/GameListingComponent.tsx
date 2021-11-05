@@ -39,20 +39,21 @@ const GameListingComponent = ({ config }: IEmulatorContainer) => {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [filteredGames, setFilteredGames] = useState<typeof games>([]);
 
+  // 1. Detect if emulator is global, portable or using fitgirl
+  // 2. Scan games on user system
+  // 3. Build metadata from eshop with titleId as argument
+  const createLibrary = async () => {
+    const m = await getModeForBinary(config.path);
+    const titleIds = await ipcRenderer.invoke('scan-games', m.dataPath, currentEmu);
+    const gamesCollection: { title: string, img: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke('build-metadata-from-titleId', i)));
+    setGames(gamesCollection.filter(i => i.title !== '0000000000000000'));
+
+    setIsLoaded(true);
+    setMode(m);
+  }
+
   useEffect(() => {
-    getModeForBinary(config.path).then(m => {
-      setMode(m);
-      ipcRenderer
-        .invoke('scan-games', m.dataPath, currentEmu)
-        .then(async g => {
-          const gamesCollection: { title: string, img: string }[]  = await Promise.all(g.map(async (i: string) => ipcRenderer.invoke('build-metadata-from-titleId', i)));
-          setGames(gamesCollection.filter(i => i.title !== '0000000000000000'))
-          setIsLoaded(true);
-        })
-        .catch(() => {
-          setIsLoaded(true);
-        });
-    });
+    createLibrary().catch(() => setIsLoaded(true));
   }, [config]);
 
   useEffect(() => {
