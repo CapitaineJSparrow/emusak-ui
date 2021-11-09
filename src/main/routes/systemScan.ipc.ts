@@ -8,6 +8,13 @@ import tinfoilDatabase from '../../assets/tinfoildb.json';
 
 const tfDb: { [key: string]: string } = tinfoilDatabase;
 const csDb: { [key: string]: string } = customDatabase;
+const eData: {
+  [key: string]: {
+    id: string,
+    name: string,
+    iconUrl: string,
+  }
+} = eshopData;
 
 const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
   const fitgirlDataPath = path.resolve(binaryPath, '..', '..', 'data', 'games');
@@ -80,28 +87,21 @@ const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): P
 }
 
 const buildMetadataForTitleId = (titleId: string) => {
-  try {
-    const data = eshopData as {
-      [key: string]: {
-        id: string,
-        name: string,
-        iconUrl: string,
-      }
-    };
-    const keys = Object.keys(eshopData);
-    const item = keys.find((key) => data[key]?.id?.toLowerCase() === titleId.toLowerCase());
-    return {
-      title: data[item].name,
-      img: data[item].iconUrl,
-    }
-  } catch(e) {
-    const id = titleId.toUpperCase();
+  const keys = Object.keys(eshopData);
+  const eshopEntry = keys.find((key) => eData[key]?.id?.toLowerCase() === titleId.toLowerCase());
+  const id = titleId.toUpperCase();
 
+  if (eshopEntry) {
     return {
-      // Use custom database in priority, then database from tinfoil and fallback by returning only title ID in case game does not exists in eshop
-      title: csDb[id] || tfDb[id] || titleId,
-      img: ''
+      title: eData[eshopEntry].name,
+      img: eData[eshopEntry].iconUrl,
     }
+  }
+
+  return {
+    // Use custom database in priority, then database from tinfoil and fallback by returning only title ID in case game does not exists in eshop
+    title: csDb[id] || tfDb[id] || titleId,
+    img: ''
   }
 }
 
