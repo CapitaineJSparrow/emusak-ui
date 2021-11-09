@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: 14
       - run: yarn install
+        name: Install NPM dependencies
+      - run: node .\src\commands\dumpTinFoil.js >> .\src\assets\tinfoildb.json
+        name: Dump title ids from tinfoil DB
       - run: npm run publish
         name: Publish github artifacts
         env:
