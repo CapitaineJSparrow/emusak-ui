@@ -6,4 +6,3 @@
 * Linux pass
 * Store last config user per emu
 * Add notice alerts
-* CI pour tinfoil + blawar https://github.com/blawar/titledb/blob/master/FR.fr.json

@@ -8,13 +8,12 @@ import tinfoilDatabase from '../../assets/tinfoildb.json';
 
 const tfDb: { [key: string]: string } = tinfoilDatabase;
 const csDb: { [key: string]: string } = customDatabase;
-const eData: {
-  [key: string]: {
+const eData = eshopData as { [key: string]: {
     id: string,
     name: string,
     iconUrl: string,
   }
-} = eshopData;
+};
 
 const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
   const fitgirlDataPath = path.resolve(binaryPath, '..', '..', 'data', 'games');
@@ -61,10 +60,6 @@ const getYuzuMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
 }
 
 const systemScanIpc = async (kind: EmusakEmulatorsKind, binaryPath: string): Promise<EmusakEmulatorMode> => {
-  if (!binaryPath) {
-    throw new Error('You must pass binaryPath');
-  }
-
   if (kind === 'yuzu') {
     return getYuzuMode(binaryPath);
   }
