@@ -73,7 +73,6 @@ const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): P
   try {
     if (emu === 'yuzu') {
       const windowsPath = path.join(dataPath, 'cache', 'game_list');
-      console.log(process.platform === "win32" ? windowsPath : path.join(dataPath, 'load'));
       const directories = await fs.readdir(process.platform === "win32" ? windowsPath : path.join(dataPath, 'load'), { withFileTypes: true });
       return directories.map(d => d.name.toLowerCase().replace('.pv.txt', ''));
     }

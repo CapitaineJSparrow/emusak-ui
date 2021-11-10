@@ -69,3 +69,18 @@ a[target="_blank"]:not(.no-blank-icon)::after {
   color: #FFF;
   background: #121212;
 }
+
+code {
+  width: auto;
+  height: auto;
+  padding: .2em;
+  margin: -.2em 0;
+  border-radius: 3px;
+  font-size: 85%;
+  font-family: Consolas,Andale Mono WT,Andale Mono,Lucida Console,Lucida Sans Typewriter,DejaVu Sans Mono,Bitstream Vera Sans Mono,Liberation Mono,Nimbus Mono L,Monaco,Courier New,Courier,monospace;
+  text-indent: 0;
+  border: none;
+  white-space: pre-wrap;
+  background: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+}

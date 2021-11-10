@@ -13,12 +13,14 @@
   "addConfigEg": "e.g \"Vulkan PR\", \"mainline\", \"custom build\", ...",
   "mode": "Mode",
   "readingDataPath": "EmuSAK is reading data from",
+  "launchRyujinx": "<a href=\"https://ryujinx.org/download\" target=\"_blank\">Download Ryujinx</a> and launch any game first, all your games should show up here automatically then. Ryujinx is not behind a paywall. If you are using a portable installation, use the \"Configuration\" button on the top left.",
+  "launchYuzu": "Launch any game first, all your games should show up here automatically then. Yuzu is behind a paywall, I recommend to use either <a target=\"_blank\" href=\"https://mostlywhat.github.io/128Bit-Yuzu-Installer/\">128BB installer</a> or <a href=\"https://www.mediafire.com/file/r4uarx57o251987/Yuzu_Nintendo_Switch_Emulator_for_PC_-_Sin.7z/file\" target=\"_blank\">Sin updater (portable)</a>. If you are using a portable installation, use the \"Configuration\" button on the top left.",
+  "yuzuDefault": "Yuzu Global (default)",
+  "ryuDefault": "Ryujinx Global (default)",
+
   "OPERATION_CANCELED": "You canceled the operation.",
   "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",
   "INVALID_YUZU_BINARY": "This is not a valid Yuzu binary file.",
   "EMULATOR_PATH_ALREADY_EXISTS": "You already added this path to EmuSAK.",
-  "launchRyujinx": "<a href=\"https://ryujinx.org/download\" target=\"_blank\">Download Ryujinx</a> and launch any game first, all your games should show up here automatically then. Ryujinx is not behind a paywall. If you are using a portable installation, use the \"Configuration\" button on the top left.",
-  "launchYuzu": "Launch any game first, all your games should show up here automatically then. Yuzu is behind a paywall, I recommend to use either <a target=\"_blank\" href=\"https://mostlywhat.github.io/128Bit-Yuzu-Installer/\">128BB installer</a> or <a href=\"https://www.mediafire.com/file/r4uarx57o251987/Yuzu_Nintendo_Switch_Emulator_for_PC_-_Sin.7z/file\" target=\"_blank\">Sin updater (portable)</a>. If you are using a portable installation, use the \"Configuration\" button on the top left.",
-  "yuzuDefault": "Yuzu Global (default)",
-  "ryuDefault": "Ryujinx Global (default)"
+  "FETCH_FAILED": "Unable to fetch resource, please retry."
 }

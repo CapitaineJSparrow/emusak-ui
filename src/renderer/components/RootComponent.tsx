@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { ipcRenderer } from "electron";
 import { EmusakEmulatorMode } from "../../types";
 
 const RootComponent = () => {
@@ -30,7 +29,8 @@ const RootComponent = () => {
     addNewEmulatorConfigAction,
     createDefaultConfig,
     currentEmu,
-    getModeForBinary
+    getModeForBinary,
+    installFirmwareAction
   ] = useStore(state => [
     state.emulatorBinariesPath,
     state.removeEmulatorConfigAction,
@@ -40,6 +40,7 @@ const RootComponent = () => {
     state.createDefaultConfig,
     state.currentEmu,
     state.getModeForBinary,
+    state.installFirmwareAction,
   ]);
 
   const filteredConfig = emulatorBinariesPath.filter(c => c.emulator === currentEmu);
@@ -116,7 +117,7 @@ const RootComponent = () => {
             (selectedConfig && mode) && (
               <>
                 <Grid item style={{ lineHeight: '52px' }} xs={3}>
-                  <Button onClick={() => ipcRenderer.invoke('install-firmware', currentEmu, mode.dataPath) } fullWidth variant="contained">{ t('dl_firmware') } 13.1.0</Button>
+                  <Button onClick={() => installFirmwareAction(mode.dataPath) } fullWidth variant="contained">{ t('dl_firmware') } 13.1.0</Button>
                 </Grid>
                 <Grid item style={{ lineHeight: '52px' }} xs={2}>
                   <Button fullWidth variant="contained">{ t('dl_keys') }</Button>
