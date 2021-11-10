@@ -60,7 +60,7 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string) => {
       }
     }
 
-    return true;
+    return extractPath;
   } catch (_err) {
     console.log(_err);
     return { error: true, code: 'FETCH_FAILED' };

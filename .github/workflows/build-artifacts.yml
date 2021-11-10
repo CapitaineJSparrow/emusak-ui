@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - emusak-v2
     paths:
       - package.json
 
@@ -24,9 +25,9 @@ jobs:
           node-version: 14
       - run: yarn install
         name: Install NPM dependencies
-      - run: node .\src\commands\dumpTinFoil.js
+      - run: node ./src/commands/dumpTinFoil.js
         name: Dump title ids from tinfoil DB
-      - run: node .\src\commands\dumpEshopData.js
+      - run: node ./src/commands/dumpEshopData.js
         name: Dump eshop data
       - run: npm run publish
         name: Publish github artifacts

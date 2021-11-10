@@ -2,7 +2,7 @@
   "name": "emusak",
   "productName": "EmuSAK",
   "version": "2.0.0",
-  "description": "Saves, shaders, firmwares and keys manager for switch emulators",
+  "description": "This is a tool to manage your switch emulators, such as downloading saves or mods",
   "repository": "https://github.com/CapitaineJSparrow/emusak-ui",
   "main": ".webpack/main",
   "scripts": {
@@ -35,8 +35,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "emusak_ui",
-            "loadingGif": "./icons/setup.gif"
+            "name": "emusak_ui"
           }
         },
         {
@@ -57,13 +56,6 @@
           "name": "electron-forge-maker-appimage",
           "platforms": [
             "linux"
-          ],
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "win32"
           ],
           "config": {}
         }
