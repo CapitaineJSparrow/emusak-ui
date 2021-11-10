@@ -80,8 +80,7 @@ Install & run
 
 ```
 yarn install
-yarn dump-games
-yarn dev
+yarn start
 ```
 
 ### Thanks
