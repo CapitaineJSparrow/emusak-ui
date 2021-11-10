@@ -55,7 +55,9 @@ const getYuzuMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
 
   return {
     mode: 'global',
-    dataPath: path.resolve(app.getPath('appData'), 'yuzu')
+    dataPath: process.platform === "win32"
+      ? path.resolve(app.getPath('appData'), 'yuzu')
+      : path.resolve(app.getPath('home'), '.local', 'share', 'yuzu')
   }
 }
 
@@ -70,8 +72,10 @@ const systemScanIpc = async (kind: EmusakEmulatorsKind, binaryPath: string): Pro
 const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): Promise<EmusakEmulatorGames> => {
   try {
     if (emu === 'yuzu') {
-      const directories = await fs.readdir(path.join(dataPath, 'cache', 'game_list'), { withFileTypes: true });
-      return directories.filter(d => d.isFile()).map(d => d.name.toLowerCase().replace('.pv.txt', ''));
+      const windowsPath = path.join(dataPath, 'cache', 'game_list');
+      console.log(process.platform === "win32" ? windowsPath : path.join(dataPath, 'load'));
+      const directories = await fs.readdir(process.platform === "win32" ? windowsPath : path.join(dataPath, 'load'), { withFileTypes: true });
+      return directories.map(d => d.name.toLowerCase().replace('.pv.txt', ''));
     }
 
     const directories = await fs.readdir(path.join(dataPath, 'games'), { withFileTypes: true });

@@ -40,6 +40,7 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string) => {
 
     // Clear destination, extract and delete firmware
     const extractPath = path.join(dataPath, emu === "yuzu" ? "nand" : "bis", 'system', 'Contents', 'registered');
+    console.log(extractPath);
     await fs.remove(extractPath);
     await fs.ensureDir(extractPath);
     zip.extractAllTo(extractPath, true);
