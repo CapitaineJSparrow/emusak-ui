@@ -2,9 +2,10 @@ import { URL } from 'url';
 import fetch, { Response } from "node-fetch";
 import pRetry from "p-retry";
 
-enum HTTP_PATHS {
+export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
   SAVES_LIST           = "/v2/saves",
+  FIRMWARE             = "/firmware/firmware.zip"
 }
 
 class HttpService {

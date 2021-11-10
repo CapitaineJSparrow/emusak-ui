@@ -4,6 +4,7 @@ import titleBarIpc from "./titleBar.ipc";
 import { systemScanIpc, scanGamesForConfig, buildMetadataForTitleId } from "./systemScan.ipc";
 import { EmusakEmulatorsKind } from "../../types";
 import { addEmulatorConfigurationIpc, createDefaultConfigActionForEmu } from "./addEmulatorConfiguration.ipc";
+import installFirmware from "./firmware.ipc";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle('load-components', async (_, url: string) => loadComponentIpcHandler(url));
@@ -14,6 +15,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle('build-default-emu-config', async (_, emu: EmusakEmulatorsKind) => createDefaultConfigActionForEmu(emu));
   ipcMain.handle('scan-games', async (_, dataPath: string, emu: EmusakEmulatorsKind) => scanGamesForConfig(dataPath, emu));
   ipcMain.handle('build-metadata-from-titleId', async (_, titleId: string) => buildMetadataForTitleId(titleId));
+  ipcMain.handle('install-firmware', async (_, emu: EmusakEmulatorsKind, dataPath: string) => installFirmware(emu, dataPath));
 };
 
 export default makeIpcRoutes;

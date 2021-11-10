@@ -89,7 +89,7 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
   },
   createDefaultConfig: async () => {
     let config = await ipcRenderer.invoke('build-default-emu-config', get().currentEmu);
-    config = { ...config, ...{ isDefault: true }  };
+    config = { ...config, ...{ isDefault: true, name: config.emulator === "yuzu" ? i18n.t('yuzuDefault'): i18n.t('ryuDefault') }  };
     const configs = get().emulatorBinariesPath;
     configs.push(config);
     localStorage.setItem(LS_KEYS.CONFIG, JSON.stringify(configs));

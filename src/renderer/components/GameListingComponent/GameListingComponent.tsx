@@ -15,6 +15,7 @@ import defaultIcon from '../../resources/default_icon.jpg';
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;
+  mode: EmusakEmulatorMode;
 }
 
 const Label = styled(Paper)(({ theme }) => ({
@@ -34,31 +35,26 @@ const Label = styled(Paper)(({ theme }) => ({
   textAlign: 'center'
 }));
 
-const GameListingComponent = ({ config }: IEmulatorContainer) => {
+const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   const { t } = useTranslation();
-  const [getModeForBinary, currentEmu] = useStore(s => [s.getModeForBinary, s.currentEmu]);
-  const [mode, setMode] = useState<EmusakEmulatorMode>(null);
+  const [currentEmu] = useStore(s => [s.currentEmu]);
   const [games, setGames] = useState<{ title: string, img: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [filteredGames, setFilteredGames] = useState<typeof games>([]);
 
-  // 1. Detect if emulator is global, portable or using fitgirl
-  // 2. Scan games on user system
-  // 3. Build metadata from eshop with titleId as argument
+  // 1. Scan games on user system
+  // 2. Build metadata from eshop with titleId as argument
   const createLibrary = async () => {
-    const m = await getModeForBinary(config.path);
-    const titleIds = await ipcRenderer.invoke('scan-games', m.dataPath, currentEmu);
+    const titleIds = await ipcRenderer.invoke('scan-games', mode.dataPath, currentEmu);
     const gamesCollection: { title: string, img: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke('build-metadata-from-titleId', i)));
     setGames(gamesCollection.filter(i => i.title !== '0000000000000000')); // Homebrew app
-
     setIsLoaded(true);
-    setMode(m);
   }
 
   useEffect(() => {
     createLibrary().catch(() => setIsLoaded(true));
-  }, [config]);
+  }, [config, mode]);
 
   useEffect(() => {
     setFilteredGames(searchTerm.length > 0 ? games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true) : games);

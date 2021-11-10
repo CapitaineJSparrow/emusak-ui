@@ -6,3 +6,4 @@
 * Linux pass
 * Store last config user per emu
 * Add notice alerts
+* Update eshop data once a day

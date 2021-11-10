@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useStore from "../actions/state";
 import EmulatorContainer from "./GameListingComponent/GameListingComponent";
 import {
@@ -15,9 +15,12 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { ipcRenderer } from "electron";
+import { EmusakEmulatorMode } from "../../types";
 
 const RootComponent = () => {
   const { t } = useTranslation();
+  const [mode, setMode] = useState<EmusakEmulatorMode>(null);
 
   const [
     emulatorBinariesPath,
@@ -26,7 +29,8 @@ const RootComponent = () => {
     setSelectConfigAction,
     addNewEmulatorConfigAction,
     createDefaultConfig,
-    currentEmu
+    currentEmu,
+    getModeForBinary
   ] = useStore(state => [
     state.emulatorBinariesPath,
     state.removeEmulatorConfigAction,
@@ -34,7 +38,8 @@ const RootComponent = () => {
     state.setSelectConfigAction,
     state.addNewEmulatorConfigAction,
     state.createDefaultConfig,
-    state.currentEmu
+    state.currentEmu,
+    state.getModeForBinary,
   ]);
 
   const filteredConfig = emulatorBinariesPath.filter(c => c.emulator === currentEmu);
@@ -53,11 +58,18 @@ const RootComponent = () => {
     }
   }, [currentEmu]);
 
-  // If there is a config and user did not picked one already, choose the first one for him
-  useEffect(() => {
+  const onConfigChange = async () => {
     if (filteredConfig.length > 0 && !selectedConfig) {
       setSelectConfigAction(filteredConfig[0]);
+      const m = await getModeForBinary(filteredConfig[0].path);
+      setMode(m);
+      console.log(m);
     }
+  }
+
+  // If there is a config and user did not picked one already, choose the first one for him
+  useEffect(() => {
+    onConfigChange();
   }, [filteredConfig]);
 
   const renderEmulatorPathSelector = () => (
@@ -101,10 +113,10 @@ const RootComponent = () => {
             { renderEmulatorPathSelector() }
           </Grid>
           {
-            selectedConfig && (
+            (selectedConfig && mode) && (
               <>
                 <Grid item style={{ lineHeight: '52px' }} xs={3}>
-                  <Button fullWidth variant="contained">{ t('dl_firmware') } 13.1.0</Button>
+                  <Button onClick={() => ipcRenderer.invoke('install-firmware', currentEmu, mode.dataPath) } fullWidth variant="contained">{ t('dl_firmware') } 13.1.0</Button>
                 </Grid>
                 <Grid item style={{ lineHeight: '52px' }} xs={2}>
                   <Button fullWidth variant="contained">{ t('dl_keys') }</Button>
@@ -113,7 +125,7 @@ const RootComponent = () => {
             )
           }
         </Grid>
-        { selectedConfig && (<EmulatorContainer config={selectedConfig} />) }
+        { (selectedConfig && mode) && (<EmulatorContainer mode={mode} config={selectedConfig} />) }
       </Stack>
     </Container>
   );
