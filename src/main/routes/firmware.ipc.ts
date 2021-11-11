@@ -7,8 +7,15 @@ import AdmZip from "adm-zip";
 import HttpService, { HTTP_PATHS } from "../services/HttpService";
 import { ipcMain } from "electron";
 
+let isDownloadingFirmware = false;
+
 const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainWindow: BrowserWindow) => {
 
+  if (isDownloadingFirmware) {
+    return false;
+  }
+
+  isDownloadingFirmware = true;
   const destPath = path.resolve(app.getPath('temp'), 'firmware.zip');
   const exists = await fs.pathExists(destPath);
 
@@ -21,6 +28,7 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
   const response = await fetch(new URL(HTTP_PATHS.FIRMWARE, HttpService.url).href, { signal: controller.signal });
 
   if (!response.ok) {
+    isDownloadingFirmware = false;
     return { error: true, code: 'FETCH_FAILED' };
   }
 
@@ -30,10 +38,7 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
     let lastEmittedEventTimestamp = 0;
     let downloadSpeed = 0;
     const startTime = Date.now();
-
-    ipcMain.on('cancel-download', () => {
-      controller.abort();
-    })
+    ipcMain.on('cancel-download', () => controller.abort())
 
     // Stream file to disk
     for await (const chunk of response.body) {
@@ -51,6 +56,7 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
 
       const res: object | null = await fs.appendFile(destPath, chunk).catch(() => {
         controller.abort(); // Cancel download, writing file to disk is not possible (antivirus preventing emusak to write file ? Lack of space ?
+        isDownloadingFirmware = false;
         return { error: true, code: 'FETCH_FAILED' };
       }).then(() => null);
 
@@ -83,9 +89,11 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
       }
     }
 
+    isDownloadingFirmware = false;
     return extractPath;
   } catch (_err) {
     console.log(_err);
+    isDownloadingFirmware = false;
     return { error: true, code: 'FETCH_FAILED' };
   }
 }

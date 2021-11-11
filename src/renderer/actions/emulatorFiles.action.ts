@@ -14,7 +14,11 @@ const onFirmwareProgressEvent = (_: unknown, percentage: number, downloadSpeed: 
 const createEmulatorFilesSLice = (_set: SetState<{ }>, get: GetState<Partial<ITitleBar & IAlert>>) => ({
   installFirmwareAction: async (dataPath: string) => {
     ipcRenderer.on('download-progress', onFirmwareProgressEvent);
-    const extractPath: { error: boolean, code: string } | string = await ipcRenderer.invoke('install-firmware', get().currentEmu, dataPath);
+    const extractPath: { error: boolean, code: string } | string | false = await ipcRenderer.invoke('install-firmware', get().currentEmu, dataPath);
+
+    if (extractPath === false) {
+      return;
+    }
 
     if (typeof extractPath === "object") {
       ipcRenderer.removeListener('download-progress', onFirmwareProgressEvent);
@@ -29,7 +33,7 @@ const createEmulatorFilesSLice = (_set: SetState<{ }>, get: GetState<Partial<ITi
     ipcRenderer.removeListener('download-progress', onFirmwareProgressEvent);
     return Swal.fire({
       imageUrl: pirate,
-      html: `Firmware have been extracted to <code>${extractPath}</code> directory.`,
+      html: `<p style="padding: 5px">Firmware have been extracted to <code>${extractPath}</code></p>`,
     })
   }
 });
