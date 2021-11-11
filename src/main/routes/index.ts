@@ -15,7 +15,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle('build-default-emu-config', async (_, emu: EmusakEmulatorsKind) => createDefaultConfigActionForEmu(emu));
   ipcMain.handle('scan-games', async (_, dataPath: string, emu: EmusakEmulatorsKind) => scanGamesForConfig(dataPath, emu));
   ipcMain.handle('build-metadata-from-titleId', async (_, titleId: string) => buildMetadataForTitleId(titleId));
-  ipcMain.handle('install-firmware', async (_, emu: EmusakEmulatorsKind, dataPath: string) => installFirmware(emu, dataPath));
+  ipcMain.handle('install-firmware', async (event, emu: EmusakEmulatorsKind, dataPath: string) => installFirmware(emu, dataPath, mainWindow));
 };
 
 export default makeIpcRoutes;

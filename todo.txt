@@ -3,7 +3,6 @@
 * Setup auto-updates
 * Auto refresh listing with a filesystem watcher
 * When computing dataPath, make fs scan case-insensitive
-* Linux pass
 * Store last config user per emu
 * Add notice alerts
 * Update eshop data once a day

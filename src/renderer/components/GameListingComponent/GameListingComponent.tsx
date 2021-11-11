@@ -57,7 +57,6 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   }, [config, mode]);
 
   useEffect(() => {
-    setIsLoaded(false);
     setFilteredGames(searchTerm.length > 0 ? games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true) : games);
   }, [games, searchTerm])
 

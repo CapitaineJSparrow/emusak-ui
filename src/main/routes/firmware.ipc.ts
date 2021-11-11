@@ -1,12 +1,13 @@
 import { EmusakEmulatorsKind } from "../../types";
 import fetch from "node-fetch";
-import { app } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import path from "path";
 import fs from "fs-extra";
 import AdmZip from "adm-zip";
 import HttpService, { HTTP_PATHS } from "../services/HttpService";
+import { ipcMain } from "electron";
 
-const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string) => {
+const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainWindow: BrowserWindow) => {
 
   const destPath = path.resolve(app.getPath('temp'), 'firmware.zip');
   const exists = await fs.pathExists(destPath);
@@ -24,8 +25,30 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string) => {
   }
 
   try {
+    let downloadedBytesLength = 0;
+    const contentLength = +response.headers.get('Content-Length');
+    let lastEmittedEventTimestamp = 0;
+    let downloadSpeed = 0;
+    const startTime = Date.now();
+
+    ipcMain.on('cancel-download', () => {
+      controller.abort();
+    })
+
     // Stream file to disk
     for await (const chunk of response.body) {
+      downloadedBytesLength += chunk.length;
+      downloadSpeed += chunk.length;
+      const mbps = downloadedBytesLength / (1024 * 1024);
+      downloadSpeed = Date.now() - startTime === 0 ? downloadSpeed : mbps / ((Date.now() - startTime) / 1000);
+      const currentTimestamp = +new Date();
+
+      // Throttle the dispatch event since loop is called many times
+      if (currentTimestamp - lastEmittedEventTimestamp >= 100 || downloadedBytesLength === contentLength) {
+        mainWindow.webContents.send('download-progress', (downloadedBytesLength / contentLength * 100).toFixed(2), downloadSpeed.toFixed(2));
+        lastEmittedEventTimestamp = +new Date();
+      }
+
       const res: object | null = await fs.appendFile(destPath, chunk).catch(() => {
         controller.abort(); // Cancel download, writing file to disk is not possible (antivirus preventing emusak to write file ? Lack of space ?
         return { error: true, code: 'FETCH_FAILED' };
@@ -40,7 +63,6 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string) => {
 
     // Clear destination, extract and delete firmware
     const extractPath = path.join(dataPath, emu === "yuzu" ? "nand" : "bis", 'system', 'Contents', 'registered');
-    console.log(extractPath);
     await fs.remove(extractPath);
     await fs.ensureDir(extractPath);
     zip.extractAllTo(extractPath, true);

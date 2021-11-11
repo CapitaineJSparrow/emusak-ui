@@ -64,7 +64,6 @@ const RootComponent = () => {
       setSelectConfigAction(filteredConfig[0]);
       const m = await getModeForBinary(filteredConfig[0].path);
       setMode(m);
-      console.log(m);
     }
   }
 

@@ -1,17 +1,19 @@
 import React, { useEffect } from "react";
-import { Alert, AlertColor, Snackbar } from "@mui/material";
+import { Alert, AlertColor, Button, Snackbar } from "@mui/material";
 import useStore from "../../actions/state";
 import { useTranslation } from "react-i18next";
+import { ipcRenderer } from "electron";
 
 let timeoutInstance: ReturnType<typeof setTimeout> = null;
 
 const AlertComponent = () => {
   const { t } = useTranslation();
-  const [alertMessage, isAlertOpened, closeAlertAction, alertKind] = useStore(state => [
+  const [alertMessage, isAlertOpened, closeAlertAction, alertKind, alertClosable] = useStore(state => [
     state.alertMessage,
     state.isAlertOpened,
     state.closeAlertAction,
     state.alertKind,
+    state.alertClosable
   ]);
 
   useEffect(() => {
@@ -31,7 +33,21 @@ const AlertComponent = () => {
           horizontal: 'center'
         }}
       >
-        <Alert onClose={closeAlertAction} severity={alertKind as AlertColor} sx={{ width: '100%' }}>
+        <Alert
+          onClose={alertClosable ? closeAlertAction : undefined}
+          severity={alertKind as AlertColor}
+          sx={{ width: '100%' }}
+          action={
+            !alertClosable && (
+              <Button onClick={() => {
+                ipcRenderer.send('cancel-download')
+                closeAlertAction()
+              }} color="inherit" size="small">
+                Cancel
+              </Button>
+            )
+          }
+        >
           { t(alertMessage) }
         </Alert>
       </Snackbar>
