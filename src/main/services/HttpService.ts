@@ -8,12 +8,18 @@ export enum HTTP_PATHS {
   FIRMWARE             = "/firmware/firmware.zip"
 }
 
+export enum GITHUB_PATHS {
+  THRESHOLD = 'https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt',
+  RELEASE_INFO = 'https://api.github.com/repos/stromcon/emusak-ui/releases/latest',
+  FIRMWARE_VERSION = 'https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/version.txt',
+}
+
 class HttpService {
 
   public url: string = process.env.EMUSAK_CDN;
 
   // Trigger HTTP request using an exponential backoff strategy
-  protected _fetchAsJson(path: string, host: string = this.url, defaultValue = {}) {
+  protected _fetch(path: string, type: 'JSON' | 'TXT' = 'JSON', host: string = this.url, defaultValue = {}) {
     const url = new URL(path, host);
     return pRetry(
       async () => {
@@ -23,18 +29,26 @@ class HttpService {
           throw new pRetry.AbortError(response.statusText);
         }
 
-        return response.json();
+        if (type === 'JSON') {
+          return response.json();
+        }
+
+        return response.text();
       },
       { retries: 5 }
     ) as unknown as Promise<Response>
   }
 
   public async downloadRyujinxShaders() {
-    return this._fetchAsJson(HTTP_PATHS.RYUJINX_SHADERS_LIST);
+    return this._fetch(HTTP_PATHS.RYUJINX_SHADERS_LIST);
   }
 
   public async downloadSaves() {
-    return this._fetchAsJson(HTTP_PATHS.SAVES_LIST);
+    return this._fetch(HTTP_PATHS.SAVES_LIST);
+  }
+
+  public async getFirmwareVersion() {
+    return this._fetch(GITHUB_PATHS.FIRMWARE_VERSION, 'TXT');
   }
 }
 

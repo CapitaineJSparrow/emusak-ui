@@ -5,6 +5,7 @@ const loadComponentIpcHandler = async (url: string) => {
   return Promise.all([
     HttpService.downloadRyujinxShaders(),
     HttpService.downloadSaves(),
+    HttpService.getFirmwareVersion(),
   ]);
 }
 
