@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Alert, AlertColor, Button, Snackbar } from "@mui/material";
 import useStore from "../../actions/state";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../i18n/I18nService";
 import { ipcRenderer } from "electron";
 
 let timeoutInstance: ReturnType<typeof setTimeout> = null;
@@ -48,7 +48,7 @@ const AlertComponent = () => {
             )
           }
         >
-          { t(alertMessage) }
+          { t(alertMessage as any) }
         </Alert>
       </Snackbar>
     </div>

@@ -13,9 +13,9 @@ import {
   SelectChangeEvent,
   Stack
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { EmusakEmulatorMode } from "../../types";
+import { useTranslation } from "../i18n/I18nService";
 
 const RootComponent = () => {
   const { t } = useTranslation();
@@ -54,6 +54,7 @@ const RootComponent = () => {
 
   // Build defaults configs if there is none
   useEffect(() => {
+    setMode(null);
     if (filteredConfig.length === 0) {
       createDefaultConfig();
     }

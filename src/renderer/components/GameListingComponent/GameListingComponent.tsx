@@ -8,10 +8,10 @@ import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
 import useStore from "../../actions/state";
 import { Chip, Divider, Grid, IconButton, TextField, Tooltip } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
-import { useTranslation } from "react-i18next";
 import { ipcRenderer } from "electron";
 import jackSober from '../../resources/jack_sober.png';
 import defaultIcon from '../../resources/default_icon.jpg';
+import { useTranslation } from "../../i18n/I18nService";
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;

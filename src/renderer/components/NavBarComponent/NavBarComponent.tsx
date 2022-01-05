@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../i18n/I18nService";
 import discord_logo from "../../resources/discord_logo.png";
 import ryu_logo from '../../resources/ryujinx_logo.png';
 import yuzu_logo from '../../resources/yuzu_logo.png';
