@@ -125,7 +125,7 @@ const RootComponent = () => {
             )
           }
         </Grid>
-        { (selectedConfig && mode) && (<EmulatorContainer mode={mode} config={selectedConfig} />) }
+        { selectedConfig && (<EmulatorContainer mode={mode} config={selectedConfig} />) }
       </Stack>
     </Container>
   );

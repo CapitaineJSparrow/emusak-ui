@@ -15,7 +15,7 @@ import defaultIcon from '../../resources/default_icon.jpg';
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;
-  mode: EmusakEmulatorMode;
+  mode?: EmusakEmulatorMode;
 }
 
 const Label = styled(Paper)(({ theme }) => ({
@@ -58,7 +58,17 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
 
   useEffect(() => {
     setFilteredGames(searchTerm.length > 0 ? games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true) : games);
-  }, [games, searchTerm])
+  }, [games, searchTerm]);
+
+  const renderJackSober = () => (
+    <div style={{ textAlign: 'center', width: '50%', margin: '0 auto' }}>
+      <p>
+        <img width="100%" src={jackSober} alt=""/>
+      </p>
+      <Divider />
+      <h4 dangerouslySetInnerHTML={{ __html: currentEmu === "ryu" ? t('launchRyujinx') : t('launchYuzu') }} />
+    </div>
+  );
 
   return (
     <>
@@ -114,20 +124,15 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
             }
 
             {
-              (isLoaded && games.length === 0) && (
-                (
-                  <div style={{ textAlign: 'center', width: '50%', margin: '0 auto' }}>
-                    <p>
-                      <img width="100%" src={jackSober} alt=""/>
-                    </p>
-                    <Divider />
-                    <h4 dangerouslySetInnerHTML={{ __html: currentEmu === "ryu" ? t('launchRyujinx') : t('launchYuzu') }} />
-                  </div>
-                )
-              )
+              (isLoaded && games.length === 0) && renderJackSober()
+
             }
           </Stack>
         )
+      }
+
+      {
+        !mode && renderJackSober()
       }
     </>
   );
