@@ -60,7 +60,7 @@ const RootComponent = () => {
   }, [currentEmu]);
 
   const onConfigChange = async () => {
-    if (filteredConfig.length > 0 && !selectedConfig) {
+    if (filteredConfig.length > 0 && !mode) {
       setSelectConfigAction(filteredConfig[0]);
       const m = await getModeForBinary(filteredConfig[0].path);
       setMode(m);
@@ -125,6 +125,7 @@ const RootComponent = () => {
             )
           }
         </Grid>
+
         { selectedConfig && (<EmulatorContainer mode={mode} config={selectedConfig} />) }
       </Stack>
     </Container>

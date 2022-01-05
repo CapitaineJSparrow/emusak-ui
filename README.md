@@ -2,7 +2,7 @@
 
 ![showDownloads](https://img.shields.io/github/downloads/stromcon/emusak-ui/total?style=for-the-badge)
 ![showVersion](https://img.shields.io/github/package-json/v/stromcon/emusak-ui?style=for-the-badge)
-![showLatestCommit](https://img.shields.io/github/last-commit/stromcon/emusak-ui?style=for-the-badge)
+![showLatestCommit](https://img.shields.io/github/last-commit/stromcon/emusak-ui/emusak-v2?style=for-the-badge)
 ![showLicense](https://img.shields.io/github/license/stromcon/emusak-ui?style=for-the-badge)
 
 EmuSAK-ui is a graphical mod for [EmuSAK](https://github.com/sinscove/EmuSAK). This is a tool to manage your switch emulators, such as downloading saves or mods.
