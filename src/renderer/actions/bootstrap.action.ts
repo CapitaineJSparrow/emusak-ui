@@ -17,7 +17,6 @@ const createBootstrapSlice = (set: SetState<IBootstrap>) => ({
   firmwareVersion: '',
   bootstrapAppAction: async () => {
     const [ryujinxShaders, saves, firmwareVersion] = await ipcRenderer.invoke('load-components', process.env.EMUSAK_CDN);
-    console.log(firmwareVersion);
     return set({ isAppInitialized: true, saves, ryujinxShaders, firmwareVersion });
   }
 });

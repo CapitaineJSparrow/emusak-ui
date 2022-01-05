@@ -4,8 +4,9 @@ import createTitleBarSlice from "./titleBar.actions";
 import emulatorConfig from "./emulatorConfig.action";
 import createAlertSlice from "./alert.action";
 import createEmulatorFilesSLice from "./emulatorFiles.action";
+import { GetState, SetState } from "zustand/vanilla";
 
-const useStore = create((set, get) => ({
+const useStore = create((set: SetState<any>, get: GetState<any>) => ({
   ...createBootstrapSlice(set),
   ...createTitleBarSlice(set),
   ...emulatorConfig(set, get),

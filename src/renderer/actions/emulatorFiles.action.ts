@@ -35,6 +35,9 @@ const createEmulatorFilesSLice = (_set: SetState<{ }>, get: GetState<Partial<ITi
       imageUrl: pirate,
       html: `<p style="padding: 5px">Firmware have been extracted to <code>${extractPath}</code></p>`,
     })
+  },
+  downloadKeysAction: async (dataPath: string) => {
+    alert(dataPath);
   }
 });
 
