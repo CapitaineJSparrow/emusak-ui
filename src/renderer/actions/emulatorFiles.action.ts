@@ -6,6 +6,9 @@ import pirate from '../resources/pirate.gif'
 import i18next from "i18next";
 import useStore from "./state";
 import { IAlert } from "./alert.action";
+import { useTranslation } from "../i18n/I18nService"
+
+const { t } = useTranslation();
 
 const onFirmwareProgressEvent = (_: unknown, percentage: number, downloadSpeed: number) => {
   useStore.getState().openAlertAction('info', `Downloading firmware ${percentage} % at ${downloadSpeed} MB/s`, false);
@@ -37,7 +40,11 @@ const createEmulatorFilesSLice = (_set: SetState<{ }>, get: GetState<Partial<ITi
     })
   },
   downloadKeysAction: async (dataPath: string) => {
-    alert(dataPath);
+    const result = await ipcRenderer.invoke('install-keys', dataPath, get().currentEmu);
+    Swal.fire({
+      icon: 'success',
+      html: `${t('keysLocation')} : <small><code>${result}</code></small>`
+    });
   }
 });
 

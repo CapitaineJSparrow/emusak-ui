@@ -17,6 +17,7 @@
   "launchYuzu": "Launch any game first, all your games should show up here automatically then. Yuzu is behind a paywall, I recommend to use either <a target=\"_blank\" href=\"https://mostlywhat.github.io/128Bit-Yuzu-Installer/\">128BB installer</a> or <a href=\"https://www.mediafire.com/file/r4uarx57o251987/Yuzu_Nintendo_Switch_Emulator_for_PC_-_Sin.7z/file\" target=\"_blank\">Sin updater (portable)</a>. If you are using a portable installation, use the \"Configuration\" button on the top left.",
   "yuzuDefault": "Yuzu Global (default)",
   "ryuDefault": "Ryujinx Global (default)",
+  "keysLocation": "Keys successfully installed at",
 
   "OPERATION_CANCELED": "You canceled the operation.",
   "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",

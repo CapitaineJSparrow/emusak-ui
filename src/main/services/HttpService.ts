@@ -5,7 +5,8 @@ import pRetry from "p-retry";
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
   SAVES_LIST           = "/v2/saves",
-  FIRMWARE             = "/firmware/firmware.zip"
+  FIRMWARE             = "/firmware/firmware.zip",
+  KEYS                 = "/firmware/prod.keys"
 }
 
 export enum GITHUB_PATHS {
@@ -49,6 +50,10 @@ class HttpService {
 
   public async getFirmwareVersion() {
     return this._fetch(GITHUB_PATHS.FIRMWARE_VERSION, 'TXT');
+  }
+
+  public async downloadKeys() {
+    return this._fetch(HTTP_PATHS.KEYS, 'TXT');
   }
 }
 

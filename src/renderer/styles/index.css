@@ -3,7 +3,6 @@ https://stackoverflow.com/questions/21367441/make-scroll-bar-take-no-space
 Fix masonry bug where layout can shift in an infinite loop due to scrollbar appear / disappear
  */
 html {
-  overflow-y: auto;
   overflow-y: overlay;
 }
 
@@ -83,4 +82,8 @@ code {
   white-space: pre-wrap;
   background: rgba(0, 0, 0, 0.3);
   font-weight: bold;
+}
+
+.swal2-html-container {
+  padding: 10px;
 }
