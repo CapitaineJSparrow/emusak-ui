@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CropSquareRoundedIcon from '@mui/icons-material/CropSquareRounded';
-import { useTranslation } from "../../i18n/I18nService";
+import useTranslation from "../../i18n/I18nService";
 import useStore from "../../actions/state";
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import logo from '../../resources/emusak_logo.png';

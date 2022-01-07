@@ -3,6 +3,8 @@ import { i18n } from '../app';
 
 export type I18nKeys = keyof typeof trad;
 
-export const useTranslation = () => ({
+const useTranslation = () => ({
     t: (t: I18nKeys): string => i18n.t(t)
 });
+
+export default useTranslation;

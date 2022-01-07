@@ -32,3 +32,9 @@ export type EmusakEmulatorGame = {
   title: string,
   img: string
 }
+
+export type EmusakDownload = {
+  filename: string,
+  progress: number,
+  downloadSpeed: number,
+}

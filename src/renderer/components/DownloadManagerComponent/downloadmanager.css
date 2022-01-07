@@ -1,0 +1,24 @@
+.download-manager {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: #333;
+  width: 320px;
+  z-index: 1;
+}
+
+.download-manager-title {
+  text-align: center;
+}
+
+.download-manager-content {
+  max-height: 220px;
+  overflow: auto;
+}
+
+.download-manager-item {
+  background: #222;
+  padding: 10px 15px;
+  text-align: center;
+  border-bottom: 1px solid #666;
+}
