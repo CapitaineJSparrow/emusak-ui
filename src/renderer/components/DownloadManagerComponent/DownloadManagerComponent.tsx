@@ -1,8 +1,10 @@
 import React from "react";
 import './downloadmanager.css';
-import { Button, LinearProgress } from "@mui/material";
+import { Button, Grid, IconButton, LinearProgress } from "@mui/material";
 import useTranslation from "../../i18n/I18nService";
 import useStore from "../../actions/state";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { ipcRenderer } from "electron";
 
 const DownloadManagerComponent = () => {
   const [isExpended, setIsExpended] = React.useState(true);
@@ -34,7 +36,22 @@ const DownloadManagerComponent = () => {
                   <div className="download-manager-item">
                     <div>
                       <p style={{ margin: 0, marginBottom: 5 }}><small>{dlFile.filename} | {dlFile.downloadSpeed} MB/s</small></p>
-                      <LinearProgress variant="buffer" value={dlFile.progress} valueBuffer={0} />
+                      <Grid style={{ display: 'flex', alignItems: 'center' }} container spacing={2}>
+                        <Grid item xs={10}>
+                          <LinearProgress variant="buffer" value={dlFile.progress} valueBuffer={50} />
+                        </Grid>
+                        <Grid item xs>
+                          <IconButton
+                            color="error"
+                            size="small"
+                            aria-label="upload picture"
+                            component="span"
+                            onClick={() => ipcRenderer.send('cancel-download')}
+                          >
+                            <HighlightOffIcon />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
                     </div>
                   </div>
                 ))
