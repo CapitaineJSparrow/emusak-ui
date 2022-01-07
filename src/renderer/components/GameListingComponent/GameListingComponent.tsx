@@ -11,7 +11,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { ipcRenderer } from "electron";
 import jackSober from '../../resources/jack_sober.png';
 import defaultIcon from '../../resources/default_icon.jpg';
-import { useTranslation } from "../../i18n/I18nService";
+import useTranslation from "../../i18n/I18nService";
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;

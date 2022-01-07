@@ -1,6 +1,6 @@
 import React from "react";
 import './bootstrap.css';
-import { useTranslation } from "../../i18n/I18nService";
+import useTranslation from "../../i18n/I18nService";
 
 const BootstrapComponent = () => {
   const { t } = useTranslation();

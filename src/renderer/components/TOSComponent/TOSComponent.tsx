@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { LS_KEYS } from "../../../types";
 import Swal from 'sweetalert2';
-import { useTranslation } from "react-i18next";
 import pirate_icon from '../../resources/pirate_icon.png';
+import useTranslation from "../../i18n/I18nService";
 
 const TOSComponent = () => {
   const { t } = useTranslation();

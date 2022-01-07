@@ -26,6 +26,7 @@ import TitleBarComponent from "./components/TitleBarComponent/TitleBarComponent"
 import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
 import TOSComponent from "./components/TOSComponent/TOSComponent";
 import AlertComponent from "./components/AlertComponent/AlertComponent";
+import DownloadManagerComponent from "./components/DownloadManagerComponent/DownloadManagerComponent";
 
 const darkTheme = createTheme({
   palette: {
@@ -73,6 +74,7 @@ const App = () => {
         <TitleBarComponent />
         <NavBarComponent />
         <AlertComponent />
+        <DownloadManagerComponent />
         { !isAppInitialized ? <BootstrapComponent /> : <RootComponent /> }
         <TOSComponent />
       </CssBaseline>
