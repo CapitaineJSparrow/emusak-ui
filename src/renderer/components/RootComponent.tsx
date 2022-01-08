@@ -66,15 +66,18 @@ const RootComponent = () => {
 
   useEffect(() => {
     // Build default config in case there is no one
-    if (filteredConfig.length === 0) {
-      createDefaultConfig();
+    if (filteredConfig.length === 0 && !selectedConfig) {
+      createDefaultConfig()
     }
+
     // Otherwise, pick first config available and compute mode for it
     else if (!selectedConfig && filteredConfig.length > 0) {
       setSelectConfigAction(filteredConfig[0]);
       getModeForBinary(filteredConfig[0].path).then(setMode)
+    } else if (selectedConfig && !mode) {
+      getModeForBinary(selectedConfig.path).then(setMode)
     }
-  }, [currentEmu]);
+  }, [currentEmu, emulatorBinariesPath, filteredConfig]);
 
   const renderEmulatorPathSelector = () => (
     <Grid container spacing={2}>
