@@ -51,31 +51,30 @@ const RootComponent = () => {
 
   const onConfigurationChange = (e: SelectChangeEvent) => {
     const { value } = e.target;
-    value === '' ? addNewEmulatorConfigAction() : setSelectConfigAction(emulatorBinariesPath.find(i => i.path === value));
+
+    if (value === '') {
+      addNewEmulatorConfigAction()
+    } else {
+      const config = emulatorBinariesPath.find(i => i.path === value);
+      setSelectConfigAction(config);
+      getModeForBinary(config.path).then(setMode);
+    }
+
     e.preventDefault();
     return false;
   }
 
-  // Build defaults configs if there is none
   useEffect(() => {
-    setMode(null);
+    // Build default config in case there is no one
     if (filteredConfig.length === 0) {
       createDefaultConfig();
     }
-  }, [currentEmu]);
-
-  const onConfigChange = async () => {
-    if (filteredConfig.length > 0 && !mode) {
+    // Otherwise, pick first config available and compute mode for it
+    else if (!selectedConfig && filteredConfig.length > 0) {
       setSelectConfigAction(filteredConfig[0]);
-      const m = await getModeForBinary(filteredConfig[0].path);
-      setMode(m);
+      getModeForBinary(filteredConfig[0].path).then(setMode)
     }
-  }
-
-  // If there is a config and user did not picked one already, choose the first one for him
-  useEffect(() => {
-    onConfigChange();
-  }, [filteredConfig]);
+  }, [currentEmu]);
 
   const renderEmulatorPathSelector = () => (
     <Grid container spacing={2}>
