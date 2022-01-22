@@ -121,7 +121,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "fs-extra": "^10.0.0",
     "i18next": "^21.3.3",
-    "node-fetch": "^3.0.0",
+    "node-fetch": "^3.1.1",
     "p-retry": "^4.6.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
