@@ -98,7 +98,7 @@ const buildMetadataForTitleId = (titleId: string) => {
 
   return {
     // Use custom database in priority, then database from tinfoil and fallback by returning only title ID in case game does not exists in eshop
-    title: csDb[id] || tfDb[id] || titleId,
+    title: csDb[id.toUpperCase()] || tfDb[id] || titleId.toUpperCase(),
     img: ''
   }
 }
