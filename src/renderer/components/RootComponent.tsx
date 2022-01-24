@@ -79,6 +79,13 @@ const RootComponent = () => {
     }
   }, [currentEmu, emulatorBinariesPath, filteredConfig]);
 
+  // In case user chose another config (after added or removed a config)
+  useEffect(() => {
+    if (selectedConfig && "path" in selectedConfig) {
+      getModeForBinary(selectedConfig.path).then(setMode);
+    }
+  }, [selectedConfig])
+
   const renderEmulatorPathSelector = () => (
     <Grid container spacing={2}>
       <Grid item xs={4}>
@@ -112,7 +119,7 @@ const RootComponent = () => {
   )
 
   return (emulatorBinariesPath && emulatorBinariesPath.length > 0) && (
-    <Container maxWidth={false} key={currentEmu}>
+    <Container maxWidth={false} key={`${currentEmu}`}>
       <br />
       <Stack spacing={2}>
         <Grid container spacing={2}>
