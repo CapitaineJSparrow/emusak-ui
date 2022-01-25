@@ -1,9 +1,9 @@
 import React from "react";
-import './downloadmanager.css';
+import "./downloadmanager.css";
 import { Button, Grid, IconButton, LinearProgress } from "@mui/material";
 import useTranslation from "../../i18n/I18nService";
 import useStore from "../../actions/state";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { ipcRenderer } from "electron";
 
 const DownloadManagerComponent = () => {
@@ -24,7 +24,7 @@ const DownloadManagerComponent = () => {
           color="info"
           onClick={() => setIsExpended(!isExpended)}
         >
-          { t('downloadManager') }
+          { t("downloadManager") }
         </Button>
       </header>
       {
@@ -36,7 +36,7 @@ const DownloadManagerComponent = () => {
                   <div className="download-manager-item">
                     <div>
                       <p style={{ margin: 0, marginBottom: 5 }}><small>{dlFile.filename} | {dlFile.downloadSpeed} MB/s</small></p>
-                      <Grid style={{ display: 'flex', alignItems: 'center' }} container spacing={2}>
+                      <Grid style={{ display: "flex", alignItems: "center" }} container spacing={2}>
                         <Grid item xs={10}>
                           <LinearProgress variant="buffer" value={dlFile.progress} valueBuffer={50} />
                         </Grid>
@@ -46,7 +46,7 @@ const DownloadManagerComponent = () => {
                             size="small"
                             aria-label="upload picture"
                             component="span"
-                            onClick={() => ipcRenderer.send('cancel-download')}
+                            onClick={() => ipcRenderer.send("cancel-download")}
                           >
                             <HighlightOffIcon />
                           </IconButton>
@@ -62,6 +62,6 @@ const DownloadManagerComponent = () => {
       }
     </div>
   );
-}
+};
 
 export default DownloadManagerComponent;

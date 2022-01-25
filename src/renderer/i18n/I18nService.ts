@@ -1,5 +1,5 @@
 import trad from "./en.json";
-import { i18n } from '../app';
+import { i18n } from "../app";
 
 export type I18nKeys = keyof typeof trad;
 

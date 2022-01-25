@@ -1,4 +1,4 @@
-import create from 'zustand'
+import create from "zustand";
 import createBootstrapSlice from "./bootstrap.action";
 import createTitleBarSlice from "./titleBar.actions";
 import emulatorConfig from "./emulatorConfig.action";
@@ -14,6 +14,6 @@ const useStore = create((set: SetState<any>, get: GetState<any>) => ({
   ...createAlertSlice(set),
   ...createEmulatorFilesSLice(set, get),
   ...createDownloadManagerSlice(set, get)
-}))
+}));
 
 export default useStore;

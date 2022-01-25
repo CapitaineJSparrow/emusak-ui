@@ -1,5 +1,5 @@
 import React from "react";
-import './bootstrap.css';
+import "./bootstrap.css";
 import useTranslation from "../../i18n/I18nService";
 
 const BootstrapComponent = () => {
@@ -11,9 +11,9 @@ const BootstrapComponent = () => {
         <div></div>
         <div></div>
       </div>
-      <h3 dangerouslySetInnerHTML={{ __html: t('loading_data') }} />
+      <h3 dangerouslySetInnerHTML={{ __html: t("loading_data") }} />
     </div>
   );
-}
+};
 
 export default BootstrapComponent;

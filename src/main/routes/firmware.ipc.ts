@@ -1,11 +1,10 @@
 import { EmusakEmulatorsKind } from "../../types";
 import fetch from "node-fetch";
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow , ipcMain } from "electron";
 import path from "path";
 import fs from "fs-extra";
 import AdmZip from "adm-zip";
 import HttpService, { HTTP_PATHS } from "../services/HttpService";
-import { ipcMain } from "electron";
 
 let isDownloadingFirmware = false;
 
@@ -16,7 +15,7 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
   }
 
   isDownloadingFirmware = true;
-  const destPath = path.resolve(app.getPath('temp'), 'firmware.zip');
+  const destPath = path.resolve(app.getPath("temp"), "firmware.zip");
   const exists = await fs.pathExists(destPath);
 
   // Remove previous firmware if already exists
@@ -29,16 +28,16 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
 
   if (!response.ok) {
     isDownloadingFirmware = false;
-    return { error: true, code: 'FETCH_FAILED' };
+    return { error: true, code: "FETCH_FAILED" };
   }
 
   try {
     let downloadedBytesLength = 0;
-    const contentLength = +response.headers.get('Content-Length');
+    const contentLength = +response.headers.get("Content-Length");
     let lastEmittedEventTimestamp = 0;
     let downloadSpeed = 0;
     const startTime = Date.now();
-    ipcMain.on('cancel-download', () => controller.abort())
+    ipcMain.on("cancel-download", () => controller.abort());
 
     // Stream file to disk
     for await (const chunk of response.body) {
@@ -50,14 +49,14 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
 
       // Throttle the dispatch event since loop is called many times
       if (currentTimestamp - lastEmittedEventTimestamp >= 100 || downloadedBytesLength === contentLength) {
-        mainWindow.webContents.send('download-progress', (downloadedBytesLength / contentLength * 100).toFixed(2), downloadSpeed.toFixed(2));
+        mainWindow.webContents.send("download-progress", (downloadedBytesLength / contentLength * 100).toFixed(2), downloadSpeed.toFixed(2));
         lastEmittedEventTimestamp = +new Date();
       }
 
       const res: object | null = await fs.appendFile(destPath, chunk).catch(() => {
         controller.abort(); // Cancel download, writing file to disk is not possible (antivirus preventing emusak to write file ? Lack of space ?
         isDownloadingFirmware = false;
-        return { error: true, code: 'FETCH_FAILED' };
+        return { error: true, code: "FETCH_FAILED" };
       }).then(() => null);
 
       if (res) {
@@ -68,7 +67,7 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
     const zip = new AdmZip(destPath);
 
     // Clear destination, extract and delete firmware
-    const extractPath = path.join(dataPath, emu === "yuzu" ? "nand" : "bis", 'system', 'Contents', 'registered');
+    const extractPath = path.join(dataPath, emu === "yuzu" ? "nand" : "bis", "system", "Contents", "registered");
     await fs.remove(extractPath);
     await fs.ensureDir(extractPath);
     zip.extractAllTo(extractPath, true);
@@ -81,11 +80,11 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
       // We cannot do it using concurrency otherwise windows is giving perms issues
       for (const file of files) {
         // 1. Rename file to "00"
-        await fs.rename(path.join(extractPath, file), path.join(extractPath, '00'));
+        await fs.rename(path.join(extractPath, file), path.join(extractPath, "00"));
         // 2. Create directory with same name as file without .cnmt
-        await fs.ensureDir(path.join(extractPath, file.replace('.cnmt', '')));
+        await fs.ensureDir(path.join(extractPath, file.replace(".cnmt", "")));
         // 3. Move file to created directory
-        await fs.rename(path.join(extractPath, '00'), path.join(extractPath, file.replace('.cnmt', ''), '00'));
+        await fs.rename(path.join(extractPath, "00"), path.join(extractPath, file.replace(".cnmt", ""), "00"));
       }
     }
 
@@ -94,8 +93,8 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
   } catch (_err) {
     console.log(_err);
     isDownloadingFirmware = false;
-    return { error: true, code: 'FETCH_FAILED' };
+    return { error: true, code: "FETCH_FAILED" };
   }
-}
+};
 
 export default installFirmware;

@@ -1,8 +1,8 @@
 import { app, BrowserWindow } from "electron";
 
-const titleBarIpc = async (action: 'maximize' | 'close' | 'minimize', mainWindow: BrowserWindow) => {
+const titleBarIpc = async (action: "maximize" | "close" | "minimize", mainWindow: BrowserWindow) => {
   switch (action) {
-    case 'maximize':
+    case "maximize":
       if (mainWindow.isMaximized()) {
         mainWindow.unmaximize();
         mainWindow.setSize(1280, 860);
@@ -11,13 +11,13 @@ const titleBarIpc = async (action: 'maximize' | 'close' | 'minimize', mainWindow
         mainWindow.maximize();
       }
       break;
-    case 'close':
+    case "close":
       app.quit();
       break;
-    case 'minimize':
+    case "minimize":
       mainWindow.minimize();
       break;
   }
-}
+};
 
 export default titleBarIpc;

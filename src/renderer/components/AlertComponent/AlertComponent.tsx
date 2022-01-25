@@ -29,19 +29,19 @@ const AlertComponent = () => {
       <Snackbar
         open={isAlertOpened}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center'
+          vertical: "bottom",
+          horizontal: "center"
         }}
       >
         <Alert
           onClose={alertClosable ? closeAlertAction : undefined}
           severity={alertKind as AlertColor}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
           action={
             !alertClosable && (
               <Button onClick={() => {
-                ipcRenderer.send('cancel-download')
-                closeAlertAction()
+                ipcRenderer.send("cancel-download");
+                closeAlertAction();
               }} color="inherit" size="small">
                 Cancel
               </Button>
@@ -52,7 +52,7 @@ const AlertComponent = () => {
         </Alert>
       </Snackbar>
     </div>
-  )
-}
+  );
+};
 
 export default AlertComponent;

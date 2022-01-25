@@ -1,10 +1,10 @@
 import path from "path";
 import * as fs from "fs/promises";
-import { app } from 'electron';
+import { app } from "electron";
 import { EmusakEmulatorGames, EmusakEmulatorMode, EmusakEmulatorsKind } from "../../types";
-import eshopData from '../../assets/US.en.json';
-import customDatabase from '../../assets/custom_database.json';
-import tinfoilDatabase from '../../assets/tinfoildb.json';
+import eshopData from "../../assets/US.en.json";
+import customDatabase from "../../assets/custom_database.json";
+import tinfoilDatabase from "../../assets/tinfoildb.json";
 
 const tfDb: { [key: string]: string } = tinfoilDatabase;
 const csDb: { [key: string]: string } = customDatabase;
@@ -16,73 +16,73 @@ const eData = eshopData as { [key: string]: {
 };
 
 const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
-  const fitgirlDataPath = path.resolve(binaryPath, '..', '..', 'data', 'games');
+  const fitgirlDataPath = path.resolve(binaryPath, "..", "..", "data", "games");
   const isFitgirlRepack = await fs.stat(fitgirlDataPath).then(() => true).catch(() => false);
 
   if (isFitgirlRepack) {
     return {
-      mode: 'fitgirl',
+      mode: "fitgirl",
       dataPath: fitgirlDataPath
     };
   }
 
-  const portableDataPath = path.resolve(binaryPath, '..', 'portable');
+  const portableDataPath = path.resolve(binaryPath, "..", "portable");
   const isPortable = await fs.stat(portableDataPath).then(() => true).catch(() => false);
 
   if (isPortable) {
     return {
-      mode: 'portable',
+      mode: "portable",
       dataPath: portableDataPath
-    }
+    };
   }
 
   return {
-    mode: 'global',
-    dataPath: path.resolve(app.getPath('appData'), 'Ryujinx')
-  }
-}
+    mode: "global",
+    dataPath: path.resolve(app.getPath("appData"), "Ryujinx")
+  };
+};
 
 const getYuzuMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
-  const portableDataPath = path.resolve(binaryPath, '..', 'user');
+  const portableDataPath = path.resolve(binaryPath, "..", "user");
   const isPortable = await fs.stat(portableDataPath).then(() => true).catch(() => false);
 
   if (isPortable) {
     return {
-      mode: 'portable',
+      mode: "portable",
       dataPath: portableDataPath
-    }
+    };
   }
 
   return {
-    mode: 'global',
+    mode: "global",
     dataPath: process.platform === "win32"
-      ? path.resolve(app.getPath('appData'), 'yuzu')
-      : path.resolve(app.getPath('home'), '.local', 'share', 'yuzu')
-  }
-}
+      ? path.resolve(app.getPath("appData"), "yuzu")
+      : path.resolve(app.getPath("home"), ".local", "share", "yuzu")
+  };
+};
 
 const systemScanIpc = async (kind: EmusakEmulatorsKind, binaryPath: string): Promise<EmusakEmulatorMode> => {
-  if (kind === 'yuzu') {
+  if (kind === "yuzu") {
     return getYuzuMode(binaryPath);
   }
 
   return getRyujinxMode(binaryPath);
-}
+};
 
 const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): Promise<EmusakEmulatorGames> => {
   try {
-    if (emu === 'yuzu') {
-      const windowsPath = path.join(dataPath, 'cache', 'game_list');
-      const directories = await fs.readdir(process.platform === "win32" ? windowsPath : path.join(dataPath, 'load'), { withFileTypes: true });
-      return directories.map(d => d.name.toLowerCase().replace('.pv.txt', ''));
+    if (emu === "yuzu") {
+      const windowsPath = path.join(dataPath, "cache", "game_list");
+      const directories = await fs.readdir(process.platform === "win32" ? windowsPath : path.join(dataPath, "load"), { withFileTypes: true });
+      return directories.map(d => d.name.toLowerCase().replace(".pv.txt", ""));
     }
 
-    const directories = await fs.readdir(path.join(dataPath, 'games'), { withFileTypes: true });
+    const directories = await fs.readdir(path.join(dataPath, "games"), { withFileTypes: true });
     return directories.filter(d => d.isDirectory()).map(d => d.name.toLowerCase());
   } catch(e) {
     return [];
   }
-}
+};
 
 const buildMetadataForTitleId = (titleId: string) => {
   const keys = Object.keys(eshopData);
@@ -93,15 +93,15 @@ const buildMetadataForTitleId = (titleId: string) => {
     return {
       title: eData[eshopEntry].name,
       img: eData[eshopEntry].iconUrl,
-    }
+    };
   }
 
   return {
     // Use custom database in priority, then database from tinfoil and fallback by returning only title ID in case game does not exists in eshop
     title: csDb[id.toUpperCase()] || tfDb[id.toUpperCase()] || titleId.toUpperCase(),
-    img: ''
-  }
-}
+    img: ""
+  };
+};
 
 export {
   systemScanIpc,
