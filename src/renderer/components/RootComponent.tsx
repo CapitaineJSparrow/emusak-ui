@@ -13,7 +13,7 @@ import {
   SelectChangeEvent,
   Stack
 } from "@mui/material";
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { EmusakEmulatorMode } from "../../types";
 import useTranslation from "../i18n/I18nService";
 
@@ -52,8 +52,8 @@ const RootComponent = () => {
   const onConfigurationChange = (e: SelectChangeEvent) => {
     const { value } = e.target;
 
-    if (value === '') {
-      addNewEmulatorConfigAction()
+    if (value === "") {
+      addNewEmulatorConfigAction();
     } else {
       const config = emulatorBinariesPath.find(i => i.path === value);
       setSelectConfigAction(config);
@@ -62,20 +62,20 @@ const RootComponent = () => {
 
     e.preventDefault();
     return false;
-  }
+  };
 
   useEffect(() => {
     // Build default config in case there is no one
     if (filteredConfig.length === 0 && !selectedConfig) {
-      createDefaultConfig()
+      createDefaultConfig();
     }
 
     // Otherwise, pick first config available and compute mode for it
     else if (!selectedConfig && filteredConfig.length > 0) {
       setSelectConfigAction(filteredConfig[0]);
-      getModeForBinary(filteredConfig[0].path).then(setMode)
+      getModeForBinary(filteredConfig[0].path).then(setMode);
     } else if (selectedConfig && !mode) {
-      getModeForBinary(selectedConfig.path).then(setMode)
+      getModeForBinary(selectedConfig.path).then(setMode);
     }
   }, [currentEmu, emulatorBinariesPath, filteredConfig]);
 
@@ -84,20 +84,20 @@ const RootComponent = () => {
     if (selectedConfig && "path" in selectedConfig) {
       getModeForBinary(selectedConfig.path).then(setMode);
     }
-  }, [selectedConfig])
+  }, [selectedConfig]);
 
   const renderEmulatorPathSelector = () => (
     <Grid container spacing={2}>
       <Grid item xs={4}>
         <FormControl fullWidth>
-          <InputLabel id="emulator-select-path-label">{ t('configuration') }</InputLabel>
+          <InputLabel id="emulator-select-path-label">{ t("configuration") }</InputLabel>
           <Select
             labelId="emulator-select-path-label"
             id="emulator-select-path"
-            value={selectedConfig?.path || ''}
+            value={selectedConfig?.path || ""}
             onChange={onConfigurationChange}
           >
-            <MenuItem value={''}><i>{ t('addConfiguration') }</i></MenuItem>
+            <MenuItem value={""}><i>{ t("addConfiguration") }</i></MenuItem>
             {
               filteredConfig.map((item, index) => (
                 <MenuItem key={`emulator-select-path-item-${index}`} value={item.path}>{ item.name }</MenuItem>
@@ -108,7 +108,7 @@ const RootComponent = () => {
       </Grid>
       {
         (selectedConfig && !selectedConfig.isDefault) && (
-          <Grid item xs={2} style={{ lineHeight: '52px' }}>
+          <Grid item xs={2} style={{ lineHeight: "52px" }}>
             <IconButton onClick={() => removeEmulatorConfigAction(selectedConfig.path)} color="error">
               <DeleteOutlineOutlinedIcon />
             </IconButton>
@@ -116,7 +116,7 @@ const RootComponent = () => {
         )
       }
     </Grid>
-  )
+  );
 
   return (emulatorBinariesPath && emulatorBinariesPath.length > 0) && (
     <Container maxWidth={false} key={`${currentEmu}`}>
@@ -129,11 +129,11 @@ const RootComponent = () => {
           {
             (selectedConfig && mode) && (
               <>
-                <Grid item style={{ lineHeight: '52px' }} xs={3}>
-                  <Button onClick={() => installFirmwareAction(mode.dataPath) } fullWidth variant="contained">{ t('dl_firmware') } { firmwareVersion }</Button>
+                <Grid item style={{ lineHeight: "52px" }} xs={3}>
+                  <Button onClick={() => installFirmwareAction(mode.dataPath) } fullWidth variant="contained">{ t("dl_firmware") } { firmwareVersion }</Button>
                 </Grid>
-                <Grid item style={{ lineHeight: '52px' }} xs={2}>
-                  <Button onClick={() => downloadKeysAction(mode.dataPath)} fullWidth variant="contained">{ t('dl_keys') }</Button>
+                <Grid item style={{ lineHeight: "52px" }} xs={2}>
+                  <Button onClick={() => downloadKeysAction(mode.dataPath)} fullWidth variant="contained">{ t("dl_keys") }</Button>
                 </Grid>
               </>
             )

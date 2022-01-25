@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import Masonry from '@mui/lab/Masonry';
-import { styled } from '@mui/material/styles';
-import './gameListing.css'
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import Masonry from "@mui/lab/Masonry";
+import { styled } from "@mui/material/styles";
+import "./gameListing.css";
 import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
 import useStore from "../../actions/state";
 import { Chip, Divider, Grid, IconButton, TextField, Tooltip } from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
 import { ipcRenderer } from "electron";
-import jackSober from '../../resources/jack_sober.png';
-import defaultIcon from '../../resources/default_icon.jpg';
+import jackSober from "../../resources/jack_sober.png";
+import defaultIcon from "../../resources/default_icon.jpg";
 import useTranslation from "../../i18n/I18nService";
 
 interface IEmulatorContainer {
@@ -20,19 +20,19 @@ interface IEmulatorContainer {
 
 const Label = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
-  border: '1px solid black',
+  border: "1px solid black",
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '8px 8px',
-  color: '#FFF',
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "8px 8px",
+  color: "#FFF",
   zIndex: 1,
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  display: 'block',
-  textAlign: 'center'
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  display: "block",
+  textAlign: "center"
 }));
 
 const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
@@ -40,17 +40,17 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   const [currentEmu] = useStore(s => [s.currentEmu]);
   const [games, setGames] = useState<{ title: string, img: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState("");
   const [filteredGames, setFilteredGames] = useState<typeof games>([]);
 
   // 1. Scan games on user system
   // 2. Build metadata from eshop with titleId as argument
   const createLibrary = async () => {
-    const titleIds = await ipcRenderer.invoke('scan-games', mode.dataPath, currentEmu);
-    const gamesCollection: { title: string, img: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke('build-metadata-from-titleId', i)));
-    setGames(gamesCollection.filter(i => i.title !== '0000000000000000')); // Homebrew app
+    const titleIds = await ipcRenderer.invoke("scan-games", mode.dataPath, currentEmu);
+    const gamesCollection: { title: string, img: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke("build-metadata-from-titleId", i)));
+    setGames(gamesCollection.filter(i => i.title !== "0000000000000000")); // Homebrew app
     setIsLoaded(true);
-  }
+  };
 
   useEffect(() => {
     createLibrary().catch(() => setIsLoaded(true));
@@ -58,7 +58,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
 
   useEffect(() => {
     setFilteredGames(searchTerm.length > 0 ? games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true) : games);
-  }, [games, searchTerm])
+  }, [games, searchTerm]);
 
   return (
     <>
@@ -67,9 +67,9 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
           <Stack className="masonry" spacing={2}>
             <Grid container>
               <Grid item xs={10}>
-                { t('mode') } <Chip color="primary" label={mode.mode} />
+                { t("mode") } <Chip color="primary" label={mode.mode} />
                 &nbsp;
-                <Tooltip placement="right" title={`${t('readingDataPath')} ${mode.dataPath}`}>
+                <Tooltip placement="right" title={`${t("readingDataPath")} ${mode.dataPath}`}>
                   <IconButton>
                     <InfoIcon />
                   </IconButton>
@@ -116,12 +116,12 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
             {
               (isLoaded && games.length === 0) && (
                 (
-                  <div style={{ textAlign: 'center', width: '50%', margin: '0 auto' }}>
+                  <div style={{ textAlign: "center", width: "50%", margin: "0 auto" }}>
                     <p>
                       <img width="100%" src={jackSober} alt=""/>
                     </p>
                     <Divider />
-                    <h4 dangerouslySetInnerHTML={{ __html: currentEmu === "ryu" ? t('launchRyujinx') : t('launchYuzu') }} />
+                    <h4 dangerouslySetInnerHTML={{ __html: currentEmu === "ryu" ? t("launchRyujinx") : t("launchYuzu") }} />
                   </div>
                 )
               )
@@ -131,6 +131,6 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
       }
     </>
   );
-}
+};
 
 export default GameListingComponent;

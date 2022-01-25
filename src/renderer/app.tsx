@@ -1,27 +1,27 @@
-import * as React from 'react';
+import * as React from "react";
 import { useEffect } from "react";
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from "react-dom";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import Swal from 'sweetalert2';
-import './styles/swal.dark.css';
+import Swal from "sweetalert2";
+import "./styles/swal.dark.css";
 
 import BootstrapComponent from "./components/BootstrapComponent/BootstrapComponent";
 import useStore from "./actions/state";
 import RootComponent from "./components/RootComponent";
 
-import './styles/index.css';
+import "./styles/index.css";
 
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 // i18n
-import i18n_en from './i18n/en.json';
+import i18n_en from "./i18n/en.json";
 import TitleBarComponent from "./components/TitleBarComponent/TitleBarComponent";
 import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
 import TOSComponent from "./components/TOSComponent/TOSComponent";
@@ -30,9 +30,9 @@ import DownloadManagerComponent from "./components/DownloadManagerComponent/Down
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: {
-      main: '#448AFF'
+      main: "#448AFF"
     }
   },
 });
@@ -65,7 +65,7 @@ const App = () => {
   // Hack, due to tree checking, if Swal is not present the theme is not applied for further calls, need better solution
   // eslint-disable-next-line no-constant-condition
   if (false) {
-    Swal.fire({ icon: 'success', title: '' })
+    Swal.fire({ icon: "success", title: "" });
   }
 
   return (
@@ -80,7 +80,7 @@ const App = () => {
       </CssBaseline>
     </ThemeProvider>
   );
-}
+};
 
 ReactDOM.render(
   <App />,
@@ -89,4 +89,4 @@ ReactDOM.render(
 
 export {
   i18n
-}
+};

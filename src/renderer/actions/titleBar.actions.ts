@@ -13,20 +13,20 @@ export interface ITitleBar {
 }
 
 const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig>) => ({
-  version: '',
-  currentEmu: (localStorage.getItem(LS_KEYS.TAB) || 'ryu') as EmusakEmulatorsKind,
+  version: "",
+  currentEmu: (localStorage.getItem(LS_KEYS.TAB) || "ryu") as EmusakEmulatorsKind,
   getVersionAction: async () => {
-    const version = await ipcRenderer.invoke('get-app-version');
+    const version = await ipcRenderer.invoke("get-app-version");
     return set({ version });
   },
   closeEmuSAKAction: async () => {
-    await ipcRenderer.invoke('title-bar-action', 'close');
+    await ipcRenderer.invoke("title-bar-action", "close");
   },
   minimizeEmuSAKAction: async () => {
-    await ipcRenderer.invoke('title-bar-action', 'minimize');
+    await ipcRenderer.invoke("title-bar-action", "minimize");
   },
   maximizeEmuSAKAction: async () => {
-    await ipcRenderer.invoke('title-bar-action', 'maximize');
+    await ipcRenderer.invoke("title-bar-action", "maximize");
   },
   switchEmuAction: (currentEmu: EmusakEmulatorsKind) => {
     localStorage.setItem(LS_KEYS.TAB, currentEmu);

@@ -1,5 +1,5 @@
 import { PartialState, SetState } from "zustand/vanilla";
-import { ipcRenderer } from 'electron';
+import { ipcRenderer } from "electron";
 import { EmusakSaves, EmusakShaders } from "../../types";
 
 interface IBootstrap {
@@ -14,9 +14,9 @@ const createBootstrapSlice = (set: SetState<IBootstrap>) => ({
   isAppInitialized: false,
   saves: {},
   ryujinxShaders: {},
-  firmwareVersion: '',
+  firmwareVersion: "",
   bootstrapAppAction: async () => {
-    const [ryujinxShaders, saves, firmwareVersion] = await ipcRenderer.invoke('load-components', process.env.EMUSAK_CDN);
+    const [ryujinxShaders, saves, firmwareVersion] = await ipcRenderer.invoke("load-components", process.env.EMUSAK_CDN);
     return set({ isAppInitialized: true, saves, ryujinxShaders, firmwareVersion });
   }
 });

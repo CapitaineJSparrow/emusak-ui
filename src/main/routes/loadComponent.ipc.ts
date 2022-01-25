@@ -7,6 +7,6 @@ const loadComponentIpcHandler = async (url: string) => {
     HttpService.downloadSaves(),
     HttpService.getFirmwareVersion(),
   ]);
-}
+};
 
 export default loadComponentIpcHandler;

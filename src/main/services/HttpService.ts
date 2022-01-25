@@ -1,4 +1,4 @@
-import { URL } from 'url';
+import { URL } from "url";
 import fetch, { Response } from "node-fetch";
 import pRetry from "p-retry";
 
@@ -10,9 +10,9 @@ export enum HTTP_PATHS {
 }
 
 export enum GITHUB_PATHS {
-  THRESHOLD = 'https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt',
-  RELEASE_INFO = 'https://api.github.com/repos/stromcon/emusak-ui/releases/latest',
-  FIRMWARE_VERSION = 'https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/version.txt',
+  THRESHOLD = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt",
+  RELEASE_INFO = "https://api.github.com/repos/stromcon/emusak-ui/releases/latest",
+  FIRMWARE_VERSION = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/version.txt",
 }
 
 class HttpService {
@@ -20,7 +20,7 @@ class HttpService {
   public url: string = process.env.EMUSAK_CDN;
 
   // Trigger HTTP request using an exponential backoff strategy
-  protected _fetch(path: string, type: 'JSON' | 'TXT' = 'JSON', host: string = this.url, defaultValue = {}) {
+  protected _fetch(path: string, type: "JSON" | "TXT" = "JSON", host: string = this.url, defaultValue = {}) {
     const url = new URL(path, host);
     return pRetry(
       async () => {
@@ -30,14 +30,14 @@ class HttpService {
           throw new pRetry.AbortError(response.statusText);
         }
 
-        if (type === 'JSON') {
+        if (type === "JSON") {
           return response.json();
         }
 
         return response.text();
       },
       { retries: 5 }
-    ) as unknown as Promise<Response>
+    ) as unknown as Promise<Response>;
   }
 
   public async downloadRyujinxShaders() {
@@ -49,11 +49,11 @@ class HttpService {
   }
 
   public async getFirmwareVersion() {
-    return this._fetch(GITHUB_PATHS.FIRMWARE_VERSION, 'TXT');
+    return this._fetch(GITHUB_PATHS.FIRMWARE_VERSION, "TXT");
   }
 
   public async downloadKeys() {
-    return this._fetch(HTTP_PATHS.KEYS, 'TXT');
+    return this._fetch(HTTP_PATHS.KEYS, "TXT");
   }
 }
 
