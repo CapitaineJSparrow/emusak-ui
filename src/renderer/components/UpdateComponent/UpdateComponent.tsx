@@ -11,9 +11,10 @@ const UpdateComponent = ({ state }: { state: "downloading" | "downloaded" }) => 
   const { t } = useTranslation();
 
   if (process.platform !== "win32" && semver.lt(currentVersion, latestVersion)) {
-    return <Box p={ 2 } pb={ 0 }>
+    return <Box p={2} pb={0}>
       <Alert severity="info">
-        You have version v{ currentVersion }, please consider updating to the latest version from <a href="https://github.com/CapitaineJSparrow/emusak-ui" target="_blank">Github</a> (v{ latestVersion })
+        You have version v{ currentVersion }, please consider updating to the latest version from <a
+        href="https://github.com/CapitaineJSparrow/emusak-ui" target="_blank">Github</a> (v{ latestVersion })
       </Alert>
     </Box>;
   }
@@ -28,18 +29,13 @@ const UpdateComponent = ({ state }: { state: "downloading" | "downloaded" }) => 
         icon: "success",
         text: t("update_restart"),
         showCancelButton: true
-      })
-        .then(({ value }) => {
-          if (value) {
-            ipcRenderer.send("reboot-after-download");
-          }
-        });
+      }).then(({ value }) => value && ipcRenderer.send("reboot-after-download"));
     }
   }, [state]);
 
   return (
     <Box p={2} pb={0}>
-      <Alert severity="info">{t(state === "downloading" ? "update_downloading": "update_downloaded")}</Alert>
+      <Alert severity="info">{ t(state === "downloading" ? "update_downloading" : "update_downloaded") }</Alert>
     </Box>
   );
 };
