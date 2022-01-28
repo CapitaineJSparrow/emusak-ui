@@ -8,6 +8,8 @@ interface IBootstrap {
   ryujinxShaders: EmusakShaders;
   bootstrapAppAction: () => PartialState<IBootstrap>;
   firmwareVersion: string;
+  latestVersion: string;
+  currentVersion: string;
 }
 
 const createBootstrapSlice = (set: SetState<IBootstrap>) => ({
@@ -15,9 +17,11 @@ const createBootstrapSlice = (set: SetState<IBootstrap>) => ({
   saves: {},
   ryujinxShaders: {},
   firmwareVersion: "",
+  latestVersion: "",
+  currentVersion: "",
   bootstrapAppAction: async () => {
-    const [ryujinxShaders, saves, firmwareVersion] = await ipcRenderer.invoke("load-components", process.env.EMUSAK_CDN);
-    return set({ isAppInitialized: true, saves, ryujinxShaders, firmwareVersion });
+    const [ryujinxShaders, saves, firmwareVersion, latestVersion, currentVersion] = await ipcRenderer.invoke("load-components", process.env.EMUSAK_CDN);
+    return set({ isAppInitialized: true, saves, ryujinxShaders, firmwareVersion, latestVersion, currentVersion });
   }
 });
 
