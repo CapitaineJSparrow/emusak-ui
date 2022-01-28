@@ -45,10 +45,10 @@ const createWindow = (): void => {
         url: feed
       });
 
-      // Check updates every 10mn, and at startup
+      // Check updates every 5mn, and at startup
       setInterval(() => {
         autoUpdater.checkForUpdates();
-      }, 10 * 60 * 1000);
+      }, 5 * 60 * 1000);
 
       autoUpdater.checkForUpdates();
 

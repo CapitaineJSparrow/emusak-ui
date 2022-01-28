@@ -1,4 +1,5 @@
 import HttpService from "../services/HttpService";
+import electron from "electron";
 
 const loadComponentIpcHandler = async (url: string) => {
   HttpService.url = url;
@@ -6,6 +7,8 @@ const loadComponentIpcHandler = async (url: string) => {
     HttpService.downloadRyujinxShaders(),
     HttpService.downloadSaves(),
     HttpService.getFirmwareVersion(),
+    HttpService.getLatestApplicationVersion(),
+    electron.app.getVersion(),
   ]);
 };
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as ReactDOM from "react-dom";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import i18n from "i18next";
@@ -27,6 +27,8 @@ import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
 import TOSComponent from "./components/TOSComponent/TOSComponent";
 import AlertComponent from "./components/AlertComponent/AlertComponent";
 import DownloadManagerComponent from "./components/DownloadManagerComponent/DownloadManagerComponent";
+import { ipcRenderer } from "electron";
+import UpdateComponent from "./components/UpdateComponent/UpdateComponent";
 
 const darkTheme = createTheme({
   palette: {
@@ -57,6 +59,7 @@ i18n
 
 const App = () => {
   const [isAppInitialized, bootstrapAppAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction]);
+  const [downloadState, setDownloadState] = useState(null);
 
   useEffect(() => {
     bootstrapAppAction();
@@ -68,6 +71,9 @@ const App = () => {
     Swal.fire({ icon: "success", title: "" });
   }
 
+  ipcRenderer.on("update-available", () => setDownloadState("downloading"));
+  ipcRenderer.once("update-downloaded", () => setDownloadState("downloaded"));
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline>
@@ -75,6 +81,7 @@ const App = () => {
         <NavBarComponent />
         <AlertComponent />
         <DownloadManagerComponent />
+        <UpdateComponent state={downloadState} />
         { !isAppInitialized ? <BootstrapComponent /> : <RootComponent /> }
         <TOSComponent />
       </CssBaseline>

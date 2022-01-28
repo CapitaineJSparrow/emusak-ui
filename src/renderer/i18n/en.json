@@ -20,6 +20,9 @@
   "keysLocation": "Keys successfully installed at",
   "firmwareLocation": "Firmware has been extracted to",
   "downloadManager": "Download Manager",
+  "update_downloading": "A new EmuSAK version is downloading in the background! Please do not close EmuSAK until it is complete.",
+  "update_downloaded": "EmuSAK update has been downloaded and will be applied on next launch.",
+  "update_restart": "Update has been downloaded! Do you want to restart to apply?",
 
   "OPERATION_CANCELED": "You canceled the operation.",
   "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",

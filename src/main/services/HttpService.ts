@@ -1,6 +1,7 @@
 import { URL } from "url";
 import fetch, { Response } from "node-fetch";
 import pRetry from "p-retry";
+import { app } from "electron";
 
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
@@ -50,6 +51,16 @@ class HttpService {
 
   public async getFirmwareVersion() {
     return this._fetch(GITHUB_PATHS.FIRMWARE_VERSION, "TXT");
+  }
+
+  public async getLatestApplicationVersion() {
+    const versionResponse = await this._fetch(GITHUB_PATHS.RELEASE_INFO).catch(() => null);
+    if (!versionResponse) {
+      // If we cannot fetch the latest version return the current version to avoid trigger logic when emusak is not up to date
+      return app.getVersion();
+    }
+
+    return versionResponse.tag_name.replace("v", "");
   }
 
   public async downloadKeys() {
