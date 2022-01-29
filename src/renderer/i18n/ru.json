@@ -8,7 +8,7 @@
   "dl_keys": "Скачать ключи",
   "addConfiguration": "Добавить портативную конфигурация",
   "pickRyuBin": "Пожалуйста, загрузите файл \"Ryujinx.exe\" (или двоичный файл Ryujinx для пользователей Linux)",
-  "pickYuzuBin": "Пожалуйста, загрузите файл \"yuzu.exe" (или двоичный файл yuzu для пользователей Linux)",
+  "pickYuzuBin": "Пожалуйста, загрузите файл \"yuzu.exe\" (или двоичный файл yuzu для пользователей Linux)",
   "addConfigTitle": "Добавьте имя к вашей новой конфигурации ",
   "addConfigEg": "например \"Vulkan PR\", \"mainline\", \"custom build\", ... ",
   "mode": "Режим",
