@@ -8,7 +8,7 @@ import { GetState, SetState } from "zustand/vanilla";
 import createDownloadManagerSlice from "./downloadManager.action";
 
 const useStore = create((set: SetState<any>, get: GetState<any>) => ({
-  ...createBootstrapSlice(set),
+  ...createBootstrapSlice(set, get),
   ...createTitleBarSlice(set),
   ...emulatorConfig(set, get),
   ...createAlertSlice(set),

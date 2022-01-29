@@ -6,6 +6,7 @@ import { EmusakEmulatorsKind } from "../../types";
 import { addEmulatorConfigurationIpc, createDefaultConfigActionForEmu } from "./addEmulatorConfiguration.ipc";
 import installFirmware from "./firmware.ipc";
 import { installKeys } from "./installKeys";
+import updateEshopData from "./eshopData.ipc";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("load-components", async (_, url: string) => loadComponentIpcHandler(url));
@@ -18,6 +19,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("build-metadata-from-titleId", async (_, titleId: string) => buildMetadataForTitleId(titleId));
   ipcMain.handle("install-firmware", async (event, emu: EmusakEmulatorsKind, dataPath: string) => installFirmware(emu, dataPath, mainWindow));
   ipcMain.handle("install-keys", async (_, dataPath: string, emu: EmusakEmulatorsKind) => installKeys(dataPath, emu));
+  ipcMain.handle("update-eshop-data", async (_) => updateEshopData());
 };
 
 export default makeIpcRoutes;

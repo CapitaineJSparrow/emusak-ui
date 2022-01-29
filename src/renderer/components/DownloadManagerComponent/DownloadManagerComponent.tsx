@@ -33,12 +33,19 @@ const DownloadManagerComponent = () => {
             <section className="download-manager-content">
               {
                 dlManagerFiles.map(dlFile => (
-                  <div className="download-manager-item">
+                  <div key={dlFile.filename} className="download-manager-item">
                     <div>
-                      <p style={{ margin: 0, marginBottom: 5 }}><small>{dlFile.filename} | {dlFile.downloadSpeed} MB/s</small></p>
+                      <p style={{ margin: 0, marginBottom: 5 }}><small>
+                        { dlFile.filename }
+                        {
+                          dlFile.progress !== Infinity && (
+                            <> | {dlFile.downloadSpeed} MB/s </>
+                          )
+                        }
+                      </small></p>
                       <Grid style={{ display: "flex", alignItems: "center" }} container spacing={2}>
                         <Grid item xs={10}>
-                          <LinearProgress variant="buffer" value={dlFile.progress} valueBuffer={50} />
+                          <LinearProgress variant={dlFile.progress === Infinity ? undefined : "buffer"} value={dlFile.progress} valueBuffer={50} />
                         </Grid>
                         <Grid item xs>
                           <IconButton

@@ -18,7 +18,8 @@ export type EmusakEmulatorConfig = {
 export enum LS_KEYS {
   CONFIG = "v2-emulators-bin",
   TOS = "v2-tos",
-  TAB = "v2-tab"
+  TAB = "v2-tab",
+  ESHOP_UPDATE = "emusak-eshop-update-date"
 }
 
 export type EmusakEmulatorMode = {

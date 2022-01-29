@@ -1,8 +1,10 @@
 import { EmusakDownload } from "../../types";
-import { GetState, SetState } from "zustand/vanilla";
+import { GetState, PartialState, SetState } from "zustand/vanilla";
 
-interface IDownloadManager {
+export interface IDownloadManager {
   dlManagerFiles: EmusakDownload[],
+  upsertFileAction: (file: EmusakDownload) => PartialState<IDownloadManager>,
+  removeFileAction: (file: string) => PartialState<IDownloadManager>,
 }
 
 const createDownloadManagerSlice = (set: SetState<IDownloadManager>, get: GetState<IDownloadManager>) => ({

@@ -2,18 +2,12 @@ import path from "path";
 import * as fs from "fs/promises";
 import { app } from "electron";
 import { EmusakEmulatorGames, EmusakEmulatorMode, EmusakEmulatorsKind } from "../../types";
-import eshopData from "../../assets/US.en.json";
 import customDatabase from "../../assets/custom_database.json";
 import tinfoilDatabase from "../../assets/tinfoildb.json";
+import getEshopData from "../services/eshopData";
 
 const tfDb: { [key: string]: string } = tinfoilDatabase;
 const csDb: { [key: string]: string } = customDatabase;
-const eData = eshopData as { [key: string]: {
-    id: string,
-    name: string,
-    iconUrl: string,
-  }
-};
 
 const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
   const fitgirlDataPath = path.resolve(binaryPath, "..", "..", "data", "games");
@@ -84,8 +78,9 @@ const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): P
   }
 };
 
-const buildMetadataForTitleId = (titleId: string) => {
-  const keys = Object.keys(eshopData);
+const buildMetadataForTitleId = async (titleId: string) => {
+  const eData = await getEshopData();
+  const keys = Object.keys(eData);
   const eshopEntry = keys.find((key) => eData[key]?.id?.toLowerCase() === titleId.toLowerCase());
   const id = titleId.toUpperCase();
 

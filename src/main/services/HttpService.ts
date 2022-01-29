@@ -66,6 +66,10 @@ class HttpService {
   public async downloadKeys() {
     return this._fetch(HTTP_PATHS.KEYS, "TXT");
   }
+
+  public async downloadEshopData() {
+    return this._fetch("https://github.com/blawar/titledb/blob/master/US.en.json?raw=true");
+  }
 }
 
 export default new HttpService();

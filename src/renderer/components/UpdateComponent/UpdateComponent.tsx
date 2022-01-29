@@ -13,8 +13,7 @@ const UpdateComponent = ({ state }: { state: "downloading" | "downloaded" }) => 
   if (process.platform !== "win32" && semver.lt(currentVersion, latestVersion)) {
     return <Box p={2} pb={0}>
       <Alert severity="info">
-        You have version v{ currentVersion }, please consider updating to the latest version from <a
-        href="https://github.com/CapitaineJSparrow/emusak-ui" target="_blank">Github</a> (v{ latestVersion })
+        You have version v{ currentVersion }, please consider updating to the latest version from <a href="https://github.com/CapitaineJSparrow/emusak-ui" target="_blank">Github</a> (v{ latestVersion })
       </Alert>
     </Box>;
   }
