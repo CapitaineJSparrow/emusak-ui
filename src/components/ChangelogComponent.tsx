@@ -36,10 +36,7 @@ const ChangelogComponent = () => {
         <br />
         <ul style={{ marginLeft: 20 }}>
           <li><b><u>Never</u> ask for EmuSAK support in the official Ryujinx or yuzu channels (Discord, Reddit, etc.)</b></li>
-          <li>Improve backend reliability</li>
-          <li>Fix Github Actions to push EmuSAK updates to AUR (Arch User Repository). Thanks <code>LiveLM</code> !</li>
-          <li>Fix an issue preventing users to display "Download keys" or "firmware" buttons when they have never launched any game in Yuzu.</li>
-          <li>Add FitGirl Repacks support, I don't recommend to use them but it's mainly to avoid people asking for support.</li>
+          <li>Hey everyone, has been a long time since last update. You already know, but I'm working hard on next emusak update as emusak-v2 and it's really close. But before deploy it, we need to change server to have more network capabilities. This update will move us to a new server :)</li>
         </ul>
         <br/>
         <p>
