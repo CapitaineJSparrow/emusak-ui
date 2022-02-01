@@ -4,8 +4,6 @@ import * as ReactDOM from "react-dom";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import Swal from "sweetalert2";
 import "./styles/swal.dark.css";
 
@@ -22,6 +20,7 @@ import "@fontsource/roboto/700.css";
 
 // i18n
 import i18n_en from "./i18n/en.json";
+import i18n_ru from "./i18n/ru.json";
 import TitleBarComponent from "./components/TitleBarComponent/TitleBarComponent";
 import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
 import TOSComponent from "./components/TOSComponent/TOSComponent";
@@ -29,6 +28,7 @@ import AlertComponent from "./components/AlertComponent/AlertComponent";
 import DownloadManagerComponent from "./components/DownloadManagerComponent/DownloadManagerComponent";
 import { ipcRenderer } from "electron";
 import UpdateComponent from "./components/UpdateComponent/UpdateComponent";
+import { LS_KEYS } from "../types";
 
 const darkTheme = createTheme({
   palette: {
@@ -39,21 +39,19 @@ const darkTheme = createTheme({
   },
 });
 
+const lng = localStorage.getItem(LS_KEYS.LOCALE) ?? "en";
+
 i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
+  .use(initReactI18next)
   .init({
-    // the translations
-    // (tip move them in a JSON file and import them,
-    // or even better, manage them via a UI: https://react.i18next.com/guides/multiple-translation-files#manage-your-translations-with-a-management-gui)
     resources: {
-      en: {
-        translation: i18n_en
-      }
+      en: { translation: i18n_en },
+      ru: { translation: i18n_ru },
     },
-    lng: "en", // if you're using a language detector, do not define the lng option
+    lng,
     fallbackLng: "en",
     interpolation: {
-      escapeValue: false // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+      escapeValue: false
     }
   });
 

@@ -23,6 +23,7 @@
   "update_downloading": "В фоновом режиме загружается новая версия EmuSAK! Пожалуйста, не закрывайте EmuSAK, пока загрузка не будет завершена.",
   "update_downloaded": "Обновление EmuSAK загружено и будет применено при следующем запуске.",
   "update_restart": "Обновление скачано! Вы хотите перезапустить, чтобы применить обновление?",
+  "updatingEshop": "Updating eshop data",
 
   "OPERATION_CANCELED": "Вы отменили операцию.",
   "INVALID_RYUJINX_BINARY": "Это недопустимый двоичный файл Ryujinx.",
