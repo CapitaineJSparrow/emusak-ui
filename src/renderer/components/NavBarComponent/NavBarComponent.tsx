@@ -7,12 +7,19 @@ import useTranslation from "../../i18n/I18nService";
 import discord_logo from "../../resources/discord_logo.png";
 import ryu_logo from "../../resources/ryujinx_logo.png";
 import yuzu_logo from "../../resources/yuzu_logo.png";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import useStore from "../../actions/state";
+import { LS_KEYS } from "../../../types";
 
 const NavBarComponent = () => {
   const { t } = useTranslation();
   const [currentEmu, switchEmuAction] = useStore(s => [s.currentEmu, s.switchEmuAction]);
+  const locale = localStorage.getItem(LS_KEYS.LOCALE) ?? "en";
+
+  const onLocaleSelectChange = (e: SelectChangeEvent<string>) => {
+    localStorage.setItem(LS_KEYS.LOCALE, e.target.value);
+    window.location.reload();
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -43,6 +50,17 @@ const NavBarComponent = () => {
               </Button>
             </Box>
           </div>
+          <Box style={{ flex: "0 0 120px" }}>
+            <Select
+              value={locale}
+              label="Age"
+              onChange={onLocaleSelectChange}
+              variant="standard"
+            >
+              <MenuItem value={"en"}>EN</MenuItem>
+              <MenuItem value={"ru"}>RU</MenuItem>
+            </Select>
+          </Box>
           <Box style={{ flex: "0 0 50px" }}>
             <a href="https://discord.gg/nKstg6x" className="no-blank-icon" target="_blank">
               <IconButton
