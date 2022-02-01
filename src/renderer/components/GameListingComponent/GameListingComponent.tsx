@@ -76,7 +76,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                 </Tooltip>
               </Grid>
               <Grid item xs={2}>
-                <TextField onChange={e => setSearchTerm(e.target.value)} value={searchTerm} type="search" variant="standard" fullWidth placeholder={`Filter ${games.length} games`} />
+                <TextField onChange={e => setSearchTerm(e.target.value)} value={searchTerm} type="search" variant="standard" fullWidth placeholder={t("filter").replace("{{LENGTH}}", `${games.length}`)} />
               </Grid>
             </Grid>
 

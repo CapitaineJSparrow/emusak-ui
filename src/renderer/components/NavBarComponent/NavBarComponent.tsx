@@ -50,12 +50,13 @@ const NavBarComponent = () => {
               </Button>
             </Box>
           </div>
-          <Box style={{ flex: "0 0 120px" }}>
+          <Box style={{ flex: "0 0 80px" }} pr={3}>
             <Select
               value={locale}
               label="Age"
               onChange={onLocaleSelectChange}
               variant="standard"
+              fullWidth
             >
               <MenuItem value={"en"}>EN</MenuItem>
               <MenuItem value={"ru"}>RU</MenuItem>

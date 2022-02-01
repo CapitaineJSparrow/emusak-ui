@@ -24,6 +24,7 @@
   "update_downloaded": "Обновление EmuSAK загружено и будет применено при следующем запуске.",
   "update_restart": "Обновление скачано! Вы хотите перезапустить, чтобы применить обновление?",
   "updatingEshop": "Updating eshop data",
+  "filter": "Filter {{LENGTH}} games",
 
   "OPERATION_CANCELED": "Вы отменили операцию.",
   "INVALID_RYUJINX_BINARY": "Это недопустимый двоичный файл Ryujinx.",
