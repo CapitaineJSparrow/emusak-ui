@@ -6,6 +6,7 @@ import createAlertSlice from "./alert.action";
 import createEmulatorFilesSLice from "./emulatorFiles.action";
 import { GetState, SetState } from "zustand/vanilla";
 import createDownloadManagerSlice from "./downloadManager.action";
+import createGameSlice from "./game.action";
 
 const useStore = create((set: SetState<any>, get: GetState<any>) => ({
   ...createBootstrapSlice(set, get),
@@ -13,7 +14,8 @@ const useStore = create((set: SetState<any>, get: GetState<any>) => ({
   ...emulatorConfig(set, get),
   ...createAlertSlice(set),
   ...createEmulatorFilesSLice(set, get),
-  ...createDownloadManagerSlice(set, get)
+  ...createDownloadManagerSlice(set, get),
+  ...createGameSlice(set),
 }));
 
 export default useStore;

@@ -3,11 +3,12 @@ import fs from "fs-extra";
 import { app } from "electron";
 import path from "path";
 
-type EshopData = {
+export type EshopData = {
   [key: string]: {
     id: string;
     name: string;
     iconUrl: string;
+    screenshots: string[];
   };
 };
 
@@ -20,7 +21,7 @@ const getEshopData = async () => {
   if (localData) {
     data = JSON.parse(await fs.readFile(eshopDataPath, "utf-8"));
   } else {
-    data = eshopDataBuildIn;
+    data = eshopDataBuildIn as unknown as EshopData;
   }
 
   return data;

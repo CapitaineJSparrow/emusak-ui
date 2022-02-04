@@ -16,10 +16,10 @@ const path = require('path');
   const ids = Object.keys(data);
 
   ids.forEach(i => {
-    const { id, name, iconUrl } = data[i];
+    const { id, name, iconUrl, screenshots } = data[i];
 
     if (id && name && iconUrl) {
-      titleIds[id.toUpperCase()] = { id, name, iconUrl };
+      titleIds[id.toUpperCase()] = { id, name, iconUrl, screenshots };
     }
   })
 

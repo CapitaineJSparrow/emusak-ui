@@ -2,6 +2,7 @@ import { PartialState, SetState } from "zustand/vanilla";
 import { ipcRenderer } from "electron";
 import { EmusakEmulatorsKind, LS_KEYS } from "../../types";
 import { IEmulatorConfig } from "./emulatorConfig.action";
+import { IGameAction } from "./game.action";
 
 export interface ITitleBar {
   version: string,
@@ -12,7 +13,7 @@ export interface ITitleBar {
   currentEmu: EmusakEmulatorsKind;
 }
 
-const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig>) => ({
+const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig & IGameAction>) => ({
   version: "",
   currentEmu: (localStorage.getItem(LS_KEYS.TAB) || "ryu") as EmusakEmulatorsKind,
   getVersionAction: async () => {
@@ -30,7 +31,7 @@ const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig>) => ({
   },
   switchEmuAction: (currentEmu: EmusakEmulatorsKind) => {
     localStorage.setItem(LS_KEYS.TAB, currentEmu);
-    return set({ currentEmu, selectedConfig: null });
+    return set({ currentEmu, selectedConfig: null, currentGame: null });
   }
 });
 
