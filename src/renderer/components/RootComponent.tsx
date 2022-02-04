@@ -16,6 +16,7 @@ import {
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { EmusakEmulatorMode } from "../../types";
 import useTranslation from "../i18n/I18nService";
+import GameDetailComponent from "./GameDetail/GameDetailComponent";
 
 const RootComponent = () => {
   const { t } = useTranslation();
@@ -32,7 +33,8 @@ const RootComponent = () => {
     getModeForBinary,
     installFirmwareAction,
     firmwareVersion,
-    downloadKeysAction
+    downloadKeysAction,
+    currentGame,
   ] = useStore(state => [
     state.emulatorBinariesPath,
     state.removeEmulatorConfigAction,
@@ -44,7 +46,8 @@ const RootComponent = () => {
     state.getModeForBinary,
     state.installFirmwareAction,
     state.firmwareVersion,
-    state.downloadKeysAction
+    state.downloadKeysAction,
+    state.currentGame,
   ]);
 
   const filteredConfig = emulatorBinariesPath.filter(c => c.emulator === currentEmu);
@@ -123,11 +126,15 @@ const RootComponent = () => {
       <br />
       <Stack spacing={2}>
         <Grid container spacing={2}>
-          <Grid item xs={7}>
-            { renderEmulatorPathSelector() }
-          </Grid>
           {
-            (selectedConfig && mode) && (
+            !currentGame && (
+              <Grid item xs={7}>
+                { renderEmulatorPathSelector() }
+              </Grid>
+            )
+          }
+          {
+            (selectedConfig && mode && !currentGame) && (
               <>
                 <Grid item style={{ lineHeight: "52px" }} xs={3}>
                   <Button onClick={() => installFirmwareAction(mode.dataPath) } fullWidth variant="contained">{ t("dl_firmware") } { firmwareVersion }</Button>
@@ -140,7 +147,17 @@ const RootComponent = () => {
           }
         </Grid>
 
-        { (selectedConfig && mode) && (<EmulatorContainer key={mode.dataPath} mode={mode} config={selectedConfig} />) }
+        {
+          (selectedConfig && mode) && (
+            <div>
+              {
+                currentGame
+                  ? <GameDetailComponent titleId={currentGame} />
+                  : <EmulatorContainer key={mode.dataPath} mode={mode} config={selectedConfig} />
+              }
+            </div>
+          )
+        }
       </Stack>
     </Container>
   );

@@ -37,8 +37,8 @@ const Label = styled(Paper)(({ theme }) => ({
 
 const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   const { t } = useTranslation();
-  const [currentEmu] = useStore(s => [s.currentEmu]);
-  const [games, setGames] = useState<{ title: string, img: string }[]>([]);
+  const [currentEmu, setCurrentGameAction] = useStore(s => [s.currentEmu, s.setCurrentGameAction]);
+  const [games, setGames] = useState<{ title: string, img: string, titleId: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filteredGames, setFilteredGames] = useState<typeof games>([]);
@@ -47,7 +47,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   // 2. Build metadata from eshop with titleId as argument
   const createLibrary = async () => {
     const titleIds = await ipcRenderer.invoke("scan-games", mode.dataPath, currentEmu);
-    const gamesCollection: { title: string, img: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke("build-metadata-from-titleId", i)));
+    const gamesCollection: { title: string, img: string, titleId: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke("build-metadata-from-titleId", i)));
     setGames(gamesCollection.filter(i => i.title !== "0000000000000000")); // Homebrew app
     setIsLoaded(true);
   };
@@ -57,7 +57,9 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   }, [config, mode]);
 
   useEffect(() => {
-    setFilteredGames(searchTerm.length > 0 ? games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true) : games);
+    setFilteredGames(searchTerm.length > 0
+      ? games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true)
+      : games);
   }, [games, searchTerm]);
 
   return (
@@ -87,7 +89,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                       filteredGames
                         .sort((a, b) => a.title.localeCompare(b.title))
                         .map((item, index) => (
-                        <Stack key={index}>
+                        <Stack onClick={() => setCurrentGameAction(item.titleId)} style={{ cursor: "pointer" }} key={index}>
                           <Label title={item.title}>{item.title}</Label>
                           <img
                             referrerPolicy="no-referrer"

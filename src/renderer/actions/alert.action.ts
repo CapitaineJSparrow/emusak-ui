@@ -10,7 +10,6 @@ export interface IAlert {
   alertClosable: boolean
 }
 
-//   useStore.getState().openAlertAction('info', `Downloading firmware ${percentage} % at ${downloadSpeed} MB/s`);
 const createAlertSlice = (set: SetState<IAlert>) => ({
   alertMessage: "",
   isAlertOpened: false,

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import * as ReactDOM from "react-dom";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import i18n from "i18next";
+import i18n, { use } from "i18next";
 import { initReactI18next } from "react-i18next";
 import Swal from "sweetalert2";
 import "./styles/swal.dark.css";
@@ -41,8 +41,8 @@ const darkTheme = createTheme({
 
 const lng = localStorage.getItem(LS_KEYS.LOCALE) ?? "en";
 
-i18n
-  .use(initReactI18next)
+
+use(initReactI18next)
   .init({
     resources: {
       en: { translation: i18n_en },
@@ -59,10 +59,6 @@ const App = () => {
   const [isAppInitialized, bootstrapAppAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction]);
   const [downloadState, setDownloadState] = useState(null);
 
-  useEffect(() => {
-    bootstrapAppAction();
-  }, []);
-
   // Hack, due to tree checking, if Swal is not present the theme is not applied for further calls, need better solution
   // eslint-disable-next-line no-constant-condition
   if (false) {
@@ -71,6 +67,10 @@ const App = () => {
 
   ipcRenderer.on("update-available", () => setDownloadState("downloading"));
   ipcRenderer.once("update-downloaded", () => setDownloadState("downloaded"));
+
+  useEffect(() => {
+    bootstrapAppAction();
+  }, []);
 
   return (
     <ThemeProvider theme={darkTheme}>
