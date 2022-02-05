@@ -25,6 +25,10 @@
   "update_restart": "Обновление скачано! Вы хотите перезапустить, чтобы применить обновление?",
   "updatingEshop": "Updating eshop data",
   "filter": "Filter {{LENGTH}} games",
+  "openShaderDir": "Open shader cache folder",
+  "openModsDir": "Open mods directory",
+  "dlMods": "Download mod",
+  "dlSave": "Download save",
 
   "OPERATION_CANCELED": "Вы отменили операцию.",
   "INVALID_RYUJINX_BINARY": "Это недопустимый двоичный файл Ryujinx.",

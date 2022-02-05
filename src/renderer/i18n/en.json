@@ -25,6 +25,10 @@
   "update_restart": "Update has been downloaded! Do you want to restart to apply?",
   "updatingEshop": "Updating eshop data",
   "filter": "Filter {{LENGTH}} games",
+  "openShaderDir": "Open shader cache folder",
+  "openModsDir": "Open mods directory",
+  "dlMods": "Download mod",
+  "dlSave": "Download save",
 
   "OPERATION_CANCELED": "You canceled the operation.",
   "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",

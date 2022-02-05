@@ -19,10 +19,10 @@ const downloadEshopData = async () => {
   const ids = Object.keys(data);
 
   ids.forEach(i => {
-    const { id, name, iconUrl, screenshots } = data[i];
+    const { id, name, iconUrl } = data[i];
 
     if (id && name && iconUrl) {
-      titleIds[id.toUpperCase()] = { id, name, iconUrl, screenshots };
+      titleIds[id.toUpperCase()] = { id, name, iconUrl };
     }
   });
 

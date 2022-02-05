@@ -8,7 +8,6 @@ export type EshopData = {
     id: string;
     name: string;
     iconUrl: string;
-    screenshots: string[];
   };
 };
 

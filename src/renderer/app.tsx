@@ -65,11 +65,18 @@ const App = () => {
     Swal.fire({ icon: "success", title: "" });
   }
 
-  ipcRenderer.on("update-available", () => setDownloadState("downloading"));
-  ipcRenderer.once("update-downloaded", () => setDownloadState("downloaded"));
+  const onUpdateAvailable = () => setDownloadState("downloading");
+  const onUpdateDownloaded = () => () => setDownloadState("downloaded");
 
   useEffect(() => {
     bootstrapAppAction();
+    ipcRenderer.on("update-available", onUpdateAvailable);
+    ipcRenderer.on("update-downloaded", onUpdateDownloaded);
+
+    return () => {
+      ipcRenderer.removeListener("update-available", onUpdateAvailable);
+      ipcRenderer.removeListener("update-downloaded", onUpdateDownloaded);
+    };
   }, []);
 
   return (

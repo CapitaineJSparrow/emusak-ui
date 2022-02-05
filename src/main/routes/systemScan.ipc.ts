@@ -89,7 +89,6 @@ const buildMetadataForTitleId = async (titleId: string) => {
       title: eData[eshopEntry].name,
       img: eData[eshopEntry].iconUrl,
       titleId: titleId.toUpperCase(),
-      screenshots: eData[eshopEntry].screenshots
     };
   }
 
@@ -98,7 +97,6 @@ const buildMetadataForTitleId = async (titleId: string) => {
     title: csDb[id.toUpperCase()] || tfDb[id.toUpperCase()] || titleId.toUpperCase(),
     img: "",
     titleId: titleId.toUpperCase(),
-    screenshots: []
   };
 };
 
