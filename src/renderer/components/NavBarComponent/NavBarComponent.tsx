@@ -60,6 +60,7 @@ const NavBarComponent = () => {
             >
               <MenuItem value={"en"}>EN</MenuItem>
               <MenuItem value={"ru"}>RU</MenuItem>
+              <MenuItem value={"br"}>BR</MenuItem>
             </Select>
           </Box>
           <Box style={{ flex: "0 0 50px" }}>
