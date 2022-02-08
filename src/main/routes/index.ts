@@ -7,6 +7,7 @@ import { addEmulatorConfigurationIpc, createDefaultConfigActionForEmu } from "./
 import installFirmware from "./firmware.ipc";
 import { installKeys } from "./installKeys";
 import updateEshopData from "./eshopData.ipc";
+import openFolderForGame, { openFolderIPCProps } from "./openFolderForGame";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("load-components", async (_, url: string) => loadComponentIpcHandler(url));
@@ -20,6 +21,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("install-firmware", async (event, emu: EmusakEmulatorsKind, dataPath: string) => installFirmware(emu, dataPath, mainWindow));
   ipcMain.handle("install-keys", async (_, dataPath: string, emu: EmusakEmulatorsKind) => installKeys(dataPath, emu));
   ipcMain.handle("update-eshop-data", async (_) => updateEshopData());
+  ipcMain.handle("openFolderForGame", async (_, ...args: openFolderIPCProps) => openFolderForGame(...args));
 };
 
 export default makeIpcRoutes;

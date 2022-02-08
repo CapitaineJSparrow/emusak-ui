@@ -152,7 +152,7 @@ const RootComponent = () => {
             <div>
               {
                 currentGame
-                  ? <GameDetailComponent titleId={currentGame} />
+                  ? <GameDetailComponent dataPath={mode.dataPath} titleId={currentGame} />
                   : <EmulatorContainer key={mode.dataPath} mode={mode} config={selectedConfig} />
               }
             </div>

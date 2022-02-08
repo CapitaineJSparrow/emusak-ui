@@ -7,15 +7,6 @@ html {
 }
 
 :root {
-  /*
-  line left
-  line right
-  line bottom
-  line top
-  arrow left
-  arrow right
-  arrow diagonal
-  */
   --icon-external-link: url('data:image/svg+xml,\
 	<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20"> \
 		<g style="stroke:rgb(68, 238, 255);stroke-width:1"> \

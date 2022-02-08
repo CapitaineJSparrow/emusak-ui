@@ -7,10 +7,11 @@ import useTranslation from "../../i18n/I18nService";
 
 interface IGameDetailProps {
   titleId: string;
+  dataPath: string;
 }
 
 const GameDetailComponent = (props: IGameDetailProps) => {
-  const { titleId } = props;
+  const { titleId, dataPath } = props;
   const [clearCurrentGameAction] = useStore(state => [state.clearCurrentGameAction]);
   const [data, setData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const { t } = useTranslation();
@@ -37,13 +38,13 @@ const GameDetailComponent = (props: IGameDetailProps) => {
         <Grid item xs={2}>
           <img loading="lazy" referrerPolicy="no-referrer" style={{ border: "5px solid #222" }} width="100%" src={data.img} alt=""/>
         </Grid>
-        <Grid item xs={3} p={1} pl={2}>
-          <p style={{ marginTop: 0 }}><Button variant="contained" fullWidth>{t("openShaderDir")}</Button></p>
-          <p><Button variant="contained" fullWidth>{t("openModsDir")}</Button></p>
+        <Grid item xs={4} p={1} pl={2}>
+          <p style={{ marginTop: 0 }}><Button onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "shaders", dataPath)} variant="contained" fullWidth>{t("openShaderDir")}</Button></p>
+          <p><Button onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "mods", dataPath)} variant="contained" fullWidth>{t("openModsDir")}</Button></p>
           <p><Button variant="contained" fullWidth>{t("dlMods")}</Button></p>
           <p><Button variant="contained" fullWidth>{t("dlSave")}</Button></p>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={6}>
           <p style={{ textAlign: "center" }}>Something here about shaders</p>
         </Grid>
       </Grid>
