@@ -28,7 +28,11 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
   bootstrapAppAction: async () => {
     const [ryujinxShaders, saves, firmwareVersion, latestVersion, currentVersion] = await ipcRenderer.invoke("load-components", process.env.EMUSAK_CDN);
 
-    if (lastEshopUpdate > (+new Date() + 86400)) { // if last eshop update was 1 day before or more (86400 seconds)
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (lastEshopUpdate > (tomorrow.getTime())) {
       get().upsertFileAction({
         filename: t("updatingEshop"),
         progress: Infinity,
@@ -36,7 +40,7 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
       });
 
       ipcRenderer.invoke("update-eshop-data").then(() => {
-        localStorage.setItem(LS_KEYS.ESHOP_UPDATE, `${+new Date()}`);
+        localStorage.setItem(LS_KEYS.ESHOP_UPDATE, `${today.getTime()}`);
         get().removeFileAction("eshop data");
       });
     }
