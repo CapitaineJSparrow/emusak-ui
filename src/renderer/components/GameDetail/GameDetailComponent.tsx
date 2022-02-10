@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Box, Button, Chip, Grid } from "@mui/material";
+import { Alert, Box, Button, Chip, Grid, Tooltip } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useStore from "../../actions/state";
 import { ipcRenderer } from "electron";
@@ -27,6 +27,38 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     });
   }, [titleId]);
 
+  const renderCompatibilityData = () => (
+    <Grid container mb={2} sx={{ display: "flex", alignItems: "center" }}>
+      <Grid item xs={10} pr={2}>
+        {
+          (compat && compat.length > 0)
+            ? (
+              <span>
+                {
+
+                  compat.map(c => (
+                    <Tooltip title={c.description} arrow enterDelay={0}>
+                      <Chip variant="outlined" color="primary" size="small" style={{ marginRight: 8 }} key={c.name} label={c.name} />
+                    </Tooltip>
+                  ))
+                }
+              </span>
+            )
+            : (<Alert severity="warning">There is no compatibility data yet, add your own !</Alert>)
+        }
+      </Grid>
+      <Grid item xs={2}>
+        <a
+          href={`https://github.com/Ryujinx/Ryujinx-Games-List/issues?q=is%3Aissue+is%3Aopen+${data.titleId}`}
+          target="_blank"
+          className="no-blank-icon"
+        >
+          <Button variant="outlined" fullWidth>Add your report</Button>
+        </a>
+      </Grid>
+    </Grid>
+  );
+
   if (!data) {
     return null;
   }
@@ -41,21 +73,11 @@ const GameDetailComponent = (props: IGameDetailProps) => {
           )
         }
       </Box>
+
       {
-        (compat && compat.length > 0) && (
-          <Grid container mb={2}>
-            <Grid item xs={12}>
-              <Alert severity="info">
-                {
-                  compat.map(c => (
-                    <Chip size="small" style={{ marginRight: 8, backgroundColor: `#${c.color}` }} key={c.name} title={c.description} label={c.name} />
-                  ))
-                }
-              </Alert>
-            </Grid>
-          </Grid>
-        )
+        renderCompatibilityData()
       }
+
       <Grid container mt={0}>
         <Grid item xs={2}>
           <img loading="lazy" referrerPolicy="no-referrer" style={{ border: "5px solid #222" }} width="100%" src={data.img} alt=""/>
