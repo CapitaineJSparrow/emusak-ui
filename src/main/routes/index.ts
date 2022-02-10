@@ -9,6 +9,7 @@ import { installKeys } from "./installKeys";
 import updateEshopData from "./eshopData.ipc";
 import openFolderForGame, { openFolderIPCProps } from "./openFolderForGame";
 import ryujinxCompatibility, { ryujinxCompatibilityProps } from "./ryujinxCompatibility";
+import savesDownloads, { downloadSaveProps } from "./savesDownload";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("load-components", async (_, url: string) => loadComponentIpcHandler(url));
@@ -24,6 +25,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("update-eshop-data", async () => updateEshopData());
   ipcMain.handle("openFolderForGame", async (_, ...args: openFolderIPCProps) => openFolderForGame(...args));
   ipcMain.handle("getRyujinxCompatibility", async (_, ...args: ryujinxCompatibilityProps) => ryujinxCompatibility(...args));
+  ipcMain.handle("downloadSave", async (_, ...args: downloadSaveProps) => savesDownloads(...args));
 };
 
 export default makeIpcRoutes;

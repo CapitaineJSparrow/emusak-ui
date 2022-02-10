@@ -6,6 +6,7 @@ import { app } from "electron";
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
   SAVES_LIST           = "/v2/saves",
+  SAVES_DOWNLOAD       = "/v2/saves?id={id}&index={index}",
   FIRMWARE             = "/firmware/firmware.zip",
   KEYS                 = "/firmware/prod.keys"
 }
@@ -21,7 +22,7 @@ class HttpService {
   public url: string = process.env.EMUSAK_CDN;
 
   // Trigger HTTP request using an exponential backoff strategy
-  protected _fetch(path: string, type: "JSON" | "TXT" = "JSON", host: string = this.url, defaultValue = {}, retries = 5) {
+  protected _fetch(path: string, type: "JSON" | "TXT" | "BUFFER" = "JSON", host: string = this.url, defaultValue = {}, retries = 5) {
     const url = new URL(path, host);
     return pRetry(
       async () => {
@@ -33,6 +34,10 @@ class HttpService {
 
         if (type === "JSON") {
           return response.json();
+        }
+
+        if (type === "BUFFER") {
+          return response.arrayBuffer();
         }
 
         return response.text();
@@ -74,6 +79,10 @@ class HttpService {
   public async getRyujinxCompatibility(id: string) {
     // do not use this._fetch because we do not want exponential backoff strategy since GitHub api is limited to 10 requests per minute for unauthenticated requests
     return fetch(`https://api.github.com/search/issues?q=${id}%20repo:Ryujinx/Ryujinx-Games-List`).then(r => r.json());
+  }
+
+  public async downloadSave(id: string, index: number) {
+    return this._fetch(HTTP_PATHS.SAVES_DOWNLOAD.replace("{id}", id).replace("{index}", `${index}`), "BUFFER");
   }
 }
 
