@@ -29,6 +29,7 @@
   "openModsDir": "Open mods directory",
   "dlMods": "Download mod",
   "dlSave": "Download save",
+  "noSave": "No save data",
   "noCompatData": "There is no compatibility data yet, add your own !",
   "addCompatReport": "Add your report",
 

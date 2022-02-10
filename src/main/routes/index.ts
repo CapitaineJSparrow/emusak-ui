@@ -8,6 +8,7 @@ import installFirmware from "./firmware.ipc";
 import { installKeys } from "./installKeys";
 import updateEshopData from "./eshopData.ipc";
 import openFolderForGame, { openFolderIPCProps } from "./openFolderForGame";
+import listSavesForGame, { listSavesProps } from "./saves.ipc";
 import ryujinxCompatibility, { ryujinxCompatibilityProps } from "./ryujinxCompatibility";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
@@ -21,8 +22,9 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("build-metadata-from-titleId", async (_, titleId: string) => buildMetadataForTitleId(titleId));
   ipcMain.handle("install-firmware", async (event, emu: EmusakEmulatorsKind, dataPath: string) => installFirmware(emu, dataPath, mainWindow));
   ipcMain.handle("install-keys", async (_, dataPath: string, emu: EmusakEmulatorsKind) => installKeys(dataPath, emu));
-  ipcMain.handle("update-eshop-data", async (_) => updateEshopData());
+  ipcMain.handle("update-eshop-data", async () => updateEshopData());
   ipcMain.handle("openFolderForGame", async (_, ...args: openFolderIPCProps) => openFolderForGame(...args));
+  ipcMain.handle("listSavesForGame", async (_, ...args: listSavesProps) => listSavesForGame(...args));
   ipcMain.handle("getRyujinxCompatibility", async (_, ...args: ryujinxCompatibilityProps) => ryujinxCompatibility(...args));
 };
 

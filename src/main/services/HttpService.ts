@@ -5,7 +5,8 @@ import { app } from "electron";
 
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
-  SAVES_LIST           = "/v2/saves",
+  SAVES_LIST           = "/saves/",
+  SAVES_DETAILS        = "/saves/{id}/",
   FIRMWARE             = "/firmware/firmware.zip",
   KEYS                 = "/firmware/prod.keys"
 }
@@ -47,6 +48,10 @@ class HttpService {
 
   public async downloadSaves() {
     return this._fetch(HTTP_PATHS.SAVES_LIST);
+  }
+
+  public async downloadSavesDetails(id: string) {
+    return this._fetch(HTTP_PATHS.SAVES_DETAILS.replace("{id}", id));
   }
 
   public async getFirmwareVersion() {

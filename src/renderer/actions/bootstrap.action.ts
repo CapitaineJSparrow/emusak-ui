@@ -1,4 +1,4 @@
-import { GetState, PartialState, SetState } from "zustand/vanilla";
+import { GetState, SetState } from "zustand/vanilla";
 import { ipcRenderer } from "electron";
 import { EmusakSaves, EmusakShaders, LS_KEYS } from "../../types";
 import { IDownloadManager } from "./downloadManager.action";
@@ -10,7 +10,7 @@ interface IBootstrap {
   isAppInitialized: boolean;
   saves: EmusakSaves;
   ryujinxShaders: EmusakShaders;
-  bootstrapAppAction: () => PartialState<IBootstrap>;
+  bootstrapAppAction: () => Promise<any>;
   firmwareVersion: string;
   latestVersion: string;
   currentVersion: string;
@@ -18,9 +18,9 @@ interface IBootstrap {
 
 const lastEshopUpdate = localStorage.getItem(LS_KEYS.ESHOP_UPDATE) ? +localStorage.getItem(LS_KEYS.ESHOP_UPDATE) : Infinity;
 
-const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownloadManager>) => ({
+const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownloadManager>): IBootstrap => ({
   isAppInitialized: false,
-  saves: {},
+  saves: [],
   ryujinxShaders: {},
   firmwareVersion: "",
   latestVersion: "",

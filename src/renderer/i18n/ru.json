@@ -31,6 +31,7 @@
   "dlSave": "Download save",
   "noCompatData": "There is no compatibility data yet, add your own !",
   "addCompatReport": "Add your report",
+  "noSave": "No save data",
 
   "OPERATION_CANCELED": "Вы отменили операцию.",
   "INVALID_RYUJINX_BINARY": "Это недопустимый двоичный файл Ryujinx.",

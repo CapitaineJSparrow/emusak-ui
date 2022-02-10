@@ -1,6 +1,6 @@
 export type EmusakSaves = {
-  [key: string]: string[];
-};
+  name: string;
+}[];
 
 export type EmusakShaders = {
   [key: string]: number;
