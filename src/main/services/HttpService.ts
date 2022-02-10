@@ -21,7 +21,7 @@ class HttpService {
   public url: string = process.env.EMUSAK_CDN;
 
   // Trigger HTTP request using an exponential backoff strategy
-  protected _fetch(path: string, type: "JSON" | "TXT" = "JSON", host: string = this.url, defaultValue = {}) {
+  protected _fetch(path: string, type: "JSON" | "TXT" = "JSON", host: string = this.url, defaultValue = {}, retries = 5) {
     const url = new URL(path, host);
     return pRetry(
       async () => {
@@ -37,7 +37,7 @@ class HttpService {
 
         return response.text();
       },
-      { retries: 5 }
+      { retries }
     ) as unknown as Promise<Response>;
   }
 
@@ -69,6 +69,11 @@ class HttpService {
 
   public async downloadEshopData() {
     return this._fetch("https://github.com/blawar/titledb/blob/master/US.en.json?raw=true");
+  }
+
+  public async getRyujinxCompatibility(id: string) {
+    // do not use this._fetch because we do not want exponential backoff strategy since GitHub api is limited to 10 requests per minute for unauthenticated requests
+    return fetch(`https://api.github.com/search/issues?q=${id}%20repo:Ryujinx/Ryujinx-Games-List`).then(r => r.json());
   }
 }
 

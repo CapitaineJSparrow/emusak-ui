@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Grid } from "@mui/material";
+import { Alert, Box, Button, Chip, Grid } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useStore from "../../actions/state";
 import { ipcRenderer } from "electron";
 import useTranslation from "../../i18n/I18nService";
+import { GithubLabel } from "../../../types";
 
 interface IGameDetailProps {
   titleId: string;
@@ -12,12 +13,18 @@ interface IGameDetailProps {
 
 const GameDetailComponent = (props: IGameDetailProps) => {
   const { titleId, dataPath } = props;
-  const [clearCurrentGameAction] = useStore(state => [state.clearCurrentGameAction]);
+  const [clearCurrentGameAction, currentEmu] = useStore(state => [state.clearCurrentGameAction, state.currentEmu]);
   const [data, setData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
+  const [compat, setCompat] = useState<GithubLabel[]>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
     ipcRenderer.invoke("build-metadata-from-titleId", titleId).then(d => setData(d));
+    currentEmu === "ryu" && ipcRenderer.invoke("getRyujinxCompatibility", titleId).then(r => {
+      if (!r.items) return;
+      const item = (r.items as any[]).find(i => i.state === "open");
+      item && setCompat(item.labels);
+    });
   }, [titleId]);
 
   if (!data) {
@@ -34,6 +41,21 @@ const GameDetailComponent = (props: IGameDetailProps) => {
           )
         }
       </Box>
+      {
+        (compat && compat.length > 0) && (
+          <Grid container mb={2}>
+            <Grid item xs={12}>
+              <Alert severity="info">
+                {
+                  compat.map(c => (
+                    <Chip size="small" style={{ marginRight: 8, backgroundColor: `#${c.color}` }} key={c.name} title={c.description} label={c.name} />
+                  ))
+                }
+              </Alert>
+            </Grid>
+          </Grid>
+        )
+      }
       <Grid container mt={0}>
         <Grid item xs={2}>
           <img loading="lazy" referrerPolicy="no-referrer" style={{ border: "5px solid #222" }} width="100%" src={data.img} alt=""/>

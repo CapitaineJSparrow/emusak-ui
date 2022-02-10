@@ -40,3 +40,9 @@ export type EmusakDownload = {
   progress: number,
   downloadSpeed: number,
 };
+
+export type GithubLabel = {
+  color: string;
+  description: string;
+  name: string;
+};

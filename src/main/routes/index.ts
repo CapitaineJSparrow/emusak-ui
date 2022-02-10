@@ -8,6 +8,7 @@ import installFirmware from "./firmware.ipc";
 import { installKeys } from "./installKeys";
 import updateEshopData from "./eshopData.ipc";
 import openFolderForGame, { openFolderIPCProps } from "./openFolderForGame";
+import ryujinxCompatibility, { ryujinxCompatibilityProps } from "./ryujinxCompatibility";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("load-components", async (_, url: string) => loadComponentIpcHandler(url));
@@ -22,6 +23,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("install-keys", async (_, dataPath: string, emu: EmusakEmulatorsKind) => installKeys(dataPath, emu));
   ipcMain.handle("update-eshop-data", async (_) => updateEshopData());
   ipcMain.handle("openFolderForGame", async (_, ...args: openFolderIPCProps) => openFolderForGame(...args));
+  ipcMain.handle("getRyujinxCompatibility", async (_, ...args: ryujinxCompatibilityProps) => ryujinxCompatibility(...args));
 };
 
 export default makeIpcRoutes;
