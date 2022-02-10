@@ -29,7 +29,7 @@
   "openModsDir": "Abrir o diretório de Mods",
   "dlMods": "Baixar mod",
   "dlSave": "Baixar save",
-  "dlSaveDesc": "Once the download will be completed, the save file will be placed on your desktop. You can install save with a right click in the emulator, \"open save folder\" and extract archive here.",
+  "dlSaveDesc": "Once the download will be completed, the save file will be placed on your desktop. You can install save with a right click on the game in the emulator, \"open save folder\" and extract archive here.",
   "noCompatData": "There is no compatibility data yet, add your own ! (if it's leaked game don't do that)",
   "addCompatReport": "Add your report",
   "infoNewReport": "You'll be redirected to Ryujinx official game compatibility tracker on github. Please follow the issue template and double check a report does not already exists for this game. Also if this game is not released, aka leaked, your report will be removed because they don't support pirated games.",
