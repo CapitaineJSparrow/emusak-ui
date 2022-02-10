@@ -15,7 +15,7 @@ const ryujinxCompatibility = async (...args: ryujinxCompatibilityProps) => {
   const compatData = await HttpService.getRyujinxCompatibility(titleId).catch(() => null);
 
   if (!compatData) {
-    return;
+    return [];
   }
 
   memoryDb[titleId] = compatData;

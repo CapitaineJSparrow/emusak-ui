@@ -46,3 +46,10 @@ export type GithubLabel = {
   description: string;
   name: string;
 };
+
+export type GithubIssue = {
+  items: {
+    state: string;
+    labels: GithubLabel[];
+  }[];
+};

@@ -10,12 +10,12 @@ const openFolderForGame = async (...args: openFolderIPCProps) => {
   if (dir === "mods") {
     const modPath = path.resolve(dataPath, "mods", "contents", titleId.toLocaleLowerCase());
     await fs.ensureDir(modPath); // Mod directory may not exist if it has never been opened so create it
-    shell.openPath(modPath);
-  } else {
-    const shaderPath = path.resolve(dataPath, "games", titleId.toLocaleLowerCase(), "cache", "shader");
-    await fs.ensureDir(shaderPath); // shader directory may not exist if it has never been opened so create it
-    shell.openPath(shaderPath);
+    return shell.openPath(modPath);
   }
+
+  const shaderPath = path.resolve(dataPath, "games", titleId.toLocaleLowerCase(), "cache", "shader");
+  await fs.ensureDir(shaderPath); // shader directory may not exist if it has never been opened so create it
+  return shell.openPath(shaderPath);
 };
 
 export default openFolderForGame;

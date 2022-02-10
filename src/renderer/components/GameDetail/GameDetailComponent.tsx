@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Alert, Box, Button, Chip, Grid, Tooltip } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useStore from "../../actions/state";
-import { ipcRenderer } from "electron";
+import { ipcRenderer , shell } from "electron";
 import useTranslation from "../../i18n/I18nService";
-import { GithubLabel } from "../../../types";
+import { GithubIssue, GithubLabel } from "../../../types";
+import Swal from "sweetalert2";
 
 interface IGameDetailProps {
   titleId: string;
@@ -14,52 +15,70 @@ interface IGameDetailProps {
 const GameDetailComponent = (props: IGameDetailProps) => {
   const { titleId, dataPath } = props;
   const [clearCurrentGameAction, currentEmu] = useStore(state => [state.clearCurrentGameAction, state.currentEmu]);
-  const [data, setData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
+  const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    ipcRenderer.invoke("build-metadata-from-titleId", titleId).then(d => setData(d));
-    currentEmu === "ryu" && ipcRenderer.invoke("getRyujinxCompatibility", titleId).then(r => {
-      if (!r.items) return;
-      const item = (r.items as any[]).find(i => i.state === "open");
-      item && setCompat(item.labels);
+  const extractCompatibilityLabels = (response: GithubIssue) => {
+    // Probably non 200 response from GitHub, so leave it as default value (null)
+    if (!response.items) return;
+
+    const item = (response.items).find(i => i.state === "open");
+    return setCompat(item ? item.labels : []);
+  };
+
+  const handleAddReportButtonClick = async () => {
+    if (compat === null) return;
+
+    await Swal.fire({
+      icon: "info",
+      text: t(compat.length === 0 ? "infoNewReport" : "infoExistingReport"),
+      allowOutsideClick: false
     });
+
+    return shell.openExternal(compat.length > 0
+      ? `https://github.com/Ryujinx/Ryujinx-Games-List/issues?q=is%3Aissue+is%3Aopen+${metaData.titleId}`
+      : "https://github.com/Ryujinx/Ryujinx-Games-List/issues/new"
+    );
+  };
+
+  useEffect(() => {
+    ipcRenderer.invoke("build-metadata-from-titleId", titleId).then(d => setMetaData(d));
+    currentEmu === "ryu" && ipcRenderer.invoke("getRyujinxCompatibility", titleId).then(extractCompatibilityLabels);
   }, [titleId]);
 
   const renderCompatibilityData = () => (
     <Grid container mb={2} sx={{ display: "flex", alignItems: "center" }}>
-      <Grid item xs={10} pr={2}>
-        {
-          (compat && compat.length > 0)
-            ? (
-              <span>
-                {
-
-                  compat.map(c => (
-                    <Tooltip title={c.description} arrow enterDelay={0}>
-                      <Chip variant="outlined" color="primary" size="small" style={{ marginRight: 8 }} key={c.name} label={c.name} />
-                    </Tooltip>
-                  ))
-                }
-              </span>
-            )
-            : (<Alert severity="warning">There is no compatibility data yet, add your own !</Alert>)
-        }
-      </Grid>
-      <Grid item xs={2}>
-        <a
-          href={`https://github.com/Ryujinx/Ryujinx-Games-List/issues?q=is%3Aissue+is%3Aopen+${data.titleId}`}
-          target="_blank"
-          className="no-blank-icon"
+      <Grid item xs={12}>
+        <Alert
+          severity={compat.length === 0 ? "warning" : "info"}
+          action={(<Button
+            onClick={() => handleAddReportButtonClick()}
+            variant="outlined"
+            size="small"
+            fullWidth
+          >
+            {t("addCompatReport")}
+          </Button>)}
         >
-          <Button variant="outlined" fullWidth>Add your report</Button>
-        </a>
+          {
+
+            compat.map(c => (
+              <Tooltip key={c.name} title={c.description} arrow enterDelay={0}>
+                <Chip variant="outlined" color="primary" size="small" style={{ marginRight: 8 }} label={c.name} />
+              </Tooltip>
+            ))
+          }
+
+          {
+            compat.length === 0 && t("noCompatData")
+          }
+        </Alert>
       </Grid>
     </Grid>
   );
 
-  if (!data) {
+  if (!metaData) {
     return null;
   }
 
@@ -68,19 +87,19 @@ const GameDetailComponent = (props: IGameDetailProps) => {
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Button onClick={clearCurrentGameAction} size="small" variant="outlined"><ArrowBackIcon /></Button>
         {
-          data && (
-            <h3 style={{ marginLeft: 12 }}>{data.title} (<small>{data.titleId}</small>)</h3>
+          metaData && (
+            <h3 style={{ marginLeft: 12 }}>{metaData.title} (<small>{metaData.titleId}</small>)</h3>
           )
         }
       </Box>
 
       {
-        renderCompatibilityData()
+        (compat !== null) && renderCompatibilityData()
       }
 
       <Grid container mt={0}>
         <Grid item xs={2}>
-          <img loading="lazy" referrerPolicy="no-referrer" style={{ border: "5px solid #222" }} width="100%" src={data.img} alt=""/>
+          <img loading="lazy" referrerPolicy="no-referrer" style={{ border: "5px solid #222" }} width="100%" src={metaData.img} alt=""/>
         </Grid>
         <Grid item xs={4} p={1} pl={2}>
           <p style={{ marginTop: 0 }}><Button onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "shaders", dataPath)} variant="contained" fullWidth>{t("openShaderDir")}</Button></p>
