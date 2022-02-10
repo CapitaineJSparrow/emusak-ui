@@ -44,7 +44,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
                 }
               </span>
             )
-            : (<Alert severity="warning">There is no compatibility data yet, add your own !</Alert>)
+            : (<Alert severity="warning">{t("noCompatData")}</Alert>)
         }
       </Grid>
       <Grid item xs={2}>
@@ -53,7 +53,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
           target="_blank"
           className="no-blank-icon"
         >
-          <Button variant="outlined" fullWidth>Add your report</Button>
+          <Button variant="outlined" fullWidth>{t("addCompatReport")}</Button>
         </a>
       </Grid>
     </Grid>

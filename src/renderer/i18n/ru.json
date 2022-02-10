@@ -29,6 +29,8 @@
   "openModsDir": "Open mods directory",
   "dlMods": "Download mod",
   "dlSave": "Download save",
+  "noCompatData": "There is no compatibility data yet, add your own !",
+  "addCompatReport": "Add your report",
 
   "OPERATION_CANCELED": "Вы отменили операцию.",
   "INVALID_RYUJINX_BINARY": "Это недопустимый двоичный файл Ryujinx.",
