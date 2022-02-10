@@ -7,6 +7,7 @@ import createEmulatorFilesSLice from "./emulatorFiles.action";
 import { GetState, SetState } from "zustand/vanilla";
 import createDownloadManagerSlice from "./downloadManager.action";
 import createGameSlice from "./game.action";
+import createDownloadSaveSlice from "./save.action";
 
 const useStore = create((set: SetState<any>, get: GetState<any>) => ({
   ...createBootstrapSlice(set, get),
@@ -16,6 +17,7 @@ const useStore = create((set: SetState<any>, get: GetState<any>) => ({
   ...createEmulatorFilesSLice(set, get),
   ...createDownloadManagerSlice(set, get),
   ...createGameSlice(set),
+  ...createDownloadSaveSlice(set),
 }));
 
 export default useStore;

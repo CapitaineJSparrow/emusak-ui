@@ -31,6 +31,7 @@ import DownloadManagerComponent from "./components/DownloadManagerComponent/Down
 import { ipcRenderer } from "electron";
 import UpdateComponent from "./components/UpdateComponent/UpdateComponent";
 import { LS_KEYS } from "../types";
+import DownloadSaveComponent from "./components/DownloadSaveComponent/DownloadSaveComponent";
 
 const darkTheme = createTheme({
   palette: {
@@ -89,6 +90,7 @@ const App = () => {
         <NavBarComponent />
         <AlertComponent />
         <DownloadManagerComponent />
+        <DownloadSaveComponent />
         <UpdateComponent state={downloadState} />
         { !isAppInitialized ? <BootstrapComponent /> : <RootComponent /> }
         <TOSComponent />

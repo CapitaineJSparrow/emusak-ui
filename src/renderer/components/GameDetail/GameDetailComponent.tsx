@@ -14,7 +14,17 @@ interface IGameDetailProps {
 
 const GameDetailComponent = (props: IGameDetailProps) => {
   const { titleId, dataPath } = props;
-  const [clearCurrentGameAction, currentEmu] = useStore(state => [state.clearCurrentGameAction, state.currentEmu]);
+  const [
+    clearCurrentGameAction,
+    currentEmu,
+    saves,
+    setCurrentSaveDownloadAction,
+  ] = useStore(state => [
+    state.clearCurrentGameAction,
+    state.currentEmu,
+    state.saves,
+    state.setCurrentSaveDownloadAction
+  ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
   const { t } = useTranslation();
@@ -105,7 +115,16 @@ const GameDetailComponent = (props: IGameDetailProps) => {
           <p style={{ marginTop: 0 }}><Button onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "shaders", dataPath)} variant="contained" fullWidth>{t("openShaderDir")}</Button></p>
           <p><Button onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "mods", dataPath)} variant="contained" fullWidth>{t("openModsDir")}</Button></p>
           <p><Button variant="contained" fullWidth>{t("dlMods")}</Button></p>
-          <p><Button variant="contained" fullWidth>{t("dlSave")}</Button></p>
+          <p>
+            <Button
+              variant="contained"
+              fullWidth
+              disabled={!Object.keys(saves).map(k => k.toUpperCase()).includes(metaData.titleId.toUpperCase())}
+              onClick={() => setCurrentSaveDownloadAction(metaData.titleId.toUpperCase())}
+            >
+              {t("dlSave")}
+            </Button>
+          </p>
         </Grid>
         <Grid item xs={6}>
           <p style={{ textAlign: "center" }}>Something here about shaders</p>
