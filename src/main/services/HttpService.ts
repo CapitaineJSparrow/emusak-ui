@@ -12,8 +12,8 @@ export enum HTTP_PATHS {
 }
 
 export enum GITHUB_PATHS {
-  THRESHOLD = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt",
-  RELEASE_INFO = "https://api.github.com/repos/stromcon/emusak-ui/releases/latest",
+  THRESHOLD        = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/threshold.txt",
+  RELEASE_INFO     = "https://api.github.com/repos/stromcon/emusak-ui/releases/latest",
   FIRMWARE_VERSION = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/version.txt",
 }
 

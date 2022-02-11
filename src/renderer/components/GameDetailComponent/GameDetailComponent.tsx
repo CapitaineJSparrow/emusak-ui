@@ -112,8 +112,24 @@ const GameDetailComponent = (props: IGameDetailProps) => {
           <img loading="lazy" referrerPolicy="no-referrer" style={{ border: "5px solid #222" }} width="100%" src={metaData.img} alt=""/>
         </Grid>
         <Grid item xs={4} p={1} pl={2}>
-          <p style={{ marginTop: 0 }}><Button onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "shaders", dataPath)} variant="contained" fullWidth>{t("openShaderDir")}</Button></p>
-          <p><Button onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "mods", dataPath)} variant="contained" fullWidth>{t("openModsDir")}</Button></p>
+          <p style={{ marginTop: 0 }}>
+            <Button
+              onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "shaders", dataPath, currentEmu)}
+              variant="contained"
+              fullWidth
+            >
+              {t("openShaderDir")}
+            </Button>
+          </p>
+          <p>
+            <Button
+              onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "mods", dataPath, currentEmu)}
+              variant="contained"
+              fullWidth
+            >
+              {t("openModsDir")}
+            </Button>
+          </p>
           <p><Button variant="contained" fullWidth>{t("dlMods")}</Button></p>
           <p>
             <Button
