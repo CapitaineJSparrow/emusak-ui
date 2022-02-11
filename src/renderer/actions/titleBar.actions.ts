@@ -1,4 +1,4 @@
-import { PartialState, SetState } from "zustand/vanilla";
+import { SetState } from "zustand/vanilla";
 import { ipcRenderer } from "electron";
 import { EmusakEmulatorsKind, LS_KEYS } from "../../types";
 import { IEmulatorConfig } from "./emulatorConfig.action";
@@ -6,14 +6,15 @@ import { IGameAction } from "./game.action";
 
 export interface ITitleBar {
   version: string,
-  getVersionAction: () => PartialState<ITitleBar>;
-  closeEmuSAKAction: () => never;
+  getVersionAction: () => void;
+  closeEmuSAKAction: () => void;
   maximizeEmuSAKAction: () => void;
   minimizeEmuSAKAction: () => void;
   currentEmu: EmusakEmulatorsKind;
+  switchEmuAction: (currentEmu: EmusakEmulatorsKind) => void;
 }
 
-const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig & IGameAction>) => ({
+const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig & IGameAction>): ITitleBar => ({
   version: "",
   currentEmu: (localStorage.getItem(LS_KEYS.TAB) || "ryu") as EmusakEmulatorsKind,
   getVersionAction: async () => {
@@ -29,7 +30,7 @@ const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig & IGameAc
   maximizeEmuSAKAction: async () => {
     await ipcRenderer.invoke("title-bar-action", "maximize");
   },
-  switchEmuAction: (currentEmu: EmusakEmulatorsKind) => {
+  switchEmuAction: (currentEmu) => {
     localStorage.setItem(LS_KEYS.TAB, currentEmu);
     return set({ currentEmu, selectedConfig: null, currentGame: null });
   }

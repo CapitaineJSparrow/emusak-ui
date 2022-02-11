@@ -16,7 +16,7 @@ import {
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { EmusakEmulatorMode } from "../../types";
 import useTranslation from "../i18n/I18nService";
-import GameDetailComponent from "./GameDetail/GameDetailComponent";
+import GameDetailComponent from "./GameDetailComponent/GameDetailComponent";
 
 const RootComponent = () => {
   const { t } = useTranslation();
