@@ -2,6 +2,9 @@ import { URL } from "url";
 import fetch, { Response } from "node-fetch";
 import pRetry from "p-retry";
 import { app } from "electron";
+import http from "http";
+import https from "https";
+import dns from "dns/promises";
 
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
@@ -17,6 +20,27 @@ export enum GITHUB_PATHS {
   FIRMWARE_VERSION = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/version.txt",
 }
 
+dns.setServers([
+  "1.1.1.1",
+  "[2606:4700:4700::1111]",
+]);
+
+const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
+  const ips = await dns.resolve(hostname);
+
+  if (ips.length === 0) {
+    throw new Error(`Unable to resolve ${hostname}`);
+  }
+
+  cb(null, ips[0], 4);
+};
+
+const staticDnsAgent = (scheme: "http" | "https") => {
+  const httpModule = scheme === "http" ? http : https;
+  return new httpModule.Agent({ lookup: staticLookup(), rejectUnauthorized: false });
+};
+
+
 class HttpService {
 
   public url: string = process.env.EMUSAK_CDN;
@@ -26,7 +50,12 @@ class HttpService {
     const url = new URL(path, host);
     return pRetry(
       async () => {
-        const response = await fetch(url.href, defaultValue);
+        const response = await fetch(url.href, {
+          ...defaultValue,
+          ...{
+            agent: staticDnsAgent(url.href.includes("http:") ? "http" : "https")
+          }
+        });
 
         if (response.status >= 400) {
           throw new pRetry.AbortError(response.statusText);
@@ -78,7 +107,9 @@ class HttpService {
 
   public async getRyujinxCompatibility(id: string) {
     // do not use this._fetch because we do not want exponential backoff strategy since GitHub api is limited to 10 requests per minute for unauthenticated requests
-    return fetch(`https://api.github.com/search/issues?q=${id}%20repo:Ryujinx/Ryujinx-Games-List`).then(r => r.json());
+    return fetch(`https://api.github.com/search/issues?q=${id}%20repo:Ryujinx/Ryujinx-Games-List`, {
+      agent: staticDnsAgent("https")
+    }).then(r => r.json());
   }
 
   public async downloadSave(id: string, index: number) {
