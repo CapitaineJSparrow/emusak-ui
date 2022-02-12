@@ -55,7 +55,7 @@ const createDownloadModSlice = (set: SetState<ISaveAction>): ISaveAction => ({
 
     Swal.fire({
       imageUrl: pirate,
-      html: `Mod installed at <code>${result}</code>`
+      html: t("modInstalled").replace("{path}", result)
     });
   }
 });
