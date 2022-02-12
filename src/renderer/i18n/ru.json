@@ -42,6 +42,12 @@
   "modInstalled": "Mod successfully installed at : <code>{path}</code>",
   "shaderInfo": "Shaders are small programs running on a graphics card that are responsible for rendering graphics like terrain, characters, explosions, grass etc. Since a PC cannot directly execute shaders it first has to translate them to a format a PC can understand. This translation process is time consuming and you'll notice it in two ways:<br /><br />- Any new shaders that are encountered will cause the emulation to pause until the translation is done, which causes stuttering and FPS drops. When you load a game for the first time a lot of translation will happen. By playing more this stuttering decreases rapidly.<br /><br />- The emulator will save any shaders a game uses (aka it caches them). When you launch a game, the emulator will take some time loading those saved shaders to prevent the stuttering from happening again.",
   "shaderThreshold": "That means you can share Shaders if your local Shader count surpasses EmuSAK's count by this value. This is based on how many submissions we already have and our workload. Reviewing your submissions is very time consuming and it is not worth our effort if the count is below the threshold variable. Submission are limited to 3 per user per hour for now.",
+  "localShadersCount": "Local shaders count",
+  "emusakShadersCount": "Emusak shaders count",
+  "dlShaders": "Download shaders",
+  "shareShaders": "Share shaders",
+  "shaders": "Shaders",
+  "threshold": "Threshold :",
 
   "OPERATION_CANCELED": "Вы отменили операцию.",
   "INVALID_RYUJINX_BINARY": "Это недопустимый двоичный файл Ryujinx.",
