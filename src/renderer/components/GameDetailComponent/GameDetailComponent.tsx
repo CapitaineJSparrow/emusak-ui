@@ -162,7 +162,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
         <Grid item xs={6} pl={3} pr={3}>
           <Grid container>
             <Grid item xs={12}>
-              <h3 style={{ textAlign: "center", margin: "0 auto" }}>
+              <h3 style={{ margin: "0 auto" }}>
                 Shaders &nbsp;
                 <Tooltip placement="right" title={(<div dangerouslySetInnerHTML={{ __html: t("shaderInfo") }} />)}>
                   <IconButton color="primary">
@@ -172,29 +172,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
               </h3>
               <Divider />
             </Grid>
-
-            <Grid container spacing={4}>
-              <Grid item xs={6}>
-                <p style={{ marginTop: 20, textAlign: "center" }}>Local shader count: 1280</p>
-                <Button variant="contained" fullWidth>Download shaders</Button>
-              </Grid>
-              <Grid item xs={6}>
-                <p style={{ marginTop: 20, textAlign: "center" }}>Emusak shader count: 1280</p>
-                <Button variant="contained" fullWidth>Share shaders</Button>
-              </Grid>
-            </Grid>
-
-            <Grid container mt={2}>
-              <Grid item xs={12}>
-                <Alert icon={false} severity="info">Threshold : 50
-                  <Tooltip placement="right" title={t("shaderThreshold")}>
-                    <IconButton size="small" color="primary">
-                      <InfoIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Alert>
-              </Grid>
-            </Grid>
+            <p>Something here about shaders</p>
           </Grid>
         </Grid>
       </Grid>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
-import Masonry from "@mui/lab/Masonry";
 import { styled } from "@mui/material/styles";
 import "./gameListing.css";
 import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
@@ -93,35 +92,30 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
 
             {
               (filteredGames.length > 0) && (
-                  <Masonry columns={Math.min(Math.max(filteredGames.length, 4), 6)} spacing={4}>
-                    {
-                      filteredGames
-                        .sort((a, b) => a.title.localeCompare(b.title))
-                        .map((item, index) => (
-                        <Stack onClick={() => setCurrentGameAction(item.titleId)} style={{ cursor: "pointer" }} key={index}>
+                <Grid container spacing={2} pr={4}>
+                  {
+                    filteredGames
+                      .sort((a, b) => a.title.localeCompare(b.title))
+                      .map((item, index) =>(
+                        <Grid item xs={2} onClick={() => setCurrentGameAction(item.titleId)} style={{ cursor: "pointer" }} key={index}>
                           <Label title={item.title}>{item.title}</Label>
-                          <img
-                            referrerPolicy="no-referrer"
-                            src={item.img.length > 0 ? item.img : defaultIcon}
-                            alt={item.title}
-                            loading="lazy"
-                            data-name={item.title}
-                            style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}
-                          />
-                        </Stack>
+                          <div
+                            style={{ width: "100%", aspectRatio: "1 / 1" }}>
+                            <img
+                              referrerPolicy="no-referrer"
+                              src={defaultIcon}
+                              alt={item.title}
+                              loading="lazy"
+                              onLoad={e => item.img.length > 0 ? (e.target as HTMLImageElement).src = item.img : null}
+                              data-name={item.title}
+                              style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4, width: "100%" }}
+                            />
+                          </div>
+                        </Grid>
                       ))
-                    }
-                    {
-                      filteredGames.length <= 3 && (
-                        <>
-                          <Stack><p>&nbsp;</p></Stack>
-                          <Stack><p>&nbsp;</p></Stack>
-                          <Stack><p>&nbsp;</p></Stack>
-                        </>
-                      )
-                    }
-                  </Masonry>
-                )
+                  }
+                </Grid>
+              )
             }
 
             {
