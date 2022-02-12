@@ -13,8 +13,8 @@ interface IBootstrap {
   ryujinxShaders: EmusakShaders;
   bootstrapAppAction: () => Promise<void>;
   firmwareVersion: string;
-  latestVersion: string;
-  currentVersion: string;
+  latestVersion?: string;
+  currentVersion?: string;
 }
 
 const lastEshopUpdate = localStorage.getItem(LS_KEYS.ESHOP_UPDATE) ? +localStorage.getItem(LS_KEYS.ESHOP_UPDATE) : Infinity;
@@ -24,8 +24,8 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
   saves: {},
   ryujinxShaders: {},
   firmwareVersion: "",
-  latestVersion: "",
-  currentVersion: "",
+  latestVersion: null,
+  currentVersion: null,
   mods: [],
   bootstrapAppAction: async () => {
     const [

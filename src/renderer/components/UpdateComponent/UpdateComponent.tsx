@@ -10,7 +10,7 @@ const UpdateComponent = ({ state }: { state: "downloading" | "downloaded" }) => 
   const [latestVersion, currentVersion] = useStore(state => [state.latestVersion, state.currentVersion]);
   const { t } = useTranslation();
 
-  if (process.platform !== "win32" && semver.lt(currentVersion, latestVersion)) {
+  if (process.platform !== "win32" && currentVersion && latestVersion && semver.lt(currentVersion, latestVersion)) {
     return <Box p={2} pb={0}>
       <Alert severity="info">
         You have version v{ currentVersion }, please consider updating to the latest version from <a href="https://github.com/CapitaineJSparrow/emusak-ui" target="_blank">Github</a> (v{ latestVersion })
