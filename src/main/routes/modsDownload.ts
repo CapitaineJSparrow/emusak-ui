@@ -32,7 +32,7 @@ export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadMo
       destPath = path.resolve(dataPath, "mods", "contents", titleId.toLocaleLowerCase());
       break;
     case "yuzu":
-      destPath = path.resolve(dataPath, "load",titleId.toLocaleLowerCase());
+      destPath = path.resolve(dataPath, "load",titleId.toUpperCase());
   }
 
   await fs.ensureDir(destPath);
@@ -63,13 +63,15 @@ export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadMo
     return Promise.reject(new Error("Unable to retrieve file"));
   }
 
+  // Might be duplicate with chmod bellow, but I'm struggling to fix perms issues on linux
+  await fs.promises.chmod(modDestPath, "660");
   const kind = name.toLowerCase().includes(".pchtxt") ? "pchtxt" : "archive";
 
   if (kind === "pchtxt") {
     await fs.ensureDir(path.resolve(destPath, modName,"exefs"));
     await fs.remove(path.resolve(destPath, modName, "exefs", name));
     await fs.move(modDestPath, path.resolve(destPath, modName, "exefs", name));
-    await fs.chmod(path.resolve(destPath, modName, "exefs", name), 660);
+    await fs.chmod(path.resolve(destPath, modName, "exefs", name), "660");
     return destPath;
   }
 
@@ -88,7 +90,7 @@ export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadMo
   const files = await asyncGlob(path.normalize(`${path.resolve(modDestPath, "..")}/**/*.pchtxt`)).catch(() => []);
 
   for (const file of files) { // Don't use concurrency here since FS does not like that
-    await fs.chmod(file, 660);
+    await fs.chmod(file, "660");
   }
 
   return destPath;
