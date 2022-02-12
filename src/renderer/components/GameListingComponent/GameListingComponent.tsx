@@ -83,7 +83,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                 </Tooltip>
               </Grid>
               <Grid item xs={2} pr={2}>
-                <Button onClick={refreshLibrary} startIcon={<RefreshIcon />} variant="outlined" fullWidth>Refresh</Button>
+                <Button onClick={refreshLibrary} startIcon={<RefreshIcon />} variant="outlined" fullWidth>{t("refresh")}</Button>
               </Grid>
               <Grid item xs={2}>
                 <TextField onChange={e => setSearchTerm(e.target.value)} value={searchTerm} type="search" variant="standard" fullWidth placeholder={t("filter").replace("{{LENGTH}}", `${games.length}`)} />
@@ -103,10 +103,9 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                             style={{ width: "100%", aspectRatio: "1 / 1" }}>
                             <img
                               referrerPolicy="no-referrer"
-                              src={defaultIcon}
+                              src={item.img.length > 0 ? item.img : defaultIcon}
                               alt={item.title}
                               loading="lazy"
-                              onLoad={e => item.img.length > 0 ? (e.target as HTMLImageElement).src = item.img : null}
                               data-name={item.title}
                               style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4, width: "100%" }}
                             />

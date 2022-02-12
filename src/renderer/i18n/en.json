@@ -48,6 +48,7 @@
   "shareShaders": "Share shaders",
   "shaders": "Shaders",
   "threshold": "Threshold :",
+  "refresh": "Refresh",
 
   "OPERATION_CANCELED": "You canceled the operation.",
   "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",

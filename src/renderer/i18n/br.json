@@ -48,6 +48,7 @@
   "shareShaders": "Enviar shaders",
   "shaders": "Shaders",
   "threshold": "Limiar :",
+  "refresh": "Atualizar",
 
   "OPERATION_CANCELED": "Você cancelou a operação.",
   "INVALID_RYUJINX_BINARY": "Esse não é um arquivo binário válido do Ryujinx.",
