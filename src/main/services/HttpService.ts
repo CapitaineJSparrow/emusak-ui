@@ -11,7 +11,11 @@ export enum HTTP_PATHS {
   SAVES_LIST           = "/v2/saves",
   SAVES_DOWNLOAD       = "/v2/saves?id={id}&index={index}",
   FIRMWARE             = "/firmware/firmware.zip",
-  KEYS                 = "/firmware/prod.keys"
+  KEYS                 = "/firmware/prod.keys",
+  MODS_LIST            = "/mods/",
+  MODS_VERSION         = "/mods/{id}/",
+  MODS_LIST_VERSION    = "/mods/{id}/{version}/",
+  MOD_DOWNLOAD         = "/mods/{id}/{version}/{name}/"
 }
 
 export enum GITHUB_PATHS {
@@ -20,6 +24,8 @@ export enum GITHUB_PATHS {
   FIRMWARE_VERSION = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/version.txt",
 }
 
+// CloudFlare CDN https://1.1.1.1/dns/
+// Resolve an issue where server cannot be reached in rare cases
 dns.setServers([
   "1.1.1.1",
   "[2606:4700:4700::1111]",
@@ -83,6 +89,10 @@ class HttpService {
     return this._fetch(HTTP_PATHS.SAVES_LIST);
   }
 
+  public async downloadMods() {
+    return this._fetch(HTTP_PATHS.MODS_LIST);
+  }
+
   public async getFirmwareVersion() {
     return this._fetch(GITHUB_PATHS.FIRMWARE_VERSION, "TXT");
   }
@@ -110,6 +120,35 @@ class HttpService {
     return fetch(`https://api.github.com/search/issues?q=${id}%20repo:Ryujinx/Ryujinx-Games-List`, {
       agent: staticDnsAgent("https")
     }).then(r => r.json());
+  }
+
+  public async getVersionsForMod(id: string) {
+    return this._fetch(HTTP_PATHS.MODS_VERSION.replace("{id}", id));
+  }
+
+  public async getModsForVersion(id: string, version: string) {
+    return this._fetch(HTTP_PATHS.MODS_LIST_VERSION.replace("{id}", id).replace("{version}", version));
+  }
+
+  public async downloadMod(id: string, version: string, name: string): Promise<{ response: Response, name: string }> {
+    const path = HTTP_PATHS
+      .MOD_DOWNLOAD
+      .replace("{id}", id)
+      .replace("{version}", encodeURIComponent(version))
+      .replace("{name}", encodeURIComponent(name));
+
+    const mod = (await this._fetch(path)) as unknown as { name: string }[];
+
+    if (!mod[0]) {
+      return;
+    }
+
+    const url = new URL(`${path}${encodeURIComponent(mod[0].name)}`, this.url);
+
+    return {
+      response: await fetch(url.href),
+      name: mod[0].name
+    };
   }
 
   public async downloadSave(id: string, index: number) {

@@ -1,5 +1,5 @@
 import HttpService from "../services/HttpService";
-import { app } from "electron";
+import { app, shell } from "electron";
 import fs from "fs-extra";
 import path from "path";
 
@@ -9,7 +9,9 @@ const downloadSave = async (...args: downloadSaveProps) => {
   const [titleId, index, filename] = args;
   const buffer = await HttpService.downloadSave(titleId, index);
   const desktopPath = app.getPath("desktop");
-  await fs.writeFile(path.resolve(desktopPath, filename), Buffer.from(buffer as unknown as ArrayBuffer));
+  const fileDest = path.resolve(desktopPath, filename);
+  await fs.writeFile(fileDest, Buffer.from(buffer as unknown as ArrayBuffer));
+  shell.showItemInFolder(fileDest);
 };
 
 export default downloadSave;

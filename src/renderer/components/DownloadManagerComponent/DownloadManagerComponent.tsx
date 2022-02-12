@@ -38,17 +38,17 @@ const DownloadManagerComponent = () => {
                       <p style={{ margin: 0, marginBottom: 5 }}><small>
                         { dlFile.filename }
                         {
-                          dlFile.progress !== Infinity && (
+                          (dlFile.progress !== Infinity && dlFile.downloadSpeed !== Infinity) && (
                             <> | {dlFile.downloadSpeed} MB/s </>
                           )
                         }
                       </small></p>
                       <Grid style={{ display: "flex", alignItems: "center" }} container spacing={2}>
-                        <Grid item xs={dlFile.progress === Infinity ? 12 : 10}>
+                        <Grid item xs={dlFile.progress !== Infinity && dlFile.downloadSpeed ? 12 : 10}>
                           <LinearProgress variant={dlFile.progress === Infinity ? undefined : "buffer"} value={dlFile.progress} valueBuffer={50} />
                         </Grid>
                         {
-                          dlFile.progress !== Infinity && (
+                          (dlFile.progress !== Infinity && dlFile.downloadSpeed !== Infinity) && (
                             <Grid item xs>
                               <IconButton
                                 color="error"

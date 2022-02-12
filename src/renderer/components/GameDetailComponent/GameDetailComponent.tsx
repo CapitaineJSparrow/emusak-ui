@@ -19,11 +19,15 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     currentEmu,
     saves,
     setCurrentSaveDownloadAction,
+    mods,
+    setCurrentModAction
   ] = useStore(state => [
     state.clearCurrentGameAction,
     state.currentEmu,
     state.saves,
-    state.setCurrentSaveDownloadAction
+    state.setCurrentSaveDownloadAction,
+    state.mods,
+    state.setCurrentModAction
   ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
@@ -92,6 +96,9 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     return null;
   }
 
+  const hasMods  = mods.find(m => m.name.toUpperCase() === metaData.titleId.toUpperCase());
+  const hasSaves = Object.keys(saves).map(k => k.toUpperCase()).includes(metaData.titleId.toUpperCase());
+
   return (
     <div>
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -130,15 +137,23 @@ const GameDetailComponent = (props: IGameDetailProps) => {
               {t("openModsDir")}
             </Button>
           </p>
-          <p><Button variant="contained" fullWidth>{t("dlMods")}</Button></p>
           <p>
             <Button
               variant="contained"
               fullWidth
-              disabled={!Object.keys(saves).map(k => k.toUpperCase()).includes(metaData.titleId.toUpperCase())}
+              disabled={!hasMods}
+              onClick={() => setCurrentModAction(metaData.titleId, dataPath)}
+            >
+              {t(hasMods ? "dlMods": "noMods")}
+            </Button></p>
+          <p>
+            <Button
+              variant="contained"
+              fullWidth
+              disabled={!hasSaves}
               onClick={() => setCurrentSaveDownloadAction(metaData.titleId.toUpperCase())}
             >
-              {t("dlSave")}
+              {t(hasSaves ? "dlSave": "noSave")}
             </Button>
           </p>
         </Grid>
