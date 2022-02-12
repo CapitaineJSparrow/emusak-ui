@@ -35,8 +35,10 @@
   "noCompatData": "There is no compatibility data yet, add your own ! (if it's leaked game don't do that)",
   "addCompatReport": "Add your report",
   "infoNewReport": "You'll be redirected to Ryujinx official game compatibility tracker on github. Please follow the issue template and double check a report does not already exists for this game. Also if this game is not released, aka leaked, your report will be removed because they don't support pirated games.",
+  "infoExistingReport": "You'll be redirected to Ryujinx official game compatibility tracker on GitHub. Please add a comment to the existing issue (do not create a new one) and make sure to provide relevant information like hardware specs and log file.",
   "dlMod": "Download mod",
   "dlModVersion": "Pick the version of the game you are playing. Note that mod may not work if you are not using exactly same version",
+  "refreshInfo": "Please note your game will be shown only if you launched it one time in the emulator",
 
   "OPERATION_CANCELED": "Você cancelou a operação.",
   "INVALID_RYUJINX_BINARY": "Esse não é um arquivo binário válido do Ryujinx.",

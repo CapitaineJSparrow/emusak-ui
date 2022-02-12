@@ -13,12 +13,11 @@ import { LS_KEYS } from "../../../types";
 
 const NavBarComponent = () => {
   const { t } = useTranslation();
-  const [currentEmu, switchEmuAction] = useStore(s => [s.currentEmu, s.switchEmuAction]);
+  const [currentEmu, switchEmuAction, switchLanguage] = useStore(s => [s.currentEmu, s.switchEmuAction, s.switchLanguage]);
   const locale = localStorage.getItem(LS_KEYS.LOCALE) ?? "en";
 
-  const onLocaleSelectChange = (e: SelectChangeEvent<string>) => {
-    localStorage.setItem(LS_KEYS.LOCALE, e.target.value);
-    window.location.reload();
+  const onLocaleSelectChange = (e: SelectChangeEvent) => {
+    switchLanguage(e.target.value);
   };
 
   return (

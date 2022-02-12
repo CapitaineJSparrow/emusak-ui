@@ -38,6 +38,7 @@
   "infoExistingReport": "You'll be redirected to Ryujinx official game compatibility tracker on GitHub. Please add a comment to the existing issue (do not create a new one) and make sure to provide relevant information like hardware specs and log file.",
   "dlMod": "Download mod",
   "dlModVersion": "Pick the version of the game you are playing. Note that mod may not work if you are not using exactly same version",
+  "refreshInfo": "Please note your game will be shown only if you launched it one time in the emulator",
 
   "OPERATION_CANCELED": "You canceled the operation.",
   "INVALID_RYUJINX_BINARY": "This is not a valid Ryujinx binary file.",

@@ -1,12 +1,12 @@
-import { PartialState, SetState } from "zustand/vanilla";
+import { SetState } from "zustand/vanilla";
 import { AlertColor } from "@mui/material";
 
 export interface IAlert {
   alertMessage: string,
   isAlertOpened: boolean,
   alertKind: AlertColor,
-  openAlertAction: (alertKind: AlertColor, alertMessage: string) => PartialState<IAlert>,
-  closeAlertAction: () => PartialState<IAlert>,
+  openAlertAction: (alertKind: AlertColor, alertMessage: string) => Partial<IAlert>,
+  closeAlertAction: () => Partial<IAlert>,
   alertClosable: boolean
 }
 
