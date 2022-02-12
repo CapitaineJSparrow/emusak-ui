@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Box, Button, Chip, Grid, Tooltip } from "@mui/material";
+import { Alert, Box, Button, Chip, Divider, Grid, IconButton, Tooltip } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useStore from "../../actions/state";
 import { ipcRenderer , shell } from "electron";
 import useTranslation from "../../i18n/I18nService";
 import { GithubIssue, GithubLabel } from "../../../types";
 import Swal from "sweetalert2";
+import InfoIcon from "@mui/icons-material/Info";
+// import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
 interface IGameDetailProps {
   titleId: string;
@@ -157,8 +159,43 @@ const GameDetailComponent = (props: IGameDetailProps) => {
             </Button>
           </p>
         </Grid>
-        <Grid item xs={6}>
-          <p style={{ textAlign: "center" }}>Something here about shaders</p>
+        <Grid item xs={6} pl={3} pr={3}>
+          <Grid container>
+            <Grid item xs={12}>
+              <h3 style={{ textAlign: "center", margin: "0 auto" }}>
+                Shaders &nbsp;
+                <Tooltip placement="right" title={(<div dangerouslySetInnerHTML={{ __html: t("shaderInfo") }} />)}>
+                  <IconButton color="primary">
+                    <InfoIcon />
+                  </IconButton>
+                </Tooltip>
+              </h3>
+              <Divider />
+            </Grid>
+
+            <Grid container spacing={4}>
+              <Grid item xs={6}>
+                <p style={{ marginTop: 20, textAlign: "center" }}>Local shader count: 1280</p>
+                <Button variant="contained" fullWidth>Download shaders</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <p style={{ marginTop: 20, textAlign: "center" }}>Emusak shader count: 1280</p>
+                <Button variant="contained" fullWidth>Share shaders</Button>
+              </Grid>
+            </Grid>
+
+            <Grid container mt={2}>
+              <Grid item xs={12}>
+                <Alert icon={false} severity="info">Threshold : 50
+                  <Tooltip placement="right" title={t("shaderThreshold")}>
+                    <IconButton size="small" color="primary">
+                      <InfoIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Alert>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </div>
