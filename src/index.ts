@@ -55,7 +55,8 @@ const handleStartupEvent = function () {
     case "--squirrel-uninstall":
       app.quit();
       try {
-        fs.removeSync(app.getPath("userData"));
+        fs.removeSync(app.getPath("userData")); // Current emusak
+        fs.removeSync(path.resolve(app.getPath("userData"), "..", "emusak")); // Emusak V1
       } catch (e) {
         console.error(e);
       }
