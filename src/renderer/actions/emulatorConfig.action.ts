@@ -1,4 +1,4 @@
-import { GetState, PartialState, SetState } from "zustand/vanilla";
+import { GetState, SetState } from "zustand/vanilla";
 import { ipcRenderer } from "electron";
 import { IAlert } from "./alert.action";
 import { EmusakEmulatorConfig, EmusakEmulatorGame, EmusakEmulatorMode, LS_KEYS } from "../../types";
@@ -7,10 +7,10 @@ import { i18n } from "../app";
 import { ITitleBar } from "./titleBar.actions";
 
 export interface IEmulatorConfig {
-  addNewEmulatorConfigAction: () => PartialState<IEmulatorConfig>;
+  addNewEmulatorConfigAction: () => Partial<IEmulatorConfig>;
   emulatorBinariesPath: EmusakEmulatorConfig[];
   selectedConfig: EmusakEmulatorConfig;
-  setSelectConfigAction: (selectedConfig: EmusakEmulatorConfig) => PartialState<IEmulatorConfig>,
+  setSelectConfigAction: (selectedConfig: EmusakEmulatorConfig) => Partial<IEmulatorConfig>,
   getModeForBinary: (binaryPath: string) => Promise<EmusakEmulatorMode>;
   createDefaultConfig: () => void;
   emulatorGames: EmusakEmulatorGame[];

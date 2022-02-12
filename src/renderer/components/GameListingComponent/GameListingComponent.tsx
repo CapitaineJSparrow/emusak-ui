@@ -6,12 +6,13 @@ import { styled } from "@mui/material/styles";
 import "./gameListing.css";
 import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
 import useStore from "../../actions/state";
-import { Chip, Divider, Grid, IconButton, TextField, Tooltip } from "@mui/material";
+import { Button, Chip, Divider, Grid, IconButton, TextField, Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { ipcRenderer } from "electron";
 import jackSober from "../../resources/jack_sober.png";
 import defaultIcon from "../../resources/default_icon.jpg";
 import useTranslation from "../../i18n/I18nService";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;
@@ -37,7 +38,7 @@ const Label = styled(Paper)(({ theme }) => ({
 
 const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   const { t } = useTranslation();
-  const [currentEmu, setCurrentGameAction] = useStore(s => [s.currentEmu, s.setCurrentGameAction]);
+  const [currentEmu, setCurrentGameAction, openAlertAction] = useStore(s => [s.currentEmu, s.setCurrentGameAction, s.openAlertAction]);
   const [games, setGames] = useState<{ title: string, img: string, titleId: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -62,13 +63,18 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
       : games);
   }, [games, searchTerm]);
 
+  const refreshLibrary = () => {
+    openAlertAction("info", t("refreshInfo"));
+    return createLibrary();
+  };
+
   return (
     <>
       {
         mode && (
           <Stack className="masonry" spacing={2}>
             <Grid container>
-              <Grid item xs={10}>
+              <Grid item xs={8}>
                 { t("mode") } <Chip color="primary" label={mode.mode} />
                 &nbsp;
                 <Tooltip placement="right" title={`${t("readingDataPath")} ${mode.dataPath}`}>
@@ -76,6 +82,9 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                     <InfoIcon />
                   </IconButton>
                 </Tooltip>
+              </Grid>
+              <Grid item xs={2} pr={2}>
+                <Button onClick={refreshLibrary} startIcon={<RefreshIcon />} variant="outlined" fullWidth>Refresh</Button>
               </Grid>
               <Grid item xs={2}>
                 <TextField onChange={e => setSearchTerm(e.target.value)} value={searchTerm} type="search" variant="standard" fullWidth placeholder={t("filter").replace("{{LENGTH}}", `${games.length}`)} />

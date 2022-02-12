@@ -4,6 +4,7 @@ import path from "path";
 import { BrowserWindow } from "electron";
 import { EmusakEmulatorsKind } from "../../types";
 import Zip from "adm-zip";
+import glob from "glob";
 
 export type getModsVersionsProps = [string];
 
@@ -75,6 +76,20 @@ export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadMo
   const archive = new Zip(modDestPath);
   archive.extractAllTo(path.resolve(modDestPath, ".."), true);
   await fs.remove(modDestPath);
+
+  // We should double-check if there is no pchtxt files here to set chmod. Otherwise, there will be a crash on linux but worth it to do on Windows too
+  const asyncGlob = (path: string): Promise<string[]> => new Promise((resolve, reject) => {
+    glob(path, (err, files) => {
+      if (err) reject(err);
+      else resolve(files);
+    });
+  });
+
+  const files = await asyncGlob(path.normalize(`${path.resolve(modDestPath, "..")}/**/*.pchtxt`)).catch(() => []);
+
+  for (const file of files) { // Don't use concurrency here since FS does not like that
+    await fs.chmod(file, 660);
+  }
 
   return destPath;
 };
