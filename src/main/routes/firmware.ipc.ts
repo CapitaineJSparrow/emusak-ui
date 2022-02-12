@@ -49,7 +49,7 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
 
       // Throttle the dispatch event since loop is called many times
       if (currentTimestamp - lastEmittedEventTimestamp >= 100 || downloadedBytesLength === contentLength) {
-        mainWindow.webContents.send("download-progress", (downloadedBytesLength / contentLength * 100).toFixed(2), downloadSpeed.toFixed(2));
+        mainWindow.webContents.send("download-progress", "firmware", (downloadedBytesLength / contentLength * 100).toFixed(2), downloadSpeed.toFixed(2));
         lastEmittedEventTimestamp = +new Date();
       }
 

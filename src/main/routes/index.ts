@@ -1,5 +1,5 @@
 import { app, ipcMain, BrowserWindow } from "electron";
-import loadComponentIpcHandler from "./loadComponent.ipc";
+import loadComponentIpcHandler, { loadComponentsProps } from "./loadComponent.ipc";
 import titleBarIpc from "./titleBar.ipc";
 import { systemScanIpc, scanGamesForConfig, buildMetadataForTitleId } from "./systemScan.ipc";
 import { EmusakEmulatorsKind } from "../../types";
@@ -10,9 +10,17 @@ import updateEshopData from "./eshopData.ipc";
 import openFolderForGame, { openFolderIPCProps } from "./openFolderForGame";
 import ryujinxCompatibility, { ryujinxCompatibilityProps } from "./ryujinxCompatibility";
 import savesDownloads, { downloadSaveProps } from "./savesDownload";
+import {
+  downloadMod,
+  downloadModProps,
+  getModsListForVersion,
+  getModsListForVersionProps,
+  getModsVersions,
+  getModsVersionsProps
+} from "./modsDownload";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
-  ipcMain.handle("load-components", async (_, url: string) => loadComponentIpcHandler(url));
+  ipcMain.handle("load-components", async (_, ...args: loadComponentsProps) => loadComponentIpcHandler(...args));
   ipcMain.handle("get-app-version", async () => app.getVersion());
   ipcMain.handle("title-bar-action", async (_, action: "maximize" | "close" | "minimize") => titleBarIpc(action, mainWindow));
   ipcMain.handle("add-emulator-folder", async (_, emuKind: EmusakEmulatorsKind) => addEmulatorConfigurationIpc(mainWindow, emuKind));
@@ -26,6 +34,9 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("openFolderForGame", async (_, ...args: openFolderIPCProps) => openFolderForGame(...args));
   ipcMain.handle("getRyujinxCompatibility", async (_, ...args: ryujinxCompatibilityProps) => ryujinxCompatibility(...args));
   ipcMain.handle("downloadSave", async (_, ...args: downloadSaveProps) => savesDownloads(...args));
+  ipcMain.handle("get-mods-versions", async(_, ...args: getModsVersionsProps) => getModsVersions(...args));
+  ipcMain.handle("get-mods-list-for-version", async(_, ...args: getModsListForVersionProps) => getModsListForVersion(...args));
+  ipcMain.handle("download-mod", async(_, ...args: downloadModProps) => downloadMod(mainWindow, ...args));
 };
 
 export default makeIpcRoutes;

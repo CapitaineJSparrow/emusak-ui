@@ -10,7 +10,12 @@ import useTranslation, { I18nKeys } from "../i18n/I18nService";
 const { t } = useTranslation();
 const firmwareFileName = "firmware.zip";
 
-const onFirmwareProgressEvent = (_: unknown, percentage: number, downloadSpeed: number) => {
+const onFirmwareProgressEvent = (_: unknown, filename: string, percentage: number, downloadSpeed: number) => {
+
+  if (filename !== "firmware") {
+    return;
+  }
+
   useStore.getState().upsertFileAction({
     filename: firmwareFileName,
     downloadSpeed,
