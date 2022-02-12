@@ -18,158 +18,156 @@ if (require("electron-squirrel-startup")) { // eslint-disable-line global-requir
 const gotTheLock = app.requestSingleInstanceLock();
 let mainWindow: BrowserWindow;
 
-(async () => {
-  const handleStartupEvent = async function () {
-    if (process.platform !== "win32") {
-      return false;
-    }
-
-    const appFolder = path.resolve(process.execPath, "..");
-    const rootAtomFolder = path.resolve(appFolder, "..");
-    const updateDotExe = path.resolve(path.join(rootAtomFolder, "Update.exe"));
-    const exeName = path.basename(process.execPath);
-
-    const spawn = function (command: any, args: any) {
-      let spawnedProcess;
-
-      try {
-        spawnedProcess = child_process.spawn(command, args, { detached: true });
-      } catch (error) {
-        console.error(error);
-      }
-
-      return spawnedProcess;
-    };
-
-    const spawnUpdate = function (args: any) {
-      return spawn(updateDotExe, args);
-    };
-
-    const squirrelCommand = process.argv[1];
-    switch (squirrelCommand) {
-      case "--squirrel-install":
-        spawnUpdate(["--createShortcut", exeName]);
-        return false;
-      case "--squirrel-updated":
-        setTimeout(app.quit, 1000);
-        return true;
-      case "--squirrel-uninstall":
-        app.quit();
-        try {
-          await fs.remove(app.getPath("userData"));
-        } catch (e) {
-          console.error(e);
-        }
-        spawnUpdate(["--removeShortcut", exeName]);
-        return true;
-      case "--squirrel-obsolete":
-        app.quit();
-        return true;
-    }
-  };
-
-  if (await handleStartupEvent()) {
+const handleStartupEvent = function () {
+  if (process.platform !== "win32") {
     return false;
   }
 
-  const createWindow = (): void => {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-      minHeight: 860,
-      minWidth: 1280,
-      resizable: true,
-      autoHideMenuBar: true,
-      show: false,
-      frame: false,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-      }
-    });
+  const appFolder = path.resolve(process.execPath, "..");
+  const rootAtomFolder = path.resolve(appFolder, "..");
+  const updateDotExe = path.resolve(path.join(rootAtomFolder, "Update.exe"));
+  const exeName = path.basename(process.execPath);
 
-    makeIpcRoutes(mainWindow);
+  const spawn = function (command: any, args: any) {
+    let spawnedProcess;
 
-    mainWindow.webContents.on("did-finish-load", function () {
-      mainWindow.setSize(1280, 860);
-      mainWindow.center();
-      mainWindow.show();
-
-      if (!isDev && process.platform === "win32") {
-        const feed = `https://update.electronjs.org/CapitaineJSparrow/emusak-ui/${process.platform}-${process.arch}/${app.getVersion()}`;
-
-        autoUpdater.setFeedURL({
-          url: feed
-        });
-
-        // Check updates every 5mn, and at startup
-        setInterval(() => {
-          autoUpdater.checkForUpdates();
-        }, 5 * 60 * 1000);
-
-        autoUpdater.checkForUpdates();
-
-        autoUpdater.on("update-downloaded", () => mainWindow.webContents.send("update-downloaded"));
-        autoUpdater.on("update-available", () => mainWindow.webContents.send("update-available"));
-        ipcMain.on("reboot-after-download", () => autoUpdater.quitAndInstall());
-      }
-    });
-
-    mainWindow.webContents.on("new-window", function(e, url) {
-      e.preventDefault();
-      shell.openExternal(url);
-    });
-
-    // and load the index.html of the app.
-    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-    let cspHeader = "default-src 'self' https://fonts.googleapis.com/ https://fonts.gstatic.com/ 'unsafe-inline'; img-src 'self' data: https://*;";
-
-    // "unsafe-eval" is required by webpack in development
-    if (process.env.NODE_ENV === "development") {
-      cspHeader = "default-src 'self' https://fonts.googleapis.com/ https://fonts.gstatic.com/ 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://*;";
+    try {
+      spawnedProcess = child_process.spawn(command, args, { detached: true });
+    } catch (error) {
+      console.error(error);
     }
 
-    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-      callback({
-        responseHeaders: {
-          ...details.responseHeaders,
-          "Content-Security-Policy": [cspHeader]
-        }
-      });
-    });
+    return spawnedProcess;
   };
 
-// Do not allow application to be launched twice
-  if (!gotTheLock) {
-    app.quit();
-  } else {
-    app.on("second-instance", () => {
-      if (mainWindow) {
-        if (mainWindow.isMinimized()) mainWindow.restore();
-        mainWindow.focus();
+  const spawnUpdate = function (args: any) {
+    return spawn(updateDotExe, args);
+  };
+
+  const squirrelCommand = process.argv[1];
+  switch (squirrelCommand) {
+    case "--squirrel-install":
+      spawnUpdate(["--createShortcut", exeName]);
+      return false;
+    case "--squirrel-updated":
+      setTimeout(app.quit, 1000);
+      return true;
+    case "--squirrel-uninstall":
+      app.quit();
+      try {
+        fs.removeSync(app.getPath("userData"));
+      } catch (e) {
+        console.error(e);
+      }
+      spawnUpdate(["--removeShortcut", exeName]);
+      return true;
+    case "--squirrel-obsolete":
+      app.quit();
+      return true;
+  }
+};
+
+if (handleStartupEvent()) {
+  process.exit(0);
+}
+
+const createWindow = (): void => {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    minHeight: 860,
+    minWidth: 1280,
+    resizable: true,
+    autoHideMenuBar: true,
+    show: false,
+    frame: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    }
+  });
+
+  makeIpcRoutes(mainWindow);
+
+  mainWindow.webContents.on("did-finish-load", function () {
+    mainWindow.setSize(1280, 860);
+    mainWindow.center();
+    mainWindow.show();
+
+    if (!isDev && process.platform === "win32") {
+      const feed = `https://update.electronjs.org/CapitaineJSparrow/emusak-ui/${process.platform}-${process.arch}/${app.getVersion()}`;
+
+      autoUpdater.setFeedURL({
+        url: feed
+      });
+
+      // Check updates every 5mn, and at startup
+      setInterval(() => {
+        autoUpdater.checkForUpdates();
+      }, 5 * 60 * 1000);
+
+      autoUpdater.checkForUpdates();
+
+      autoUpdater.on("update-downloaded", () => mainWindow.webContents.send("update-downloaded"));
+      autoUpdater.on("update-available", () => mainWindow.webContents.send("update-available"));
+      ipcMain.on("reboot-after-download", () => autoUpdater.quitAndInstall());
+    }
+  });
+
+  mainWindow.webContents.on("new-window", function(e, url) {
+    e.preventDefault();
+    shell.openExternal(url);
+  });
+
+  // and load the index.html of the app.
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+  let cspHeader = "default-src 'self' https://fonts.googleapis.com/ https://fonts.gstatic.com/ 'unsafe-inline'; img-src 'self' data: https://*;";
+
+  // "unsafe-eval" is required by webpack in development
+  if (process.env.NODE_ENV === "development") {
+    cspHeader = "default-src 'self' https://fonts.googleapis.com/ https://fonts.gstatic.com/ 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://*;";
+  }
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": [cspHeader]
       }
     });
+  });
+};
 
-    // This method will be called when Electron has finished
-    // initialization and is ready to create browser windows.
-    // Some APIs can only be used after this event occurs.
-    app.on("ready", createWindow);
-  }
+// Do not allow application to be launched twice
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  // This method will be called when Electron has finished
+  // initialization and is ready to create browser windows.
+  // Some APIs can only be used after this event occurs.
+  app.on("ready", createWindow);
+}
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-  app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") {
-      app.quit();
-    }
-  });
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
 
-  app.on("activate", () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
-})();
+app.on("activate", () => {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
