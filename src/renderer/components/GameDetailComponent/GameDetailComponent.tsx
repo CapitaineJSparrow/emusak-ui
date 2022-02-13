@@ -42,7 +42,9 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     setCurrentSaveDownloadAction,
     mods,
     setCurrentModAction,
-    ryujinxShaders
+    ryujinxShaders,
+    downloadShadersAction,
+    needRefreshShaders
   ] = useStore(state => [
     state.clearCurrentGameAction,
     state.currentEmu,
@@ -50,7 +52,9 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     state.setCurrentSaveDownloadAction,
     state.mods,
     state.setCurrentModAction,
-    state.ryujinxShaders
+    state.ryujinxShaders,
+    state.downloadShadersAction,
+    state.needRefreshShaders
   ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
@@ -86,7 +90,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
       ipcRenderer.invoke("getRyujinxCompatibility", titleId).then(extractCompatibilityLabels);
       ipcRenderer.invoke("count-shaders", titleId, dataPath).then(setLocalShadersCount);
     }
-  }, [titleId]);
+  }, [titleId, needRefreshShaders]);
 
   const renderCompatibilityData = () => (
     <Grid container mb={2} sx={{ display: "flex", alignItems: "center" }}>
@@ -235,8 +239,8 @@ const GameDetailComponent = (props: IGameDetailProps) => {
                       <Button
                         variant="contained"
                         fullWidth
-                        disabled={emusakShadersCount === 0}
-                        onClick={() => alert("Not working")}
+                        disabled={emusakShadersCount === 0 || localShadersCount >= emusakShadersCount}
+                        onClick={() => downloadShadersAction(metaData.titleId, dataPath)}
                       >
                         {t("dlShaders")}
                       </Button>
@@ -256,10 +260,10 @@ const GameDetailComponent = (props: IGameDetailProps) => {
                     </p>
                     <p>
                       <Button
-                        disabled={emusakShadersCount >= localShadersCount}
+                        disabled={(emusakShadersCount + 50) >= localShadersCount}
                         variant="contained"
                         fullWidth
-                        onClick={() => alert("Not working")}
+                        onClick={() => alert("Not working in beta yet, it works on emusak V1")}
                       >
                         {t("shareShaders")}
                       </Button>

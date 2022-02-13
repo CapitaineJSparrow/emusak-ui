@@ -15,7 +15,9 @@ export enum HTTP_PATHS {
   MODS_LIST            = "/mods/",
   MODS_VERSION         = "/mods/{id}/",
   MODS_LIST_VERSION    = "/mods/{id}/{version}/",
-  MOD_DOWNLOAD         = "/mods/{id}/{version}/{name}/"
+  MOD_DOWNLOAD         = "/mods/{id}/{version}/{name}/",
+  SHADER_INFO          = "/ryu/{id}.info",
+  SHADER_ZIP           = "/ryu/{id}.zip"
 }
 
 export enum GITHUB_PATHS {
@@ -146,9 +148,20 @@ class HttpService {
     const url = new URL(`${path}${encodeURIComponent(mod[0].name)}`, this.url);
 
     return {
-      response: await fetch(url.href, { signal: controller ? controller.signal : undefined }),
+      response: await fetch(url.href, { signal: controller ? controller.signal : undefined, agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https") }),
       name: mod[0].name
     };
+  }
+
+  public async downloadShaderInfo(id: string) {
+    return this._fetch(HTTP_PATHS.SHADER_INFO.replace("{id}", id), "BUFFER");
+  }
+
+  public async downloadShaderZip(id: string, controller?: AbortController) {
+    const path = HTTP_PATHS.SHADER_ZIP.replace("{id}", id);
+    const url = new URL(path, this.url);
+
+    return await fetch(url.href, { agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https"), signal: controller ? controller.signal : undefined });
   }
 
   public async downloadSave(id: string, index: number) {
