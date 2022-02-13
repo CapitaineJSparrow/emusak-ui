@@ -22,6 +22,7 @@ import "@fontsource/roboto/700.css";
 import i18n_en from "./i18n/en.json";
 import i18n_ru from "./i18n/ru.json";
 import i18n_br from "./i18n/br.json";
+import i18n_de from "./i18n/de.json";
 
 import TitleBarComponent from "./components/TitleBarComponent/TitleBarComponent";
 import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
@@ -52,6 +53,7 @@ use(initReactI18next)
       en: { translation: i18n_en },
       ru: { translation: i18n_ru },
       br: { translation: i18n_br },
+      de: { translation: i18n_de },
     },
     lng,
     fallbackLng: "en",

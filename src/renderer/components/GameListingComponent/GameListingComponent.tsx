@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import "./gameListing.css";
 import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
 import useStore from "../../actions/state";
-import { Button, Chip, Divider, Grid, IconButton, TextField, Tooltip } from "@mui/material";
+import { Box, Button, Chip, Divider, Grid, IconButton, TextField, Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { ipcRenderer } from "electron";
 import jackSober from "../../resources/jack_sober.png";
@@ -33,6 +33,13 @@ const Label = styled(Paper)(({ theme }) => ({
   textOverflow: "ellipsis",
   display: "block",
   textAlign: "center"
+}));
+
+const Cover = styled(Box)(() => ({
+  width: "100%",
+  aspectRatio: "1 / 1",
+  backgroundColor: "#444",
+  backgroundSize: "cover",
 }));
 
 const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
@@ -99,17 +106,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                       .map((item, index) =>(
                         <Grid item xs={2} onClick={() => setCurrentGameAction(item.titleId)} style={{ cursor: "pointer" }} key={index}>
                           <Label title={item.title}>{item.title}</Label>
-                          <div
-                            style={{ width: "100%", aspectRatio: "1 / 1" }}>
-                            <img
-                              referrerPolicy="no-referrer"
-                              src={item.img.length > 0 ? item.img : defaultIcon}
-                              alt={item.title}
-                              loading="lazy"
-                              data-name={item.title}
-                              style={{ borderBottomLeftRadius: 4, borderBottomRightRadius: 4, width: "100%" }}
-                            />
-                          </div>
+                          <Cover style={{ backgroundImage: `url(${item.img.length > 0 ? item.img : defaultIcon})` }} />
                         </Grid>
                       ))
                   }
