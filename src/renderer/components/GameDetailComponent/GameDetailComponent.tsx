@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Box, Button, Chip, Divider, Grid, IconButton, Tooltip } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Grid,
+  IconButton,
+  Tooltip, Typography
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useStore from "../../actions/state";
 import { ipcRenderer , shell } from "electron";
@@ -7,12 +16,22 @@ import useTranslation from "../../i18n/I18nService";
 import { GithubIssue, GithubLabel } from "../../../types";
 import Swal from "sweetalert2";
 import InfoIcon from "@mui/icons-material/Info";
-// import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import defaultIcon from "../../resources/default_icon.jpg";
+import { styled } from "@mui/material/styles";
+import MuiGrid from "@mui/material/Grid";
 
 interface IGameDetailProps {
   titleId: string;
   dataPath: string;
 }
+
+const GridWithVerticalSeparator = styled(MuiGrid)(({ theme }) => ({
+  width: "100%",
+  ...theme.typography.body2,
+  "& [role=\"separator\"]": {
+    margin: theme.spacing(0, 2),
+  },
+}));
 
 const GameDetailComponent = (props: IGameDetailProps) => {
   const { titleId, dataPath } = props;
@@ -22,17 +41,20 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     saves,
     setCurrentSaveDownloadAction,
     mods,
-    setCurrentModAction
+    setCurrentModAction,
+    ryujinxShaders
   ] = useStore(state => [
     state.clearCurrentGameAction,
     state.currentEmu,
     state.saves,
     state.setCurrentSaveDownloadAction,
     state.mods,
-    state.setCurrentModAction
+    state.setCurrentModAction,
+    state.ryujinxShaders
   ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
+  const [localShadersCount, setLocalShadersCount] = useState(0);
   const { t } = useTranslation();
 
   const extractCompatibilityLabels = (response: GithubIssue) => {
@@ -60,7 +82,10 @@ const GameDetailComponent = (props: IGameDetailProps) => {
 
   useEffect(() => {
     ipcRenderer.invoke("build-metadata-from-titleId", titleId).then(d => setMetaData(d));
-    currentEmu === "ryu" && ipcRenderer.invoke("getRyujinxCompatibility", titleId).then(extractCompatibilityLabels);
+    if (currentEmu === "ryu") {
+      ipcRenderer.invoke("getRyujinxCompatibility", titleId).then(extractCompatibilityLabels);
+      ipcRenderer.invoke("count-shaders", titleId, dataPath).then(setLocalShadersCount);
+    }
   }, [titleId]);
 
   const renderCompatibilityData = () => (
@@ -100,9 +125,10 @@ const GameDetailComponent = (props: IGameDetailProps) => {
 
   const hasMods  = mods.find(m => m.name.toUpperCase() === metaData.titleId.toUpperCase());
   const hasSaves = Object.keys(saves).map(k => k.toUpperCase()).includes(metaData.titleId.toUpperCase());
+  const emusakShadersCount = ryujinxShaders[metaData.titleId.toUpperCase()] || 0;
 
   return (
-    <div>
+    <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Button onClick={clearCurrentGameAction} size="small" variant="outlined"><ArrowBackIcon /></Button>
         {
@@ -118,7 +144,12 @@ const GameDetailComponent = (props: IGameDetailProps) => {
 
       <Grid container mt={0}>
         <Grid item xs={2}>
-          <img loading="lazy" referrerPolicy="no-referrer" style={{ border: "5px solid #222" }} width="100%" src={metaData.img} alt=""/>
+          <img
+            referrerPolicy="no-referrer"
+            style={{ border: "5px solid #222" }}
+            width="100%" src={metaData?.img || defaultIcon}
+            alt=""
+          />
         </Grid>
         <Grid item xs={4} p={1} pl={2}>
           <p style={{ marginTop: 0 }}>
@@ -161,22 +192,90 @@ const GameDetailComponent = (props: IGameDetailProps) => {
         </Grid>
         <Grid item xs={6} pl={3} pr={3}>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <h3 style={{ margin: "0 auto" }}>
-                Shaders &nbsp;
                 <Tooltip placement="right" title={(<div dangerouslySetInnerHTML={{ __html: t("shaderInfo") }} />)}>
-                  <IconButton color="primary">
+                  <IconButton style={{ position: "relative", top: -3 }} size="small" color="primary">
                     <InfoIcon />
                   </IconButton>
                 </Tooltip>
+                {t("shaders")}
               </h3>
+            </Grid>
+            {
+              currentEmu === "ryu" && (
+                <Grid item xs={6}>
+
+                  <h3 style={{ margin: "0 auto", textAlign: "right" }}>
+                    {t("threshold")}
+                    <Tooltip placement="right" title={(<div dangerouslySetInnerHTML={{ __html: t("shaderThreshold") }} />)}>
+                      <IconButton style={{ position: "relative", top: -3 }} size="small" color="primary">
+                        <InfoIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <code style={{ position: "relative", top: -3 }}>50</code>
+                  </h3>
+                </Grid>
+              )
+            }
+
+            <Grid item xs={12}>
               <Divider />
             </Grid>
-            <p>Something here about shaders</p>
           </Grid>
+
+          {
+            currentEmu === "ryu"
+             ? (<GridWithVerticalSeparator container pt={2} spacing={0}>
+                <GridWithVerticalSeparator item xs pr={2}>
+                  <Box>
+                    <Typography variant="h6" align="center">{t("localShadersCount")}</Typography>
+                    <p><Button style={{ pointerEvents: "none" }} variant="outlined" fullWidth>{localShadersCount}</Button></p>
+                    <p>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        disabled={emusakShadersCount === 0}
+                        onClick={() => alert("Not working")}
+                      >
+                        {t("dlShaders")}
+                      </Button>
+                    </p>
+                  </Box>
+                </GridWithVerticalSeparator>
+
+                <Divider flexItem orientation="vertical" />
+
+                <GridWithVerticalSeparator item xs pl={2}>
+                  <Box>
+                    <Typography variant="h6" align="center">{t("emusakShadersCount")}</Typography>
+                    <p>
+                      <Button style={{ pointerEvents: "none" }} variant="outlined" fullWidth>
+                        { emusakShadersCount }
+                      </Button>
+                    </p>
+                    <p>
+                      <Button
+                        disabled={emusakShadersCount >= localShadersCount}
+                        variant="contained"
+                        fullWidth
+                        onClick={() => alert("Not working")}
+                      >
+                        {t("shareShaders")}
+                      </Button>
+                    </p>
+                  </Box>
+                </GridWithVerticalSeparator>
+              </GridWithVerticalSeparator>)
+              : (
+                <Box mt={2}>
+                  <Alert severity="info">{t("shadersYuzu")}</Alert>
+                </Box>
+              )
+          }
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
 
