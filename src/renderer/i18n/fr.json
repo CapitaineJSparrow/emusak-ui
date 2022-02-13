@@ -31,7 +31,7 @@
   "noMods": "Aucun mod disponible",
   "dlSave": "Télécharger une sauvegarde",
   "noSave": "Aucune donnée de sauvegarde disponible",
-  "dlSaveDesc": "Une fois le téléchargement terminé, le fichier de sauvegarde sera placé sur votre bureau. Vous pouvez l'installer la sauvegarde avec un clic droit sur le jeu dans l'émulateur, \"open save folder\" et extraire l'archive ici.",
+  "dlSaveDesc": "Une fois le téléchargement terminé, le fichier de sauvegarde sera placé sur votre bureau. Vous pouvez installer la sauvegarde avec un clic droit sur le jeu dans l'émulateur, \"open save folder\" puis extraire l'archive ici.",
   "noCompatData": "Pas encore de données de compatibilité, ajoutez la ! (si c'est un jeu fuité, ne le faites pas !)",
   "addCompatReport": "Raporter la compatibilité",
   "infoNewReport": "Vous allez être redirigé vers le traqueur de compatibilité officiel de Ryujinx sur GitHub. Veuillez suivre le template pour rapporter la compatibilité d’un jeu et vérifiez que votre rapport n’existe pas déjà pour ce jeu. Aussi, si le jeu n’est pas encore sorti, soit un jeu fuité, votre rapport sera supprimé car ils ne tiennent pas compte des jeux piratés.",
