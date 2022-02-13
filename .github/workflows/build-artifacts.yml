@@ -3,6 +3,7 @@ name: Build artifacts
 on:
   push:
     branches:
+      - emusak-v2
       - main
     paths:
       - package.json
