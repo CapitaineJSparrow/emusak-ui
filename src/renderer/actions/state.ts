@@ -9,6 +9,7 @@ import createDownloadManagerSlice from "./downloadManager.action";
 import createGameSlice from "./game.action";
 import createDownloadSaveSlice from "./save.action";
 import createDownloadModSlice from "./mod.action";
+import createShadersSlice from "./shaders.action";
 
 const useStore = create((set: SetState<any>, get: GetState<any>) => ({
   ...createBootstrapSlice(set, get),
@@ -19,7 +20,8 @@ const useStore = create((set: SetState<any>, get: GetState<any>) => ({
   ...createDownloadManagerSlice(set, get),
   ...createGameSlice(set),
   ...createDownloadSaveSlice(set),
-  ...createDownloadModSlice(set)
+  ...createDownloadModSlice(set),
+  ...createShadersSlice(set)
 }));
 
 export default useStore;

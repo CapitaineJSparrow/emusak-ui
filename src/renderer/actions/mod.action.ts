@@ -26,8 +26,6 @@ const createDownloadModSlice = (set: SetState<ISaveAction>): ISaveAction => ({
       progress: 0
     });
 
-    console.log(pickedMod);
-
     const onModDownloadProgress = (_: any, filename: string, percentage: number) => {
       if (filename !== pickedMod) {
         return;

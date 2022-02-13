@@ -63,7 +63,7 @@ use(initReactI18next)
   });
 
 const App = () => {
-  const [isAppInitialized, bootstrapAppAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction]);
+  const [isAppInitialized, bootstrapAppAction, openAlertAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction, state.openAlertAction]);
   const [downloadState, setDownloadState] = useState(null);
 
   // Hack, due to tree checking, if Swal is not present the theme is not applied for further calls, need better solution
@@ -79,6 +79,7 @@ const App = () => {
     bootstrapAppAction();
     ipcRenderer.on("update-available", onUpdateAvailable);
     ipcRenderer.on("update-downloaded", onUpdateDownloaded);
+    openAlertAction("info", "Thanks for joining the beta. If something is not working, please report it on the Github as issue.");
 
     return () => {
       ipcRenderer.removeListener("update-available", onUpdateAvailable);
