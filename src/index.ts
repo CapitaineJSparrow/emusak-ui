@@ -17,6 +17,7 @@ if (require("electron-squirrel-startup")) { // eslint-disable-line global-requir
 
 const gotTheLock = app.requestSingleInstanceLock();
 let mainWindow: BrowserWindow;
+let isPortable = false;
 
 const handleStartupEvent = function () {
   if (process.platform !== "win32") {
@@ -103,10 +104,17 @@ const createWindow = (): void => {
 
       // Check updates every 5mn, and at startup
       setInterval(() => {
-        autoUpdater.checkForUpdates();
+        if (!isPortable) {
+          autoUpdater.checkForUpdates();
+        }
       }, 5 * 60 * 1000);
 
-      autoUpdater.checkForUpdates();
+      try {
+        autoUpdater.checkForUpdates();
+      } catch(e) {
+        mainWindow.webContents.send("is-portable");
+        isPortable = true;
+      }
 
       autoUpdater.on("update-downloaded", () => mainWindow.webContents.send("update-downloaded"));
       autoUpdater.on("update-available", () => mainWindow.webContents.send("update-available"));

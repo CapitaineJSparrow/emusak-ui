@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Box } from "@mui/material";
 import useTranslation from "../../i18n/I18nService";
 import Swal from "sweetalert2";
@@ -8,9 +8,14 @@ import semver from "semver";
 
 const UpdateComponent = ({ state }: { state: "downloading" | "downloaded" }) => {
   const [latestVersion, currentVersion] = useStore(state => [state.latestVersion, state.currentVersion]);
+  const [isPortable, setIsPortable] = useState(false);
   const { t } = useTranslation();
 
-  if (process.platform !== "win32" && currentVersion && latestVersion && semver.lt(currentVersion, latestVersion)) {
+  useEffect(() => {
+    ipcRenderer.on("is-portable", () => setIsPortable(true));
+  }, [isPortable]);
+
+  if ((process.platform !== "win32" || isPortable) && currentVersion && latestVersion && semver.lt(currentVersion, latestVersion)) {
     return <Box p={2} pb={0}>
       <Alert severity="info">
         You have version v{ currentVersion }, please consider updating to the latest version from <a href="https://github.com/CapitaineJSparrow/emusak-ui" target="_blank">Github</a> (v{ latestVersion })
