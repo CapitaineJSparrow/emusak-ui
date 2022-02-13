@@ -269,7 +269,9 @@ const GameDetailComponent = (props: IGameDetailProps) => {
               </GridWithVerticalSeparator>)
               : (
                 <Box mt={2}>
-                  <Alert severity="info">{t("shadersYuzu")}</Alert>
+                  <Alert severity="info">
+                    <span dangerouslySetInnerHTML={{ __html: t("shadersYuzu") }} />
+                  </Alert>
                 </Box>
               )
           }
