@@ -49,7 +49,7 @@
   "shaders": "Shader",
   "threshold": "Schwellenwert",
   "refresh": "Aktualisieren",
-  "shadersYuzu": "Das Teilen und Herunterladen von Shadern ist im Moment nur für Ryujinx möglich.Die meisten Spiele sind Rendering besser mit Vulkan-API und auch dieser Cache ist übertragbar. Jener ist jedoch nicht <i>vollständig</i> was bedeutet, dass du immer noch zusätzlich Shader cachen musst, wenn du sie von jemand anderem herunterladen hast. Die Stotterer sind bei Vulkan API sehr gering, also nutze es einfach.",
+  "shadersYuzu": "Das Teilen und Herunterladen von Shadern ist im Moment nur für Ryujinx möglich. Die meisten Spiele sind Rendering besser mit Vulkan-API und auch dieser Cache ist übertragbar. Jener ist jedoch nicht <i>vollständig</i> was bedeutet, dass du immer noch zusätzlich Shader cachen musst, wenn du sie von jemand anderem herunterladen hast. Die Stotterer sind bei Vulkan API sehr gering, also nutze es einfach.",
 
   "OPERATION_CANCELED": "Du hast die Operation abgebrochen.",
   "INVALID_RYUJINX_BINARY": "Dies ist keine gültige Ryujinx Binärdatei.",
