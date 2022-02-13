@@ -56,23 +56,37 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
     const titleIds = await ipcRenderer.invoke("scan-games", mode.dataPath, currentEmu);
     const gamesCollection: { title: string, img: string, titleId: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke("build-metadata-from-titleId", i)));
     setGames(gamesCollection.filter(i => i.title !== "0000000000000000")); // Homebrew app
-    setIsLoaded(true);
   };
 
   useEffect(() => {
     createLibrary().catch(() => setIsLoaded(true));
-  }, [config, mode]);
+  }, [config]);
 
   useEffect(() => {
     setFilteredGames(searchTerm.length > 0
       ? games.filter(item => searchTerm.length > 0 ? item.title.toLowerCase().includes(searchTerm.toLowerCase()) : true)
       : games);
+    setIsLoaded(true);
   }, [games, searchTerm]);
 
   const refreshLibrary = () => {
     openAlertAction("info", t("refreshInfo"));
     return createLibrary();
   };
+
+  const renderJackSober = () => (
+    <div style={{ textAlign: "center", width: "50%", margin: "0 auto" }}>
+      <p>
+        <img width="100%" src={jackSober} alt=""/>
+      </p>
+      <Divider />
+      <h4 dangerouslySetInnerHTML={{ __html: currentEmu === "ryu" ? t("launchRyujinx") : t("launchYuzu") }} />
+    </div>
+  );
+
+  if (games.length === 0 || filteredGames.length === 0 || !isLoaded) {
+    return renderJackSober();
+  }
 
   return (
     <>
@@ -81,8 +95,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
           <Stack className="masonry" spacing={2}>
             <Grid container>
               <Grid item xs={8}>
-                { t("mode") } <Chip color="primary" label={mode.mode} />
-                &nbsp;
+                { t("mode") } <Chip color="primary" label={mode.mode} /> &nbsp;
                 <Tooltip placement="right" title={`${t("readingDataPath")} ${mode.dataPath}`}>
                   <IconButton>
                     <InfoIcon />
@@ -103,7 +116,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                   {
                     filteredGames
                       .sort((a, b) => a.title.localeCompare(b.title))
-                      .map((item, index) =>(
+                      .map((item, index) => (
                         <Grid item xs={2} onClick={() => setCurrentGameAction(item.titleId)} style={{ cursor: "pointer" }} key={index}>
                           <Label title={item.title}>{item.title}</Label>
                           <Cover style={{ backgroundImage: `url(${item.img.length > 0 ? item.img : defaultIcon})` }} />
@@ -111,20 +124,6 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                       ))
                   }
                 </Grid>
-              )
-            }
-
-            {
-              (isLoaded && games.length === 0) && (
-                (
-                  <div style={{ textAlign: "center", width: "50%", margin: "0 auto" }}>
-                    <p>
-                      <img width="100%" src={jackSober} alt=""/>
-                    </p>
-                    <Divider />
-                    <h4 dangerouslySetInnerHTML={{ __html: currentEmu === "ryu" ? t("launchRyujinx") : t("launchYuzu") }} />
-                  </div>
-                )
               )
             }
           </Stack>

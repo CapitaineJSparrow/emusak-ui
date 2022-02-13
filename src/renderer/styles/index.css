@@ -1,10 +1,4 @@
-/**
-https://stackoverflow.com/questions/21367441/make-scroll-bar-take-no-space
-Fix masonry bug where layout can shift in an infinite loop due to scrollbar appear / disappear
- */
-html {
-  overflow-y: overlay;
-}
+
 
 :root {
   --icon-external-link: url('data:image/svg+xml,\

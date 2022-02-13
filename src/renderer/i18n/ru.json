@@ -47,8 +47,9 @@
   "dlShaders": "Скачать шейдеры",
   "shareShaders": "Поделиться шейдерами",
   "shaders": "Шейдеры",
-  "threshold": "Порог :",
+  "threshold": "Порог",
   "refresh": "Обновить",
+  "shadersYuzu": "Sharing and downloading shader is Ryujinx only for now. Most games are rendering better using Vulkan API and even this cache is transferable, it is only <i>partially</i> which means you still need to build shaders if you download it from someone else. Meanwhile, stutters related to shaders with vulkan are really small, so just use it.",
 
   "OPERATION_CANCELED": "Вы отменили операцию.",
   "INVALID_RYUJINX_BINARY": "Это недопустимый двоичный файл Ryujinx.",

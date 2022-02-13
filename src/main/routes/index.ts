@@ -18,6 +18,7 @@ import {
   getModsVersions,
   getModsVersionsProps
 } from "./modsDownload";
+import { countShaders, countShadersProps } from "./shaders";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("load-components", async (_, ...args: loadComponentsProps) => loadComponentIpcHandler(...args));
@@ -37,6 +38,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("get-mods-versions", async(_, ...args: getModsVersionsProps) => getModsVersions(...args));
   ipcMain.handle("get-mods-list-for-version", async(_, ...args: getModsListForVersionProps) => getModsListForVersion(...args));
   ipcMain.handle("download-mod", async(_, ...args: downloadModProps) => downloadMod(mainWindow, ...args));
+  ipcMain.handle("count-shaders", async (_, ...args: countShadersProps) => countShaders(...args));
 };
 
 export default makeIpcRoutes;
