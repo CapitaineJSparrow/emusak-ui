@@ -130,7 +130,7 @@ class HttpService {
     return this._fetch(HTTP_PATHS.MODS_LIST_VERSION.replace("{id}", id).replace("{version}", version));
   }
 
-  public async downloadMod(id: string, version: string, name: string): Promise<{ response: Response, name: string }> {
+  public async downloadMod(id: string, version: string, name: string, controller?: AbortController): Promise<{ response: Response, name: string }> {
     const path = HTTP_PATHS
       .MOD_DOWNLOAD
       .replace("{id}", id)
@@ -146,7 +146,7 @@ class HttpService {
     const url = new URL(`${path}${encodeURIComponent(mod[0].name)}`, this.url);
 
     return {
-      response: await fetch(url.href),
+      response: await fetch(url.href, { signal: controller ? controller.signal : undefined }),
       name: mod[0].name
     };
   }

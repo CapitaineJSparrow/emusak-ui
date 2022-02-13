@@ -37,7 +37,10 @@ const installFirmware = async (emu: EmusakEmulatorsKind, dataPath: string, mainW
     let lastEmittedEventTimestamp = 0;
     let downloadSpeed = 0;
     const startTime = Date.now();
-    ipcMain.on("cancel-download", () => controller.abort());
+    ipcMain.on("cancel-download", (_, filename: string) => {
+      if (filename !== "firmware.zip") return;
+      controller.abort();
+    });
 
     // Stream file to disk
     for await (const chunk of response.body) {

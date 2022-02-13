@@ -44,18 +44,18 @@ const DownloadManagerComponent = () => {
                         }
                       </small></p>
                       <Grid style={{ display: "flex", alignItems: "center" }} container spacing={2}>
-                        <Grid item xs={dlFile.downloadSpeed === Infinity ? 12 : 10}>
-                          <LinearProgress variant={dlFile.progress === Infinity ? undefined : "buffer"} value={dlFile.progress} valueBuffer={50} />
+                        <Grid item xs={dlFile.progress === Infinity ? 12 : 10}>
+                          <LinearProgress variant={dlFile.progress === Infinity ? undefined : "buffer"} value={+dlFile.progress} valueBuffer={50} />
                         </Grid>
                         {
-                          (dlFile.progress !== Infinity && dlFile.downloadSpeed !== Infinity) && (
+                          (dlFile.progress !== Infinity) && (
                             <Grid item xs>
                               <IconButton
                                 color="error"
                                 size="small"
                                 aria-label="upload picture"
                                 component="span"
-                                onClick={() => ipcRenderer.send("cancel-download")}
+                                onClick={() => ipcRenderer.send("cancel-download", dlFile.filename)}
                               >
                                 <HighlightOffIcon />
                               </IconButton>

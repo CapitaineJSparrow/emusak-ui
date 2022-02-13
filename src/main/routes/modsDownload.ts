@@ -1,7 +1,7 @@
 import HttpService from "../services/HttpService";
 import fs from "fs-extra";
 import path from "path";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 import { EmusakEmulatorsKind } from "../../types";
 import Zip from "adm-zip";
 import glob from "glob";
@@ -24,7 +24,8 @@ export const getModsListForVersion = async (...args: getModsListForVersionProps)
 
 export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadModProps): Promise<string> => {
   const [titleId, version, modName, dataPath, emulator] = args;
-  const { response, name } = await HttpService.downloadMod(titleId, version, modName);
+  const controller = new AbortController();
+  const { response, name } = await HttpService.downloadMod(titleId, version, modName, controller);
   let destPath = "";
 
   switch (emulator) {
@@ -42,6 +43,11 @@ export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadMo
   let bytes = 0;
   let lastEmittedEventTimestamp = 0;
 
+  ipcMain.on("cancel-download", (_, filename: string) => {
+    if (filename !== modName) return;
+    controller.abort();
+  });
+
   const result = await new Promise((resolve, reject) => {
     response.body.pipe(fileStream);
     response.body.on("error", reject);
@@ -52,7 +58,7 @@ export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadMo
 
       // Throttle event to 1 time every 100ms
       if (currentTimestamp - lastEmittedEventTimestamp >= 100) {
-        mainWindow.webContents.send("download-progress", "mod", percentage.toFixed(2), modName);
+        mainWindow.webContents.send("download-progress", modName, percentage.toFixed(2));
         lastEmittedEventTimestamp = +new Date();
       }
     });

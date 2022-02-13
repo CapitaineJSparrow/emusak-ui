@@ -15,20 +15,6 @@ export interface ISaveAction {
   downloadModAction: (currentMod: string, version: string, pickedMod: string, dataPath: string) => Promise<any>
 }
 
-const onModDownloadProgress = (_: any, filename: string, percentage: number, pickedMod: string) => {
-  if (filename !== "mod") {
-    return;
-  }
-
-  console.log(percentage);
-
-  useStore.getState().upsertFileAction({
-    filename: pickedMod,
-    downloadSpeed: Infinity,
-    progress: percentage
-  });
-};
-
 const createDownloadModSlice = (set: SetState<ISaveAction>): ISaveAction => ({
   setCurrentModAction: (currentMod, dataPath) => set({ currentMod, dataPath }),
   clearCurrentModAction: () => set({ currentMod: null, dataPath: null }),
@@ -39,6 +25,20 @@ const createDownloadModSlice = (set: SetState<ISaveAction>): ISaveAction => ({
       downloadSpeed: Infinity,
       progress: 0
     });
+
+    console.log(pickedMod);
+
+    const onModDownloadProgress = (_: any, filename: string, percentage: number) => {
+      if (filename !== pickedMod) {
+        return;
+      }
+
+      useStore.getState().upsertFileAction({
+        filename: pickedMod,
+        downloadSpeed: Infinity,
+        progress: percentage
+      });
+    };
 
     ipcRenderer.on("download-progress", onModDownloadProgress);
 
