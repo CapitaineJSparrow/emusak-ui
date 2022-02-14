@@ -33,9 +33,12 @@ jobs:
         name: Dump eshop data
       - run: npm run publish-dry-run
         name: Packaging app
+        env:
+          USE_HARD_LINKS: false
       - run: npm run publish-from-dry-run
         name: Publish github artifacts
         env:
           GITHUB_TOKEN: ${{ github.token }}
           EMUSAK_CDN: ${{ secrets.EMUSAK_CDN }}
           EMUSAK_URL: ${{ secrets.EMUSAK_URL }}
+          USE_HARD_LINKS: false
