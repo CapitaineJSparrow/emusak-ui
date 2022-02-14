@@ -69,10 +69,14 @@ module.exports = {
     "postMake": async (_, artifacts) => {
       const portablePath = artifacts.map(b => b.artifacts).flat().find(i => i.includes(".zip") && i.includes("win32"));
 
-      if (portablePath) {
-        const filename = path.basename(portablePath);
-        console.log({ filename })
-        await fs.move(portablePath, portablePath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip"))
+      try {
+        if (portablePath) {
+          const filename = path.basename(portablePath);
+          console.log({ filename })
+          await fs.move(portablePath, portablePath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip"))
+        }
+      } catch(e) {
+
       }
     }
   }
