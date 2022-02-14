@@ -85,6 +85,13 @@ module.exports = {
         // fs.move is launched twice, first for dry run and second time by make from dry-run causing an exception, so ignore and assume it exists
       }
 
+      try {
+        if (exePath) {
+          const filename = path.basename(exePath);
+          await fs.move(exePath, exePath.replace(filename, `EmuSAK-win32-x64-${version}-installer-recommended.exe`))
+        }
+      } catch(e) {}
+
       console.log(makeResults.map(r => ({
         ...r,
         ...{
