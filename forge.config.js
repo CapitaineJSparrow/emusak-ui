@@ -66,13 +66,31 @@ module.exports = {
     ]
   ],
   "hooks": {
-    "postMake": async (_, artifacts) => {
-      const portablePath = artifacts.map(b => b.artifacts).flat().find(i => i.includes(".zip") && i.includes("win32"));
+    "postMake": async (_, makeResults) => {
+      const version = makeResults[0].packageJSON.version;
+      const portablePath = makeResults.map(b => b.artifacts).flat().find(i => i.includes(".zip") && i.includes("win32"));
 
-      if (portablePath) {
-        const filename = path.basename(portablePath);
-        await fs.move(portablePath, portablePath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip"))
+      try {
+        if (portablePath) {
+          const filename = path.basename(portablePath);
+          await fs.move(portablePath, portablePath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`))
+        }
+      } catch(e) {
+        // fs.move is launched twice, first for dry run and second time by make from dry-run causing an exception, so ignore and assume it exists
       }
+
+      return makeResults.map(r => ({
+        ...r,
+        ...{
+          artifacts:
+            r.artifacts.map(fullPath => {
+              const filename = path.basename(fullPath);
+              return fullPath.includes(".zip") && fullPath.includes("win32")
+                ? fullPath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`)
+                : fullPath
+            })
+        }
+      }))
     }
   }
 };

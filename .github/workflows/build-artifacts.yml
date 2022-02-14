@@ -3,8 +3,8 @@ name: Build artifacts
 on:
   push:
     branches:
-      - emusak-v2
       - main
+      - ci
     paths:
       - package.json
 
@@ -23,15 +23,22 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-      - run: yarn install
+      - run: npm config rm proxy && npm config rm https-proxy
+        name: "Remove NPM / Yarn proxies"
+      - run: yarn install --frozen-lockfile --network-timeout 1000000
         name: Install NPM dependencies
       - run: node ./src/commands/dumpTinFoil.js
         name: Dump title ids from tinfoil DB
       - run: node ./src/commands/dumpEshopData.js
         name: Dump eshop data
-      - run: npm run publish
+      - run: npm run publish-dry-run
+        name: Packaging app
+        env:
+          USE_HARD_LINKS: false
+      - run: npm run publish-from-dry-run
         name: Publish github artifacts
         env:
           GITHUB_TOKEN: ${{ github.token }}
           EMUSAK_CDN: ${{ secrets.EMUSAK_CDN }}
           EMUSAK_URL: ${{ secrets.EMUSAK_URL }}
+          USE_HARD_LINKS: false
