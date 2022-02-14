@@ -62,10 +62,10 @@ module.exports = {
   "hooks": {
     "postMake": async (_, makeResults) => {
       const portablePath = makeResults.map(b => b.artifacts).flat().find(i => i.includes(".zip") && i.includes("win32"));
-      const filename = path.basename(portablePath);
 
       try {
         if (portablePath) {
+          const filename = path.basename(portablePath);
           await fs.move(portablePath, portablePath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip"))
         }
       } catch(e) {
@@ -76,9 +76,12 @@ module.exports = {
         ...r,
         ...{
           artifacts:
-            r.artifacts.map(fullPath => fullPath.includes(".zip") && fullPath.includes("win32")
-              ? fullPath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip")
-              : fullPath)
+            r.artifacts.map(fullPath => {
+              const filename = path.basename(fullPath);
+              return fullPath.includes(".zip") && fullPath.includes("win32")
+                ? fullPath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip")
+                : fullPath
+            })
         }
       }))
     }
