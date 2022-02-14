@@ -92,26 +92,6 @@ module.exports = {
         }
       } catch(e) {}
 
-      console.log(makeResults.map(r => ({
-        ...r,
-        ...{
-          artifacts:
-            r.artifacts.map(fullPath => {
-              const filename = path.basename(fullPath);
-
-              if (fullPath.includes(".zip") && fullPath.includes("win32")) {
-                return fullPath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`);
-              }
-
-              if (fullPath.includes(".exe")) {
-                return fullPath.replace(filename, `EmuSAK-win32-x64-${version}-installer-recommended.exe`);
-              }
-
-              return fullPath;
-            })
-        }
-      })))
-
       return makeResults.map(r => ({
         ...r,
         ...{
