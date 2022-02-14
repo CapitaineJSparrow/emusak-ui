@@ -1,6 +1,0 @@
-* Setup auto-updates
-* Auto refresh listing with a filesystem watcher
-* When computing dataPath, make fs scan case-insensitive
-* Store last config user per emu
-* Update eshop data once a day
-* Make uninstaller work properly
