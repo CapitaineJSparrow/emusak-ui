@@ -26,6 +26,12 @@ module.exports = {
       ]
     },
     {
+      "name": "@electron-forge/maker-squirrel",
+      "config": {
+        "name": "emusak_ui"
+      }
+    },
+    {
       "name": "@electron-forge/maker-deb",
       "config": {}
     },
