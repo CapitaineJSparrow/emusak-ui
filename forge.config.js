@@ -71,8 +71,6 @@ module.exports = {
       const portablePath = makeResults.map(b => b.artifacts).flat().find(i => i.includes(".zip") && i.includes("win32"));
       const exePath = makeResults.map(b => b.artifacts).flat().find(i => i.includes("Setup.exe"));
 
-      console.log({ exePath })
-
       try {
         if (portablePath) {
           const filename = path.basename(portablePath);
