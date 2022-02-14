@@ -20,12 +20,6 @@ module.exports = {
   ],
   "makers": [
     {
-      "name": "@electron-forge/maker-squirrel",
-      "config": {
-        "name": "emusak_ui"
-      }
-    },
-    {
       "name": "@electron-forge/maker-zip",
       "platforms": [
         "win32"
@@ -66,18 +60,27 @@ module.exports = {
     ]
   ],
   "hooks": {
-    "postMake": async (_, artifacts) => {
-      const portablePath = artifacts.map(b => b.artifacts).flat().find(i => i.includes(".zip") && i.includes("win32"));
+    "postMake": async (_, makeResults) => {
+      const portablePath = makeResults.map(b => b.artifacts).flat().find(i => i.includes(".zip") && i.includes("win32"));
+      const filename = path.basename(portablePath);
 
       try {
         if (portablePath) {
-          const filename = path.basename(portablePath);
-          console.log({ filename })
           await fs.move(portablePath, portablePath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip"))
         }
       } catch(e) {
-
+        // fs.move is launched twice, first for dry run and second time by make from dry-run causing an exception, so ignore and assume it exists
       }
+
+      return makeResults.map(r => ({
+        ...r,
+        ...{
+          artifacts:
+            r.artifacts.map(fullPath => fullPath.includes(".zip") && fullPath.includes("win32")
+              ? fullPath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip")
+              : fullPath)
+        }
+      }))
     }
   }
 };
