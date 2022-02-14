@@ -128,7 +128,7 @@ const RootComponent = () => {
         <Grid container spacing={2}>
           {
             !currentGame && (
-              <Grid item xs={7}>
+              <Grid item xs={6}>
                 { renderEmulatorPathSelector() }
               </Grid>
             )
@@ -139,7 +139,7 @@ const RootComponent = () => {
                 <Grid item style={{ lineHeight: "52px" }} xs={3}>
                   <Button onClick={() => installFirmwareAction(mode.dataPath) } fullWidth variant="contained">{ t("dl_firmware") } { firmwareVersion }</Button>
                 </Grid>
-                <Grid item style={{ lineHeight: "52px" }} xs={2}>
+                <Grid item style={{ lineHeight: "52px" }} xs={3}>
                   <Button onClick={() => downloadKeysAction(mode.dataPath)} fullWidth variant="contained">{ t("dl_keys") }</Button>
                 </Grid>
               </>
