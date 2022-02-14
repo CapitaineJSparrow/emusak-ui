@@ -23,7 +23,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-      - run: yarn install
+      - run: npm config rm proxy && npm config rm https-proxy
+        name: "Remove NPM / Yarn proxies"
+      - run: yarn install --frozen-lockfile --network-timeout 1000000
         name: Install NPM dependencies
       - run: node ./src/commands/dumpTinFoil.js
         name: Dump title ids from tinfoil DB
