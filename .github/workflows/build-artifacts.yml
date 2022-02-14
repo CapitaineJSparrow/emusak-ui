@@ -3,8 +3,8 @@ name: Build artifacts
 on:
   push:
     branches:
-      - emusak-v2
       - main
+      - ci
     paths:
       - package.json
 
@@ -29,7 +29,9 @@ jobs:
         name: Dump title ids from tinfoil DB
       - run: node ./src/commands/dumpEshopData.js
         name: Dump eshop data
-      - run: npm run publish
+      - run: npm run publish-dry-run
+        name: Packaging app
+      - run: npm run publish-from-dry-run
         name: Publish github artifacts
         env:
           GITHUB_TOKEN: ${{ github.token }}

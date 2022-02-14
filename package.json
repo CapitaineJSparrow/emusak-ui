@@ -9,7 +9,8 @@
     "start": "cross-env NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "publish-dry-run": "electron-forge publish --dry-run\n",
+    "publish-from-dry-run": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "prepare": "husky install"
   },

@@ -71,6 +71,7 @@ module.exports = {
 
       if (portablePath) {
         const filename = path.basename(portablePath);
+        console.log({ filename })
         await fs.move(portablePath, portablePath.replace(filename, "EmuSAK-win32-x64-2.0.0-portable.zip"))
       }
     }
