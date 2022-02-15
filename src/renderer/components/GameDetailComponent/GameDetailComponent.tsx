@@ -200,7 +200,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
             </Button>
           </p>
         </Grid>
-        <Grid item xs={6} pl={3} pr={3}>
+        <Grid item xs={6} pl={3} pr={3} style={{ position: "relative", top: -10 }}>
           <Grid container>
             <Grid item xs={6}>
               <h3 style={{ margin: "0 auto" }}>
