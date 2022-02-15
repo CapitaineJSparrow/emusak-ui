@@ -27,6 +27,13 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
       return;
     }
 
+    let configs = get().emulatorBinariesPath;
+    configs = configs.map(c => c.path === selectedConfig.path
+      ? ({ ...c, ...{ selected: true } })
+      : ({ ...c, ...{ selected: false } })
+    );
+
+    localStorage.setItem(LS_KEYS.CONFIG, JSON.stringify(configs));
     return set({ selectedConfig });
   },
   addNewEmulatorConfigAction: async () => {

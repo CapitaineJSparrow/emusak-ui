@@ -16,7 +16,8 @@ export type EmusakEmulatorConfig = {
   path: string,
   name: string,
   emulator : EmusakEmulatorsKind,
-  isDefault?: boolean
+  isDefault?: boolean,
+  selected?: boolean
 };
 
 export enum LS_KEYS {

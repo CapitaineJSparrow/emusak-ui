@@ -30,7 +30,9 @@ export enum GITHUB_PATHS {
 // Resolve an issue where server cannot be reached in rare cases
 dns.setServers([
   "1.1.1.1",
+  "1.0.0.1",
   "[2606:4700:4700::1111]",
+  "[2606:4700:4700::1001]"
 ]);
 
 const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
