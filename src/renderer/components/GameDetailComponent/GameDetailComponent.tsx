@@ -33,6 +33,7 @@ const GridWithVerticalSeparator = styled(MuiGrid)(({ theme }) => ({
   },
 }));
 
+// Force title to be two lines, so it's always aligned even there is long strings depending on locale
 const TwoLinesTitle = styled(Typography)(() => ({
   lineHeight: "1.5em",
   height: "3em",

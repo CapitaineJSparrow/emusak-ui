@@ -10,6 +10,14 @@ import fs from "fs-extra";
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
+// Don't use appData to store cache
+// We can't setPath in linux appImage since it's read only, for now do this only for windows
+if (process.platform === "win32") {
+  const cacheDir = path.resolve(app.getPath("exe"), "..", "electron_cache");
+  fs.ensureDirSync(cacheDir);
+  app.setPath("userData", cacheDir);
+}
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) { // eslint-disable-line global-require
   app.quit();
