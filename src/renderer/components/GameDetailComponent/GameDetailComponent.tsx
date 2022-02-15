@@ -33,6 +33,12 @@ const GridWithVerticalSeparator = styled(MuiGrid)(({ theme }) => ({
   },
 }));
 
+const TwoLinesTitle = styled(Typography)(() => ({
+  lineHeight: "1.5em",
+  height: "3em",
+  overflow: "hidden"
+}));
+
 const GameDetailComponent = (props: IGameDetailProps) => {
   const { titleId, dataPath } = props;
   const [
@@ -233,7 +239,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
              ? (<GridWithVerticalSeparator container pt={2} spacing={0}>
                 <GridWithVerticalSeparator item xs pr={2}>
                   <Box>
-                    <Typography variant="h6" align="center">{t("localShadersCount")}</Typography>
+                    <TwoLinesTitle variant="h6" align="center">{t("localShadersCount")}</TwoLinesTitle>
                     <p><Button style={{ pointerEvents: "none" }} variant="outlined" fullWidth>{localShadersCount}</Button></p>
                     <p>
                       <Button
@@ -252,7 +258,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
 
                 <GridWithVerticalSeparator item xs pl={2}>
                   <Box>
-                    <Typography variant="h6" align="center">{t("emusakShadersCount")}</Typography>
+                    <TwoLinesTitle variant="h6" align="center">{t("emusakShadersCount")}</TwoLinesTitle>
                     <p>
                       <Button style={{ pointerEvents: "none" }} variant="outlined" fullWidth>
                         { emusakShadersCount }
