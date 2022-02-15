@@ -62,6 +62,8 @@ const NavBarComponent = () => {
               <MenuItem value={"br"}>BR</MenuItem>
               <MenuItem value={"de"}>DE</MenuItem>
               <MenuItem value={"it"}>IT</MenuItem>
+              <MenuItem value={"es"}>ES</MenuItem>
+              <MenuItem value={"se"}>SE</MenuItem>
             </Select>
           </Box>
           <Box style={{ flex: "0 0 50px" }}>

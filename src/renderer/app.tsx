@@ -24,6 +24,8 @@ import i18n_ru from "./i18n/ru.json";
 import i18n_br from "./i18n/br.json";
 import i18n_de from "./i18n/de.json";
 import i18n_it from "./i18n/it.json";
+import i18n_es from "./i18n/es.json";
+import i18n_se from "./i18n/se.json";
 
 import TitleBarComponent from "./components/TitleBarComponent/TitleBarComponent";
 import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
@@ -56,6 +58,8 @@ use(initReactI18next)
       br: { translation: i18n_br },
       de: { translation: i18n_de },
       it: { translation: i18n_it },
+      es: { translation: i18n_es },
+      se: { translation: i18n_se },
     },
     lng,
     fallbackLng: "en",
