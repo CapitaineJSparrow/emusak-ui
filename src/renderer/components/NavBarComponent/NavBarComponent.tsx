@@ -10,14 +10,15 @@ import yuzu_logo from "../../resources/yuzu_logo.png";
 import { Button, IconButton, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import useStore from "../../actions/state";
 import { LS_KEYS } from "../../../types";
+import { LANGUAGES } from "../../app";
 
 const NavBarComponent = () => {
   const { t } = useTranslation();
-  const [currentEmu, switchEmuAction, switchLanguage] = useStore(s => [s.currentEmu, s.switchEmuAction, s.switchLanguage]);
+  const [currentEmu, switchEmuAction, switchLanguageAction] = useStore(s => [s.currentEmu, s.switchEmuAction, s.switchLanguageAction]);
   const locale = localStorage.getItem(LS_KEYS.LOCALE) ?? "en";
 
   const onLocaleSelectChange = (e: SelectChangeEvent) => {
-    switchLanguage(e.target.value);
+    switchLanguageAction(e.target.value);
   };
 
   return (
@@ -57,13 +58,9 @@ const NavBarComponent = () => {
               variant="standard"
               fullWidth
             >
-              <MenuItem value={"en"}>EN</MenuItem>
-              <MenuItem value={"ru"}>RU</MenuItem>
-              <MenuItem value={"br"}>BR</MenuItem>
-              <MenuItem value={"de"}>DE</MenuItem>
-              <MenuItem value={"it"}>IT</MenuItem>
-              <MenuItem value={"es"}>ES</MenuItem>
-              <MenuItem value={"se"}>SE</MenuItem>
+              {
+                LANGUAGES.map((l: string) => <MenuItem key={l} value={l.toLowerCase()}>{l.toUpperCase()}</MenuItem>)
+              }
             </Select>
           </Box>
           <Box style={{ flex: "0 0 50px" }}>

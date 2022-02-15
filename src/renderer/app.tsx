@@ -19,13 +19,13 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 // i18n
-import i18n_en from "./i18n/en.json";
-import i18n_ru from "./i18n/ru.json";
-import i18n_br from "./i18n/br.json";
-import i18n_de from "./i18n/de.json";
-import i18n_it from "./i18n/it.json";
-import i18n_es from "./i18n/es.json";
-import i18n_se from "./i18n/se.json";
+import en from "./i18n/en.json";
+import ru from "./i18n/ru.json";
+import br from "./i18n/br.json";
+import de from "./i18n/de.json";
+import it from "./i18n/it.json";
+import es from "./i18n/es.json";
+import se from "./i18n/se.json";
 
 import TitleBarComponent from "./components/TitleBarComponent/TitleBarComponent";
 import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
@@ -49,24 +49,22 @@ const darkTheme = createTheme({
 
 const lng = localStorage.getItem(LS_KEYS.LOCALE) ?? "en";
 
+const resources = { en, ru, br, de, it, es, se };
+type localesType = keyof typeof resources;
 
 use(initReactI18next)
   .init({
-    resources: {
-      en: { translation: i18n_en },
-      ru: { translation: i18n_ru },
-      br: { translation: i18n_br },
-      de: { translation: i18n_de },
-      it: { translation: i18n_it },
-      es: { translation: i18n_es },
-      se: { translation: i18n_se },
-    },
+    resources: Object
+      .keys(resources)
+      .reduce((acc, l: localesType) => ({ ...acc, [l]: { translation: resources[l]  } }), {}),
     lng,
     fallbackLng: "en",
     interpolation: {
       escapeValue: false
     }
   });
+
+export const LANGUAGES = Object.keys(resources);
 
 const App = () => {
   const [isAppInitialized, bootstrapAppAction, openAlertAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction, state.openAlertAction]);

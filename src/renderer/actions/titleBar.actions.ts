@@ -14,7 +14,7 @@ export interface ITitleBar {
   minimizeEmuSAKAction: () => void;
   currentEmu: EmusakEmulatorsKind;
   switchEmuAction: (currentEmu: EmusakEmulatorsKind) => void;
-  switchLanguage: (language: string) => void;
+  switchLanguageAction: (language: string) => void;
 }
 
 const { t } = useTranslation();
@@ -39,7 +39,7 @@ const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig & IGameAc
     localStorage.setItem(LS_KEYS.TAB, currentEmu);
     return set({ currentEmu, selectedConfig: null, currentGame: null });
   },
-  switchLanguage: async (locale) => {
+  switchLanguageAction: async (locale) => {
     localStorage.setItem(LS_KEYS.LOCALE, locale);
     await i18n.changeLanguage(locale);
     let configs: EmusakEmulatorConfig[] = localStorage.getItem(LS_KEYS.CONFIG) ? JSON.parse(localStorage.getItem(LS_KEYS.CONFIG)) : [];
