@@ -35,7 +35,7 @@ dns.setServers([
   "[2606:4700:4700::1001]"
 ]);
 
-const memoryDb: { [key: string]: string[] } = {}
+const memoryDb: { [key: string]: string[] } = {};
 
 const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
 
