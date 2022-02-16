@@ -35,13 +35,22 @@ dns.setServers([
   "[2606:4700:4700::1001]"
 ]);
 
+const memoryDb: { [key: string]: string[] } = {};
+
 const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
+
+  if (memoryDb[hostname]) {
+    cb(null, memoryDb[hostname][0], 4);
+    return;
+  }
+
   const ips = await dns.resolve(hostname);
 
   if (ips.length === 0) {
-    throw new Error(`Unable to resolve ${hostname}`);
+    console.error(`Cannot resolve ${hostname}`);
   }
 
+  memoryDb[hostname] = ips;
   cb(null, ips[0], 4);
 };
 

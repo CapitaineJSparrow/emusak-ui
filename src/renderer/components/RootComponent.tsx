@@ -75,7 +75,7 @@ const RootComponent = () => {
 
     // Otherwise, pick first config available and compute mode for it
     else if (!selectedConfig && filteredConfig.length > 0) {
-      const c = filteredConfig.find(f => f.selected) || filteredConfig[0];
+      const c = filteredConfig[0];
       setSelectConfigAction(c);
       getModeForBinary(c.path).then(setMode);
     } else if (selectedConfig && !mode) {

@@ -1,7 +1,7 @@
 import eshopDataBuildIn from "../../assets/US.en.json";
 import fs from "fs-extra";
-import { app } from "electron";
 import path from "path";
+import { app } from "electron";
 
 export type EshopData = {
   [key: string]: {
@@ -11,7 +11,7 @@ export type EshopData = {
   };
 };
 
-export const eshopDataPath = path.join(app.getPath("userData"), "eshop.json");
+export const eshopDataPath = path.resolve(app.getPath("exe"), "..", "electron_cache", "eshop.json");
 
 const getEshopData = async () => {
   const localData = await fs.access(eshopDataPath).then(() => true).catch(() => false);
