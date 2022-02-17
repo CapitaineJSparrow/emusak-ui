@@ -35,6 +35,9 @@ jobs:
         name: Packaging app
         env:
           USE_HARD_LINKS: false
+          GITHUB_TOKEN: ${{ github.token }}
+          EMUSAK_CDN: ${{ secrets.EMUSAK_CDN }}
+          EMUSAK_URL: ${{ secrets.EMUSAK_URL }}
       - run: npm run publish-from-dry-run
         name: Publish github artifacts
         env:
