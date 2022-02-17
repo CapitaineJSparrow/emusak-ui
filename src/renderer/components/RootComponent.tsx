@@ -75,7 +75,8 @@ const RootComponent = () => {
 
     // Otherwise, pick first config available and compute mode for it
     else if (!selectedConfig && filteredConfig.length > 0) {
-      const c = filteredConfig[0];
+      const selectedPath = localStorage.getItem(`${currentEmu}-selected`);
+      const c = selectedPath ? (filteredConfig.find(f => f.path === selectedPath) || filteredConfig[0]) : filteredConfig[0];
       setSelectConfigAction(c);
       getModeForBinary(c.path).then(setMode);
     } else if (selectedConfig && !mode) {

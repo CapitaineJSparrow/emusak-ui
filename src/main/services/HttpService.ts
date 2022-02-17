@@ -26,31 +26,20 @@ export enum GITHUB_PATHS {
   FIRMWARE_VERSION = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/version.txt",
 }
 
-// CloudFlare CDN https://1.1.1.1/dns/
+// CloudFlare DNS https://1.1.1.1/dns/
 // Resolve an issue where server cannot be reached in rare cases
 dns.setServers([
   "1.1.1.1",
-  "1.0.0.1",
   "[2606:4700:4700::1111]",
-  "[2606:4700:4700::1001]"
 ]);
 
-const memoryDb: { [key: string]: string[] } = {};
-
 const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
-
-  if (memoryDb[hostname]) {
-    cb(null, memoryDb[hostname][0], 4);
-    return;
-  }
-
   const ips = await dns.resolve(hostname);
 
   if (ips.length === 0) {
     console.error(`Cannot resolve ${hostname}`);
   }
 
-  memoryDb[hostname] = ips;
   cb(null, ips[0], 4);
 };
 
@@ -58,7 +47,6 @@ const staticDnsAgent = (scheme: "http" | "https") => {
   const httpModule = scheme === "http" ? http : https;
   return new httpModule.Agent({ lookup: staticLookup(), rejectUnauthorized: false });
 };
-
 
 class HttpService {
 

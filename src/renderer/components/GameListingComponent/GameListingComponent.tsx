@@ -87,7 +87,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
     </div>
   );
 
-  if (games.length === 0 || filteredGames.length === 0 || !isLoaded) {
+  if ((games.length === 0 || filteredGames.length === 0 || !isLoaded) && searchTerm.length === 0) {
     return renderJackSober();
   }
 

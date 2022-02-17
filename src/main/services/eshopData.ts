@@ -11,7 +11,10 @@ export type EshopData = {
   };
 };
 
-export const eshopDataPath = path.resolve(app.getPath("exe"), "..", "electron_cache", "eshop.json");
+export const eshopDataPath = process.platform === "win32"
+  ? path.resolve(app.getPath("exe"), "..", "electron_cache", "eshop.json")
+  // We can't write on executable directory on linux if it's installed in /bin (package manager) or with AppImage (readOnly)
+  : path.join(app.getPath("userData"), "eshop.json");
 
 const getEshopData = async () => {
   const localData = await fs.access(eshopDataPath).then(() => true).catch(() => false);
