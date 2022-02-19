@@ -17,7 +17,8 @@ export enum HTTP_PATHS {
   MODS_LIST_VERSION    = "/mods/{id}/{version}/",
   MOD_DOWNLOAD         = "/mods/{id}/{version}/{name}/",
   SHADER_INFO          = "/ryu/{id}.info",
-  SHADER_ZIP           = "/ryu/{id}.zip"
+  SHADER_ZIP           = "/ryu/{id}.zip",
+  SHADER_UPLOAD        = "/bo/api/submit"
 }
 
 export enum GITHUB_PATHS {
@@ -165,6 +166,15 @@ class HttpService {
 
   public async downloadSave(id: string, index: number) {
     return this._fetch(HTTP_PATHS.SAVES_DOWNLOAD.replace("{id}", id).replace("{index}", `${index}`), "BUFFER");
+  }
+
+  public async postMessage (message: string) {
+    return this._fetch(HTTP_PATHS.SHADER_UPLOAD, "TXT", this.url,{
+      method: "POST",
+      body: JSON.stringify({
+        message
+      })
+    });
   }
 }
 
