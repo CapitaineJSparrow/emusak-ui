@@ -10,7 +10,7 @@ import fs from "fs-extra";
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-export const hasPortableFile = fs.existsSync(path.resolve(app.getPath("exe"), "portable"));
+export const hasPortableFile = fs.existsSync(path.resolve(app.getPath("exe"), "..", "portable"));
 export const cacheDir = hasPortableFile ? path.resolve(app.getPath("exe"), "..", "electron_cache") : path.join(app.getPath("userData"));
 export const dnsFile = path.resolve(cacheDir, "dns");
 export const hasDnsFile = fs.pathExistsSync(dnsFile);
