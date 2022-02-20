@@ -84,10 +84,12 @@ const App = () => {
     bootstrapAppAction();
     ipcRenderer.on("update-available", onUpdateAvailable);
     ipcRenderer.on("update-downloaded", onUpdateDownloaded);
+    const t = setInterval(() => ipcRenderer.invoke("check-status").then(r => r ? setDownloadState("downloaded") : undefined),5000);
 
     return () => {
       ipcRenderer.removeListener("update-available", onUpdateAvailable);
       ipcRenderer.removeListener("update-downloaded", onUpdateDownloaded);
+      clearInterval(t);
     };
   }, []);
 
