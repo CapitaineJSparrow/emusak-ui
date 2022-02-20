@@ -1,8 +1,8 @@
 import fs from "fs-extra";
 import path from "path";
 import zip from "adm-zip";
-import HttpService from "../services/HttpService";
-import { BrowserWindow, dialog, ipcMain, app } from "electron";
+import HttpService, { HTTP_PATHS } from "../services/HttpService";
+import { BrowserWindow, dialog, app } from "electron";
 import { buildMetadataForTitleId } from "./systemScan.ipc";
 import { spawn } from "child_process";
 import FormData from "form-data";
@@ -99,7 +99,6 @@ export const countShaders = async (...args: countShadersProps): Promise<number> 
 
 export const installShaders = async (mainWindow: BrowserWindow, ...args: installShadersProps): Promise<boolean> => {
   const [titleId, dataPath] = args;
-  const controller = new AbortController();
   const shaderDestPath = path.resolve(dataPath, "games", titleId.toLowerCase(), "cache", "shader", "guest", "program", "cache.zip");
   const infoDestPath = path.resolve(dataPath, "games", titleId.toLowerCase(), "cache", "shader", "guest", "program", "cache.info");
   const exists = await fs.promises.access(infoDestPath).then(() => true).catch(() => false);
@@ -122,32 +121,7 @@ export const installShaders = async (mainWindow: BrowserWindow, ...args: install
     return null;
   }
 
-  ipcMain.on("cancel-download", (_, filename: string) => {
-    if (filename !== titleId) return;
-    controller.abort();
-  });
-
-  const response = await HttpService.downloadShaderZip(titleId.toUpperCase(), controller) as unknown as Response & { body: NodeJS.ReadableStream };
-  const fileStream = fs.createWriteStream(shaderDestPath);
-  let bytes = 0;
-  let lastEmittedEventTimestamp = 0;
-
-  const result = await new Promise((resolve, reject) => {
-    response.body.pipe(fileStream);
-    response.body.on("error", reject);
-    response.body.on("data", (chunk) => {
-      bytes += chunk.length;
-      const percentage = bytes / +(response.headers.get("content-length")) * 100;
-      const currentTimestamp = +new Date();
-
-      // Throttle event to 1 time every 100ms
-      if (currentTimestamp - lastEmittedEventTimestamp >= 100) {
-        mainWindow.webContents.send("download-progress", titleId, percentage.toFixed(2));
-        lastEmittedEventTimestamp = +new Date();
-      }
-    });
-    fileStream.on("finish", () => resolve(dataPath));
-  }).catch(() => null);
+  const result = await HttpService.fetchWithProgress(HTTP_PATHS.SHADER_ZIP.replace("{id}", titleId), shaderDestPath, mainWindow, titleId);
 
   if (!result) {
     return null;

@@ -12,13 +12,13 @@ const firmwareFileName = "firmware.zip";
 
 const onFirmwareProgressEvent = (_: unknown, filename: string, percentage: number, downloadSpeed: number) => {
 
-  if (filename !== "firmware") {
+  if (filename !== "firmware.zip") {
     return;
   }
 
   useStore.getState().upsertFileAction({
     filename: firmwareFileName,
-    downloadSpeed,
+    downloadSpeed: Infinity,
     progress: percentage
   });
 };

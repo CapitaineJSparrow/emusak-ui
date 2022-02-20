@@ -1,10 +1,11 @@
 import { URL } from "url";
 import fetch, { Response } from "node-fetch";
 import pRetry from "p-retry";
-import { app } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import http from "http";
 import https from "https";
 import dns from "dns/promises";
+import fs from "fs-extra";
 
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
@@ -83,6 +84,41 @@ class HttpService {
     ) as unknown as Promise<Response>;
   }
 
+  public async fetchWithProgress(path: string, destPath: string, mainWindow: BrowserWindow, eventName: string) {
+    const url = new URL(path, this.url);
+    const fileStream = fs.createWriteStream(destPath);
+    const controller = new AbortController();
+
+    const response = await fetch(url.href, { signal: controller.signal, agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https") });
+    let bytes = 0;
+    let lastEmittedEventTimestamp = 0;
+
+    ipcMain.on("cancel-download", async (_, abortKey: string) => {
+      if (abortKey !== eventName) return;
+      fileStream.close();
+      // eslint-disable-next-line no-empty
+      try {fs.unlinkSync(destPath);} catch(e) {}
+      controller.abort();
+    });
+
+    return new Promise((resolve, reject) => {
+      response.body.pipe(fileStream);
+      response.body.on("error", reject);
+      response.body.on("data", (chunk) => {
+        bytes += chunk.length;
+        const percentage = bytes / +(response.headers.get("content-length")) * 100;
+        const currentTimestamp = +new Date();
+
+        // Throttle event to 1 time every 100ms
+        if (currentTimestamp - lastEmittedEventTimestamp >= 100) {
+          mainWindow.webContents.send("download-progress", eventName, percentage.toFixed(2));
+          lastEmittedEventTimestamp = +new Date();
+        }
+      });
+      fileStream.on("finish", () => resolve(destPath));
+    }).catch(() => null);
+  }
+
   public async downloadRyujinxShaders() {
     return this._fetch(HTTP_PATHS.RYUJINX_SHADERS_LIST);
   }
@@ -132,7 +168,7 @@ class HttpService {
     return this._fetch(HTTP_PATHS.MODS_LIST_VERSION.replace("{id}", id).replace("{version}", version));
   }
 
-  public async downloadMod(id: string, version: string, name: string, controller?: AbortController): Promise<{ response: Response, name: string }> {
+  public async getModName(id: string, version: string, name: string, controller?: AbortController): Promise<{ modName: string, url: string }> {
     const path = HTTP_PATHS
       .MOD_DOWNLOAD
       .replace("{id}", id)
@@ -148,8 +184,8 @@ class HttpService {
     const url = new URL(`${path}${encodeURIComponent(mod[0].name)}`, this.url);
 
     return {
-      response: await fetch(url.href, { signal: controller ? controller.signal : undefined, agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https") }),
-      name: mod[0].name
+      modName: mod[0].name,
+      url: url.href
     };
   }
 
