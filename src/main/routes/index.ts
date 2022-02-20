@@ -19,6 +19,8 @@ import {
   getModsVersionsProps
 } from "./modsDownload";
 import { countShaders, countShadersProps, installShaders, installShadersProps, shareShaders } from "./shaders";
+import { toggleCustomDnsResolver } from "./dns.ipc";
+import { hasDnsFile } from "../../index";
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("load-components", async (_, ...args: loadComponentsProps) => loadComponentIpcHandler(...args));
@@ -41,6 +43,8 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("count-shaders", async (_, ...args: countShadersProps) => countShaders(...args));
   ipcMain.handle("install-shaders", async (_, ...args: installShadersProps) => installShaders(mainWindow, ...args));
   ipcMain.handle("share-shaders", async (_, ...args: shareShaders) => shareShaders(mainWindow, ...args));
+  ipcMain.handle("toggle-custom-dns", async () => toggleCustomDnsResolver());
+  ipcMain.handle("has-dns-file", async () => hasDnsFile ? true : false);
 };
 
 export default makeIpcRoutes;

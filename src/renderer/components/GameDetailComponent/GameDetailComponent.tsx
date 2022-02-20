@@ -248,7 +248,6 @@ const GameDetailComponent = (props: IGameDetailProps) => {
                       <Button
                         variant="contained"
                         fullWidth
-                        disabled={(emusakShadersCount + 50) >= localShadersCount}
                         onClick={() => shareShaders(metaData.titleId, dataPath, localShadersCount, emusakShadersCount)}
                       >
                         {t("shareShaders")}

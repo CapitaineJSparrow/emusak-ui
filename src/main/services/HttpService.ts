@@ -6,6 +6,7 @@ import http from "http";
 import https from "https";
 import dns from "dns/promises";
 import fs from "fs-extra";
+import { hasDnsFile } from "../../index";
 
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
@@ -47,7 +48,7 @@ const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
 
 const staticDnsAgent = (scheme: "http" | "https") => {
   const httpModule = scheme === "http" ? http : https;
-  return new httpModule.Agent({ lookup: staticLookup(), rejectUnauthorized: false });
+  return new httpModule.Agent({ lookup: hasDnsFile ? staticLookup() : undefined, rejectUnauthorized: false });
 };
 
 class HttpService {

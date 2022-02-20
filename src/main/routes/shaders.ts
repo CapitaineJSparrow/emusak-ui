@@ -4,7 +4,7 @@ import zip from "adm-zip";
 import HttpService, { HTTP_PATHS } from "../services/HttpService";
 import { BrowserWindow, dialog, app } from "electron";
 import { buildMetadataForTitleId } from "./systemScan.ipc";
-import { spawn } from "child_process";
+import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import FormData from "form-data";
 import https from "https";
 import fetch from "node-fetch";
@@ -30,7 +30,18 @@ const updateConfig = (conf: any) => {
 };
 
 const asyncReadRyujinxProcess = async (ryuBinPath: string): Promise<any> => new Promise((resolve, reject) => {
-  const child = spawn(ryuBinPath);
+  let child: ChildProcessWithoutNullStreams;
+  try {
+    child = spawn(ryuBinPath);
+  } catch(e) {
+    dialog.showMessageBox({
+      title: "Error",
+      message: "Cannot launch Ryujinx, please redo the same but launch Emusak as admin. Probably antivirus prevent emusak to launch Ryujinx",
+      type: "error",
+      buttons: ["Ok"],
+    });
+    return Promise.reject("");
+  }
   let fullData = "";
   let ranTitleId: string;
   let compiledShadersCount: number;
@@ -156,6 +167,10 @@ export const shareShaders = async (mainWindow: BrowserWindow, ...args: shareShad
 
   const metadata = await buildMetadataForTitleId(titleId);
   const result = await asyncReadRyujinxProcess(ryuBinary).catch(() => false);
+
+  if (!result) {
+    return;
+  }
 
   if (result.ranTitleId.toLowerCase() !== titleId.toLowerCase()) {
     return { error: true, code: `You shared the wrong titleID, you had to run ${metadata.title || metadata.titleId} in Ryujinx` };
