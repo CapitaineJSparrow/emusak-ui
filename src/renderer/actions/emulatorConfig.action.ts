@@ -73,7 +73,7 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
           emulator: get().currentEmu
         };
         emulatorBinariesPath.push(config);
-
+        localStorage.setItem(`${get().currentEmu}-selected`, config.path);
         localStorage.setItem(LS_KEYS.CONFIG, JSON.stringify(emulatorBinariesPath));
         return set({ emulatorBinariesPath, selectedConfig: config });
       }
