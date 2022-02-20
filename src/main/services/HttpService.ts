@@ -193,13 +193,6 @@ class HttpService {
     return this._fetch(HTTP_PATHS.SHADER_INFO.replace("{id}", id), "BUFFER");
   }
 
-  public async downloadShaderZip(id: string, controller?: AbortController) {
-    const path = HTTP_PATHS.SHADER_ZIP.replace("{id}", id);
-    const url = new URL(path, this.url);
-
-    return await fetch(url.href, { agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https"), signal: controller ? controller.signal : undefined });
-  }
-
   public async downloadSave(id: string, index: number) {
     return this._fetch(HTTP_PATHS.SAVES_DOWNLOAD.replace("{id}", id).replace("{index}", `${index}`), "BUFFER");
   }
