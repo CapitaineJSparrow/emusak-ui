@@ -17,8 +17,6 @@ export const eshopDataPath = process.platform === "win32"
   // We can't write on executable directory on linux if it's installed in /bin (package manager) or with AppImage (readOnly)
   : path.join(app.getPath("userData"), "eshop.json");
 
-console.log({ eshopDataPath });
-
 const getEshopData = async () => {
   const localData = await fs.access(eshopDataPath).then(() => true).catch(() => false);
   let data: EshopData;
