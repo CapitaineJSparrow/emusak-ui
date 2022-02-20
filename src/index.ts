@@ -10,9 +10,11 @@ import fs from "fs-extra";
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-// Don't use appData to store cache
+export const hasPortableFile = fs.existsSync(path.resolve(app.getPath("exe"), "portable"));
+
+// Don't use appData to store cache if zip maker used
 // We can't setPath in linux appImage since it's read only, for now do this only for windows
-if (process.platform === "win32" && !process.argv.join("").includes("squirrel")) {
+if (process.platform === "win32" && !process.argv.join("").includes("squirrel") && hasPortableFile) {
   const cacheDir = path.resolve(app.getPath("exe"), "..", "electron_cache");
   fs.ensureDirSync(cacheDir);
   app.setPath("userData", cacheDir);

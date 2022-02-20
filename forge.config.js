@@ -1,5 +1,6 @@
 const fs = require("fs-extra");
 const path = require("path");
+const Zip = require("adm-zip");
 
 module.exports = {
   "forge": "./forge.config.js",
@@ -74,12 +75,7 @@ module.exports = {
       try {
         if (portablePath) {
           const filename = path.basename(portablePath);
-          await fs.move(portablePath, portablePath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`))
-        }
-
-        if (exePath) {
-          const filename = path.basename(exePath);
-          await fs.move(exePath, exePath.replace(filename, `EmuSAK-win32-x64-${version}-installer-recommended.exe`))
+          await fs.move(portablePath, portablePath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`));
         }
       } catch(e) {
         // fs.move is launched twice, first for dry run and second time by make from dry-run causing an exception, so ignore and assume it exists
@@ -88,7 +84,7 @@ module.exports = {
       try {
         if (exePath) {
           const filename = path.basename(exePath);
-          await fs.move(exePath, exePath.replace(filename, `EmuSAK-win32-x64-${version}-installer-recommended.exe`))
+          await fs.move(exePath, exePath.replace(filename, `EmuSAK-win32-x64-${version}-installer-recommended.exe`));
         }
       } catch(e) {}
 
@@ -100,6 +96,10 @@ module.exports = {
               const filename = path.basename(fullPath);
 
               if (fullPath.includes(".zip") && fullPath.includes("win32")) {
+                const archive = new Zip(fullPath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`));
+                archive.addFile("portable", Buffer.from("portable", "utf8"), "EmuSAK is portable");
+                fs.removeSync(fullPath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`));
+                archive.writeZip(fullPath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`));
                 return fullPath.replace(filename, `EmuSAK-win32-x64-${version}-portable.zip`);
               }
 
@@ -110,7 +110,7 @@ module.exports = {
               return fullPath;
             })
         }
-      }))
+      }));
     }
   }
 };
