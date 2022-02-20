@@ -48,8 +48,12 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
         downloadSpeed: Infinity
       });
 
-      ipcRenderer.invoke("update-eshop-data").then(() => {
-        localStorage.setItem(LS_KEYS.ESHOP_UPDATE, `${today.getTime()}`);
+      ipcRenderer.invoke("update-eshop-data").then((res) => {
+
+        if (res === true) {
+          localStorage.setItem(LS_KEYS.ESHOP_UPDATE, `${today.getTime()}`);
+        }
+
         get().removeFileAction(t("updatingEshop"));
       });
     }
