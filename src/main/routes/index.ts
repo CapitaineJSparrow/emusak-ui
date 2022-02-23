@@ -44,7 +44,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("install-shaders", async (_, ...args: installShadersProps) => installShaders(mainWindow, ...args));
   ipcMain.handle("share-shaders", async (_, ...args: shareShaders) => shareShaders(mainWindow, ...args));
   ipcMain.handle("toggle-custom-dns", async () => toggleCustomDnsResolver());
-  ipcMain.handle("has-dns-file", async () => hasDnsFile ? true : false);
+  ipcMain.handle("has-dns-file", async () => hasDnsFile);
 };
 
 export default makeIpcRoutes;

@@ -1,4 +1,9 @@
 {
+  "customDns": "Use custom DNS resolver (CloudFlare) instead system provided. This may fix infinite load issues when emusak status is up.",
+  "shadersCheck": "Then you will have to run your game into Ryujinx so emusak can check that everything is working as expected for anyone.",
+  "shadersSharing": "Sharing Shaders ...",
+  "shadersShared": "Your shaders have been submitted! You can find them in <code>#ryu-shaders</code> channel. Once approved they will be shared to everyone!",
+
   "emusak": "EmuSAK",
   "tos": "Genom att använda EmuSAK samtycker du till att <i>aldrig</i> be om support eller prata om det i officiella emulatorkanaler (reddit, discord, etc...). Emusak är som Fight Club, du känner redan till regel #1. Använd discord-länken uppe till höger om du behöver hjälp istället",
   "agree": "Jag godkänner ToS",

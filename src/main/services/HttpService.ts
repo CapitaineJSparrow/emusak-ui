@@ -90,15 +90,20 @@ class HttpService {
     const fileStream = fs.createWriteStream(destPath);
     const controller = new AbortController();
 
-    const response = await fetch(url.href, { signal: controller.signal, agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https") });
-    let bytes = 0;
+    const response = await fetch(url.href, {
+      signal: controller.signal,
+      agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https")
+    });
+
+    let chunkLength = 0;
     let lastEmittedEventTimestamp = 0;
+    const contentLength = +(response.headers.get("content-length"));
+    const startTime = Date.now();
 
     ipcMain.on("cancel-download", async (_, abortKey: string) => {
       if (abortKey !== eventName) return;
       fileStream.close();
-      // eslint-disable-next-line no-empty
-      try {fs.unlinkSync(destPath);} catch(e) {}
+      await fs.unlink(destPath).catch(() => null);
       controller.abort();
     });
 
@@ -106,14 +111,16 @@ class HttpService {
       response.body.pipe(fileStream);
       response.body.on("error", reject);
       response.body.on("data", (chunk) => {
-        bytes += chunk.length;
-        const percentage = bytes / +(response.headers.get("content-length")) * 100;
+        chunkLength += chunk.length;
+        const percentage = chunkLength / contentLength * 100;
         const currentTimestamp = +new Date();
+        const timeRange = currentTimestamp - startTime;
+        const downloadSpeed = chunkLength / timeRange / 1024;
 
         // Throttle event to 1 time every 100ms
-        if (currentTimestamp - lastEmittedEventTimestamp >= 100) {
-          mainWindow.webContents.send("download-progress", eventName, percentage.toFixed(2));
-          lastEmittedEventTimestamp = +new Date();
+        if (currentTimestamp - lastEmittedEventTimestamp >= 200) {
+          mainWindow.webContents.send("download-progress", eventName, percentage.toFixed(2), +downloadSpeed.toFixed(2));
+          lastEmittedEventTimestamp = currentTimestamp;
         }
       });
       fileStream.on("finish", () => resolve(destPath));
@@ -198,7 +205,7 @@ class HttpService {
     return this._fetch(HTTP_PATHS.SAVES_DOWNLOAD.replace("{id}", id).replace("{index}", `${index}`), "BUFFER");
   }
 
-  public async postMessage (message: string) {
+  public async postMessage(message: string) {
     return this._fetch(HTTP_PATHS.SHADER_UPLOAD, "TXT", this.url,{
       method: "POST",
       body: JSON.stringify({
