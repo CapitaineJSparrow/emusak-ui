@@ -213,6 +213,16 @@ class HttpService {
       })
     });
   }
+
+  public async searchGameBana(query: string) {
+    return this._fetch(
+      `/apiv7/Util/Game/NameMatch?_sName=${query}&_nPerpage=10&_nPage=1`,
+      "JSON",
+      "https://gamebanana.com",
+      {},
+      1
+    );
+  }
 }
 
 export default new HttpService();

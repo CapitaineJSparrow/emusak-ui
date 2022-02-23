@@ -88,7 +88,7 @@ const buildMetadataForTitleId = async (titleId: string) => {
 
   if (eshopEntry) {
     return {
-      title: eData[eshopEntry].name,
+      title: eData[eshopEntry].name.split("").filter(c => c !== "™").join(""),
       img: eData[eshopEntry].iconUrl,
       titleId: titleId.toUpperCase(),
     };

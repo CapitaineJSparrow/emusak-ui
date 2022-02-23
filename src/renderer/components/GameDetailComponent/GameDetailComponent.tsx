@@ -40,6 +40,12 @@ const TwoLinesTitle = styled(Typography)(() => ({
   overflow: "hidden"
 }));
 
+const GameBanaCover = styled(Box)(() => ({
+  width: "100%",
+  aspectRatio: "16 / 9",
+  backgroundSize: "cover"
+}));
+
 const GameDetailComponent = (props: IGameDetailProps) => {
   const { titleId, dataPath } = props;
   const [
@@ -67,6 +73,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
   ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
+  const [gameBananaMods, setGameBananaMods] = useState<{ name: string, url: string, cover: string }[]>([]);
   const [localShadersCount, setLocalShadersCount] = useState(0);
   const { t } = useTranslation();
 
@@ -100,6 +107,12 @@ const GameDetailComponent = (props: IGameDetailProps) => {
       ipcRenderer.invoke("count-shaders", titleId, dataPath).then(setLocalShadersCount);
     }
   }, [titleId, needRefreshShaders]);
+
+  useEffect(() => {
+    metaData?.title && ipcRenderer.invoke("search-gamebanana", metaData.title).then(d => {
+      setGameBananaMods(Object.values(d).filter((d: any) => d.name && d.url && d.cover) as any);
+    });
+  }, [metaData]);
 
   const renderCompatibilityData = () => (
     <Grid container mb={2} sx={{ display: "flex", alignItems: "center" }}>
@@ -289,6 +302,34 @@ const GameDetailComponent = (props: IGameDetailProps) => {
               )
           }
         </Grid>
+
+        {
+          gameBananaMods.length > 0 && (
+            <Box pb={3}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <h3>Gamebana mods (up to 20 most downloaded mods on GameBanana)</h3>
+                  <Divider />
+                </Grid>
+
+                {
+                  gameBananaMods.map(g => (
+                    <Grid key={g.name} item xs={2}>
+                      <a style={{ textDecoration: "none", color: "#FFF" }} href={g.url} className="no-blank-icon" target="_blank">
+                        <TwoLinesTitle style={{ marginBottom: 6, lineHeight: 1.4 }} variant="body2" align="center">{g.name}</TwoLinesTitle>
+                        <GameBanaCover style={{ background: `url(${g.cover}) no-repeat center center` }}>
+
+                        </GameBanaCover>
+                      </a>
+                    </Grid>
+                  ))
+                }
+              </Grid>
+            </Box>
+          )
+        }
+
+
       </Grid>
     </>
   );
