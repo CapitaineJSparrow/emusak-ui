@@ -32,9 +32,10 @@ const downloadEshopData = async () => {
 const updateEshopData = async () => {
   try {
     const eshopData = await downloadEshopData();
-    await fs.writeFile(eshopDataPath, JSON.stringify(eshopData), "utf-8");
+    await fs.writeFile(eshopDataPath(), JSON.stringify(eshopData), "utf-8");
     return true;
   } catch(e) {
+    console.log(e);
     return false;
   }
 };
