@@ -58,3 +58,9 @@ export type GithubIssue = {
     labels: GithubLabel[];
   }[];
 };
+
+export type GameBananaMod = {
+  name: string,
+  url: string,
+  cover: string,
+};
