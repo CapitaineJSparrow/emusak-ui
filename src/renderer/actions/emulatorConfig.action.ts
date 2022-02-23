@@ -7,10 +7,11 @@ import { i18n } from "../app";
 import { ITitleBar } from "./titleBar.actions";
 
 export interface IEmulatorConfig {
-  addNewEmulatorConfigAction: () => Partial<IEmulatorConfig>;
+  addNewEmulatorConfigAction: () => void;
   emulatorBinariesPath: EmusakEmulatorConfig[];
   selectedConfig: EmusakEmulatorConfig;
-  setSelectConfigAction: (selectedConfig: EmusakEmulatorConfig) => Partial<IEmulatorConfig>,
+  setSelectConfigAction: (selectedConfig: EmusakEmulatorConfig) => void,
+  removeEmulatorConfigAction: (path: string) => void,
   getModeForBinary: (binaryPath: string) => Promise<EmusakEmulatorMode>;
   createDefaultConfig: () => void;
   emulatorGames: EmusakEmulatorGame[];
@@ -18,7 +19,7 @@ export interface IEmulatorConfig {
 
 const configuredEmulators: IEmulatorConfig["emulatorBinariesPath"] = JSON.parse(localStorage.getItem(LS_KEYS.CONFIG)) || [];
 
-const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IAlert & IEmulatorConfig & ITitleBar>>) => ({
+const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IAlert & IEmulatorConfig & ITitleBar>>): IEmulatorConfig => ({
   emulatorBinariesPath: configuredEmulators,
   emulatorGames: [] as EmusakEmulatorGame[],
   selectedConfig: null as EmusakEmulatorConfig,
@@ -27,6 +28,7 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
       return;
     }
 
+    localStorage.setItem(`${get().currentEmu}-selected`, selectedConfig.path);
     return set({ selectedConfig });
   },
   addNewEmulatorConfigAction: async () => {
@@ -71,20 +73,20 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
           emulator: get().currentEmu
         };
         emulatorBinariesPath.push(config);
-
+        localStorage.setItem(`${get().currentEmu}-selected`, config.path);
         localStorage.setItem(LS_KEYS.CONFIG, JSON.stringify(emulatorBinariesPath));
         return set({ emulatorBinariesPath, selectedConfig: config });
       }
     }
   },
-  removeEmulatorConfigAction: (path: string) => {
+  removeEmulatorConfigAction: (path) => {
     const configs = get().emulatorBinariesPath;
     const index = configs.findIndex(item => item.path === path);
     configs.splice(index, 1);
     localStorage.setItem(LS_KEYS.CONFIG, JSON.stringify(configs));
     return set({ emulatorBinariesPath: configs, selectedConfig: configs.filter(c => c.emulator === get().currentEmu)[0] });
   },
-  getModeForBinary: async (path: string): Promise<EmusakEmulatorMode> => {
+  getModeForBinary: async (path): Promise<EmusakEmulatorMode> => {
     return ipcRenderer.invoke("system-scan-for-config", get().currentEmu, path);
   },
   createDefaultConfig: async () => {

@@ -1,6 +1,6 @@
 import path from "path";
 import * as fs from "fs/promises";
-import { app } from "electron";
+import { app, dialog } from "electron";
 import { EmusakEmulatorGames, EmusakEmulatorMode, EmusakEmulatorsKind } from "../../types";
 import customDatabase from "../../assets/custom_database.json";
 import tinfoilDatabase from "../../assets/tinfoildb.json";
@@ -14,10 +14,12 @@ const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> =
   const isFitgirlRepack = await fs.stat(fitgirlDataPath).then(() => true).catch(() => false);
 
   if (isFitgirlRepack) {
-    return {
-      mode: "fitgirl",
-      dataPath: fitgirlDataPath
-    };
+    dialog.showMessageBox({
+      title: "Fitgirl strikes again",
+      message: "EmuSAK does not support Fitgirl repacks, please setup Ryujinx yourself.",
+      type: "error",
+      buttons: ["Ok"],
+    });
   }
 
   const portableDataPath = path.resolve(binaryPath, "..", "portable");
@@ -86,7 +88,7 @@ const buildMetadataForTitleId = async (titleId: string) => {
 
   if (eshopEntry) {
     return {
-      title: eData[eshopEntry].name,
+      title: eData[eshopEntry].name.split("").filter(c => c !== "™").join(""),
       img: eData[eshopEntry].iconUrl,
       titleId: titleId.toUpperCase(),
     };

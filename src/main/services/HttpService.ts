@@ -1,10 +1,12 @@
 import { URL } from "url";
 import fetch, { Response } from "node-fetch";
 import pRetry from "p-retry";
-import { app } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import http from "http";
 import https from "https";
 import dns from "dns/promises";
+import fs from "fs-extra";
+import { hasDnsFile } from "../../index";
 
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
@@ -17,7 +19,8 @@ export enum HTTP_PATHS {
   MODS_LIST_VERSION    = "/mods/{id}/{version}/",
   MOD_DOWNLOAD         = "/mods/{id}/{version}/{name}/",
   SHADER_INFO          = "/ryu/{id}.info",
-  SHADER_ZIP           = "/ryu/{id}.zip"
+  SHADER_ZIP           = "/ryu/{id}.zip",
+  SHADER_UPLOAD        = "/bo/api/submit"
 }
 
 export enum GITHUB_PATHS {
@@ -26,7 +29,7 @@ export enum GITHUB_PATHS {
   FIRMWARE_VERSION = "https://raw.githubusercontent.com/stromcon/emusak-ui/main/src/assets/version.txt",
 }
 
-// CloudFlare CDN https://1.1.1.1/dns/
+// CloudFlare DNS https://1.1.1.1/dns/
 // Resolve an issue where server cannot be reached in rare cases
 dns.setServers([
   "1.1.1.1",
@@ -37,7 +40,7 @@ const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
   const ips = await dns.resolve(hostname);
 
   if (ips.length === 0) {
-    throw new Error(`Unable to resolve ${hostname}`);
+    console.error(`Cannot resolve ${hostname}`);
   }
 
   cb(null, ips[0], 4);
@@ -45,9 +48,8 @@ const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
 
 const staticDnsAgent = (scheme: "http" | "https") => {
   const httpModule = scheme === "http" ? http : https;
-  return new httpModule.Agent({ lookup: staticLookup(), rejectUnauthorized: false });
+  return new httpModule.Agent({ lookup: hasDnsFile ? staticLookup() : undefined, rejectUnauthorized: false });
 };
-
 
 class HttpService {
 
@@ -81,6 +83,48 @@ class HttpService {
       },
       { retries }
     ) as unknown as Promise<Response>;
+  }
+
+  public async fetchWithProgress(path: string, destPath: string, mainWindow: BrowserWindow, eventName: string) {
+    const url = new URL(path, this.url);
+    const fileStream = fs.createWriteStream(destPath);
+    const controller = new AbortController();
+
+    const response = await fetch(url.href, {
+      signal: controller.signal,
+      agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https")
+    });
+
+    let chunkLength = 0;
+    let lastEmittedEventTimestamp = 0;
+    const contentLength = +(response.headers.get("content-length"));
+    const startTime = Date.now();
+
+    ipcMain.on("cancel-download", async (_, abortKey: string) => {
+      if (abortKey !== eventName) return;
+      fileStream.close();
+      await fs.unlink(destPath).catch(() => null);
+      controller.abort();
+    });
+
+    return new Promise((resolve, reject) => {
+      response.body.pipe(fileStream);
+      response.body.on("error", reject);
+      response.body.on("data", (chunk) => {
+        chunkLength += chunk.length;
+        const percentage = chunkLength / contentLength * 100;
+        const currentTimestamp = +new Date();
+        const timeRange = currentTimestamp - startTime;
+        const downloadSpeed = chunkLength / timeRange / 1024;
+
+        // Throttle event to 1 time every 100ms
+        if (currentTimestamp - lastEmittedEventTimestamp >= 200) {
+          mainWindow.webContents.send("download-progress", eventName, percentage.toFixed(2), +downloadSpeed.toFixed(2));
+          lastEmittedEventTimestamp = currentTimestamp;
+        }
+      });
+      fileStream.on("finish", () => resolve(destPath));
+    }).catch(() => null);
   }
 
   public async downloadRyujinxShaders() {
@@ -132,7 +176,7 @@ class HttpService {
     return this._fetch(HTTP_PATHS.MODS_LIST_VERSION.replace("{id}", id).replace("{version}", version));
   }
 
-  public async downloadMod(id: string, version: string, name: string, controller?: AbortController): Promise<{ response: Response, name: string }> {
+  public async getModName(id: string, version: string, name: string, controller?: AbortController): Promise<{ modName: string, url: string }> {
     const path = HTTP_PATHS
       .MOD_DOWNLOAD
       .replace("{id}", id)
@@ -148,8 +192,8 @@ class HttpService {
     const url = new URL(`${path}${encodeURIComponent(mod[0].name)}`, this.url);
 
     return {
-      response: await fetch(url.href, { signal: controller ? controller.signal : undefined, agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https") }),
-      name: mod[0].name
+      modName: mod[0].name,
+      url: url.href
     };
   }
 
@@ -157,15 +201,27 @@ class HttpService {
     return this._fetch(HTTP_PATHS.SHADER_INFO.replace("{id}", id), "BUFFER");
   }
 
-  public async downloadShaderZip(id: string, controller?: AbortController) {
-    const path = HTTP_PATHS.SHADER_ZIP.replace("{id}", id);
-    const url = new URL(path, this.url);
-
-    return await fetch(url.href, { agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https"), signal: controller ? controller.signal : undefined });
-  }
-
   public async downloadSave(id: string, index: number) {
     return this._fetch(HTTP_PATHS.SAVES_DOWNLOAD.replace("{id}", id).replace("{index}", `${index}`), "BUFFER");
+  }
+
+  public async postMessage(message: string) {
+    return this._fetch(HTTP_PATHS.SHADER_UPLOAD, "TXT", this.url,{
+      method: "POST",
+      body: JSON.stringify({
+        message
+      })
+    });
+  }
+
+  public async searchGameBana(query: string) {
+    return this._fetch(
+      `/apiv7/Util/Game/NameMatch?_sName=${query}&_nPerpage=10&_nPage=1`,
+      "JSON",
+      "https://gamebanana.com",
+      {},
+      1
+    );
   }
 }
 

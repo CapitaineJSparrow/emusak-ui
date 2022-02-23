@@ -19,7 +19,8 @@ const TOSComponent = () => {
             <p style="text-align: left">${t("tos")}</p>
           </div>`,
           input: "checkbox",
-          inputPlaceholder: t("agree")
+          inputPlaceholder: t("agree"),
+          allowOutsideClick: false,
         })
         .then((result) => {
           if (result.isConfirmed && result.value) {

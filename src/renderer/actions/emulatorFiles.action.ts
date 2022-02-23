@@ -11,30 +11,22 @@ const { t } = useTranslation();
 const firmwareFileName = "firmware.zip";
 
 const onFirmwareProgressEvent = (_: unknown, filename: string, percentage: number, downloadSpeed: number) => {
-
-  if (filename !== "firmware") {
-    return;
-  }
-
-  useStore.getState().upsertFileAction({
-    filename: firmwareFileName,
-    downloadSpeed,
-    progress: percentage
-  });
+  useStore.getState().updateFileProgress(firmwareFileName, filename, percentage, downloadSpeed);
 };
 
 const createEmulatorFilesSLice = (_set: SetState<{ }>, get: GetState<Partial<ITitleBar & IAlert>>) => ({
   installFirmwareAction: async (dataPath: string) => {
     ipcRenderer.on("download-progress", onFirmwareProgressEvent);
     const extractPath: { error: boolean, code: string } | string | false = await ipcRenderer.invoke("install-firmware", get().currentEmu, dataPath);
+
     useStore.getState().removeFileAction(firmwareFileName);
+    ipcRenderer.removeListener("download-progress", onFirmwareProgressEvent);
 
     if (extractPath === false) {
       return;
     }
 
     if (typeof extractPath === "object") {
-      ipcRenderer.removeListener("download-progress", onFirmwareProgressEvent);
       get().closeAlertAction();
       return Swal.fire({
         icon: "error",
@@ -43,7 +35,6 @@ const createEmulatorFilesSLice = (_set: SetState<{ }>, get: GetState<Partial<ITi
     }
 
     get().closeAlertAction();
-    ipcRenderer.removeListener("download-progress", onFirmwareProgressEvent);
     return Swal.fire({
       imageUrl: pirate,
       html: `<p style="padding: 5px">${t("firmwareLocation")} : <code>${extractPath}</code></p>`,

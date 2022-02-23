@@ -1,7 +1,8 @@
 import eshopDataBuildIn from "../../assets/US.en.json";
 import fs from "fs-extra";
-import { app } from "electron";
 import path from "path";
+import { app } from "electron";
+import { cacheDir } from "../../index";
 
 export type EshopData = {
   [key: string]: {
@@ -11,14 +12,17 @@ export type EshopData = {
   };
 };
 
-export const eshopDataPath = path.join(app.getPath("userData"), "eshop.json");
+export const eshopDataPath = () => process.platform === "win32"
+  ? path.join(cacheDir, "eshop.json")
+  // We can't write on executable directory on linux if it's installed in /bin (package manager) or with AppImage (readOnly)
+  : path.join(app.getPath("userData"), "eshop.json");
 
 const getEshopData = async () => {
-  const localData = await fs.access(eshopDataPath).then(() => true).catch(() => false);
+  const localData = await fs.access(eshopDataPath()).then(() => true).catch(() => false);
   let data: EshopData;
 
   if (localData) {
-    data = JSON.parse(await fs.readFile(eshopDataPath, "utf-8"));
+    data = JSON.parse(await fs.readFile(eshopDataPath(), "utf-8"));
   } else {
     data = eshopDataBuildIn as unknown as EshopData;
   }

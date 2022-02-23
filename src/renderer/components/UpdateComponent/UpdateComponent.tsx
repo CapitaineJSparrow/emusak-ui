@@ -15,6 +15,16 @@ const UpdateComponent = ({ state }: { state: "downloading" | "downloaded" }) => 
     ipcRenderer.on("is-portable", () => setIsPortable(true));
   }, [isPortable]);
 
+  useEffect(() => {
+    if (state === "downloaded") {
+      Swal.fire({
+        icon: "success",
+        text: t("update_restart"),
+        showCancelButton: true
+      }).then(({ value }) => value && ipcRenderer.send("reboot-after-download"));
+    }
+  }, [state]);
+
   if ((process.platform !== "win32" || isPortable) && currentVersion && latestVersion && semver.lt(currentVersion, latestVersion)) {
     return <Box p={2} pb={0}>
       <Alert severity="info">
@@ -26,16 +36,6 @@ const UpdateComponent = ({ state }: { state: "downloading" | "downloaded" }) => 
   if (!state) {
     return null;
   }
-
-  useEffect(() => {
-    if (state === "downloaded") {
-      Swal.fire({
-        icon: "success",
-        text: t("update_restart"),
-        showCancelButton: true
-      }).then(({ value }) => value && ipcRenderer.send("reboot-after-download"));
-    }
-  }, [state]);
 
   return (
     <Box p={2} pb={0}>

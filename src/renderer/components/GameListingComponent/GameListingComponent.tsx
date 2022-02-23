@@ -81,10 +81,13 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
       </p>
       <Divider />
       <h4 dangerouslySetInnerHTML={{ __html: currentEmu === "ryu" ? t("launchRyujinx") : t("launchYuzu") }} />
+      <p style={{ textAlign: "center" }}>
+        <Button onClick={refreshLibrary} startIcon={<RefreshIcon />} variant="outlined">{t("refresh")}</Button>
+      </p>
     </div>
   );
 
-  if (games.length === 0 || filteredGames.length === 0 || !isLoaded) {
+  if ((games.length === 0 || filteredGames.length === 0 || !isLoaded) && searchTerm.length === 0) {
     return renderJackSober();
   }
 

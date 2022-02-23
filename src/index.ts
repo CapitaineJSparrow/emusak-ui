@@ -10,10 +10,17 @@ import fs from "fs-extra";
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
-// Don't use appData to store cache
+export const hasPortableFile = fs.existsSync(path.resolve(app.getPath("exe"), "..", "portable"));
+export const cacheDir = hasPortableFile ? path.resolve(app.getPath("exe"), "..", "electron_cache") : path.join(app.getPath("userData"));
+export const dnsFile = path.resolve(cacheDir, "dns");
+export const hasDnsFile = fs.pathExistsSync(dnsFile);
+let updateDownloaded = false;
+
+ipcMain.handle("check-status", () => updateDownloaded);
+
+// Don't use appData to store cache if zip maker used
 // We can't setPath in linux appImage since it's read only, for now do this only for windows
-if (process.platform === "win32" && !process.argv.join("").includes("squirrel")) {
-  const cacheDir = path.resolve(app.getPath("exe"), "..", "electron_cache");
+if (process.platform === "win32" && !process.argv.join("").includes("squirrel") && hasPortableFile) {
   fs.ensureDirSync(cacheDir);
   app.setPath("userData", cacheDir);
 }
@@ -124,8 +131,11 @@ const createWindow = (): void => {
         isPortable = true;
       }
 
-      autoUpdater.on("update-downloaded", () => mainWindow.webContents.send("update-downloaded"));
       autoUpdater.on("update-available", () => mainWindow.webContents.send("update-available"));
+      autoUpdater.on("update-downloaded", () => {
+        updateDownloaded = true;
+        mainWindow.webContents.send("update-downloaded");
+      });
       ipcMain.on("reboot-after-download", () => autoUpdater.quitAndInstall());
     }
   });

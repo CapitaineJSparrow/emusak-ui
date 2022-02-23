@@ -1,4 +1,12 @@
 {
+  "customDns": "Use custom DNS resolver (CloudFlare) instead system provided. This may fix infinite load issues when emusak status is up.",
+  "shadersCheck": "Then you will have to run your game into Ryujinx so emusak can check that everything is working as expected for anyone.",
+  "shadersSharing": "Sharing Shaders ...",
+  "shadersShared": "Your shaders have been submitted! You can find them in <code>#ryu-shaders</code> channel. Once approved they will be shared to everyone!",
+  "gamebananaModsTitle": "Gamebanana mods (up to 20 most downloaded mods on GameBanana)",
+  "gamebananaNoMods": "Cannot find any mods on Gamebanana",
+  "gameBananaLoading": "Loading mods from Gamebanana ...",
+
   "emusak": "EmuSAK",
   "tos": "Utilizzando EmuSAK, accetti di non chiedere mai supporto o di parlarne nei canali ufficiali dell'emulatori (reddit, discord, ...). Emusak è come un fight club, conosci già la regola n.1. Utilizza il link Discord in alto a destra se hai bisogno di aiuto.",
   "agree": "Accetto",

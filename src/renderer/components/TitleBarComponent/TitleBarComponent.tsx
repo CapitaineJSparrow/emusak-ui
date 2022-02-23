@@ -36,7 +36,7 @@ const TitleBarComponent = () => {
         <img src={logo} height={28} alt=""/>
       </div>
       <div className="title-bar-title">
-        <span>{t("emusak")} <small>- v{version} (beta)</small></span>
+        <span>{t("emusak")} <small>- v{version}</small></span>
       </div>
       <div className="title-bar-buttons">
         <IconButton onClick={minimizeEmuSAKAction} size="small" style={{ color: "#FFF" }} color="primary" disableRipple>

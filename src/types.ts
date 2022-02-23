@@ -16,7 +16,8 @@ export type EmusakEmulatorConfig = {
   path: string,
   name: string,
   emulator : EmusakEmulatorsKind,
-  isDefault?: boolean
+  isDefault?: boolean,
+  selected?: boolean
 };
 
 export enum LS_KEYS {
@@ -56,4 +57,10 @@ export type GithubIssue = {
     state: string;
     labels: GithubLabel[];
   }[];
+};
+
+export type GameBananaMod = {
+  name: string,
+  url: string,
+  cover: string,
 };

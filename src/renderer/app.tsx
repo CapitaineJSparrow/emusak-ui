@@ -26,6 +26,7 @@ import de from "./i18n/de.json";
 import it from "./i18n/it.json";
 import es from "./i18n/es.json";
 import se from "./i18n/se.json";
+import tr from "./i18n/tr.json";
 
 import TitleBarComponent from "./components/TitleBarComponent/TitleBarComponent";
 import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
@@ -49,7 +50,7 @@ const darkTheme = createTheme({
 
 const lng = localStorage.getItem(LS_KEYS.LOCALE) ?? "en";
 
-const resources = { en, ru, br, de, it, es, se };
+const resources = { en, ru, br, de, it, es, se, tr };
 type localesType = keyof typeof resources;
 
 use(initReactI18next)
@@ -67,7 +68,7 @@ use(initReactI18next)
 export const LANGUAGES = Object.keys(resources);
 
 const App = () => {
-  const [isAppInitialized, bootstrapAppAction, openAlertAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction, state.openAlertAction]);
+  const [isAppInitialized, bootstrapAppAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction]);
   const [downloadState, setDownloadState] = useState(null);
 
   // Hack, due to tree checking, if Swal is not present the theme is not applied for further calls, need better solution
@@ -83,11 +84,12 @@ const App = () => {
     bootstrapAppAction();
     ipcRenderer.on("update-available", onUpdateAvailable);
     ipcRenderer.on("update-downloaded", onUpdateDownloaded);
-    openAlertAction("info", "Thanks for joining the beta. If something is not working, please report it on the Github as issue.");
+    const t = setInterval(() => ipcRenderer.invoke("check-status").then(r => r ? setDownloadState("downloaded") : undefined),5000);
 
     return () => {
       ipcRenderer.removeListener("update-available", onUpdateAvailable);
       ipcRenderer.removeListener("update-downloaded", onUpdateDownloaded);
+      clearInterval(t);
     };
   }, []);
 

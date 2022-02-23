@@ -19,6 +19,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import defaultIcon from "../../resources/default_icon.jpg";
 import { styled } from "@mui/material/styles";
 import MuiGrid from "@mui/material/Grid";
+import GameBananaModsComponent from "../GameBananaModsComponent";
 
 interface IGameDetailProps {
   titleId: string;
@@ -51,7 +52,8 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     setCurrentModAction,
     ryujinxShaders,
     downloadShadersAction,
-    needRefreshShaders
+    needRefreshShaders,
+    shareShaders
   ] = useStore(state => [
     state.clearCurrentGameAction,
     state.currentEmu,
@@ -61,7 +63,8 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     state.setCurrentModAction,
     state.ryujinxShaders,
     state.downloadShadersAction,
-    state.needRefreshShaders
+    state.needRefreshShaders,
+    state.shareShaders
   ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
@@ -246,10 +249,10 @@ const GameDetailComponent = (props: IGameDetailProps) => {
                       <Button
                         variant="contained"
                         fullWidth
-                        disabled={emusakShadersCount === 0 || localShadersCount >= emusakShadersCount}
-                        onClick={() => downloadShadersAction(metaData.titleId, dataPath)}
+                        disabled={(emusakShadersCount + 50) >= localShadersCount}
+                        onClick={() => shareShaders(metaData.titleId, dataPath, localShadersCount, emusakShadersCount)}
                       >
-                        {t("dlShaders")}
+                        {t("shareShaders")}
                       </Button>
                     </p>
                   </Box>
@@ -267,12 +270,12 @@ const GameDetailComponent = (props: IGameDetailProps) => {
                     </p>
                     <p>
                       <Button
-                        disabled={(emusakShadersCount + 50) >= localShadersCount}
                         variant="contained"
                         fullWidth
-                        onClick={() => alert("Not working in beta yet, it works on emusak V1")}
+                        disabled={emusakShadersCount === 0 || localShadersCount >= emusakShadersCount}
+                        onClick={() => downloadShadersAction(metaData.titleId, dataPath)}
                       >
-                        {t("shareShaders")}
+                        {t("dlShaders")}
                       </Button>
                     </p>
                   </Box>
@@ -286,6 +289,10 @@ const GameDetailComponent = (props: IGameDetailProps) => {
                 </Box>
               )
           }
+        </Grid>
+
+        <Grid item xs={12}>
+          <GameBananaModsComponent title={metaData?.title} />
         </Grid>
       </Grid>
     </>
