@@ -24,7 +24,7 @@ const BootstrapComponent = () => {
         <FormControlLabel
           control={<Checkbox checked={hasDns} />}
           onChange={() => ipcRenderer.invoke("toggle-custom-dns")}
-          label="Use custom DNS resolver (CloudFlare) instead system provided. This may fix infinite load issues when emusak status is up."
+          label={t("customDns")}
         />
       </FormGroup>
     </div>

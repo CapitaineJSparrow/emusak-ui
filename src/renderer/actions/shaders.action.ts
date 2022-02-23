@@ -24,16 +24,8 @@ const createShadersSlice = (set: SetState<IShaders>): IShaders => ({
       progress: 0
     });
 
-    const onShaderDownloadProgress = (_: any, filename: string, percentage: number) => {
-      if (filename !== titleId) {
-        return;
-      }
-
-      useStore.getState().upsertFileAction({
-        filename: titleId,
-        downloadSpeed: Infinity,
-        progress: percentage
-      });
+    const onShaderDownloadProgress = (_: unknown, filename: string, percentage: number, downloadSpeed: number) => {
+      useStore.getState().updateFileProgress(titleId, filename, percentage, downloadSpeed);
     };
 
     ipcRenderer.on("download-progress", onShaderDownloadProgress);
@@ -58,10 +50,11 @@ const createShadersSlice = (set: SetState<IShaders>): IShaders => ({
   shareShaders: async (titleId, dataPath, localShaderCount, emusakCount) => {
     await Swal.fire({
       icon: "info",
-      text: `${t("pickRyuBin")}. Then you will have to run your game into Ryujinx so emusak can check that everything is good`
+      text: `${t("pickRyuBin")}. ${t("shadersCheck")}`,
+      allowOutsideClick: false
     });
     const state = useStore.getState();
-    const dlManagerFilename = "Sharing shaders";
+    const dlManagerFilename = t("shadersSharing");
 
     state.upsertFileAction({
       filename: dlManagerFilename,
@@ -96,7 +89,7 @@ const createShadersSlice = (set: SetState<IShaders>): IShaders => ({
 
     return Swal.fire({
       imageUrl: pirate,
-      html: "You shaders have been submitted! You can find them in #ryu-shaders channel. Once approved they will be shared to everyone!",
+      html: t("shadersShared"),
     });
   }
 });

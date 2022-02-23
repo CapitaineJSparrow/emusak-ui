@@ -26,16 +26,8 @@ const createDownloadModSlice = (set: SetState<ISaveAction>): ISaveAction => ({
       progress: 0
     });
 
-    const onModDownloadProgress = (_: any, filename: string, percentage: number) => {
-      if (filename !== pickedMod) {
-        return;
-      }
-
-      useStore.getState().upsertFileAction({
-        filename: pickedMod,
-        downloadSpeed: Infinity,
-        progress: percentage
-      });
+    const onModDownloadProgress = (_: any, filename: string, percentage: number, downloadSpeed: number) => {
+      useStore.getState().updateFileProgress(filename, filename, percentage, downloadSpeed);
     };
 
     ipcRenderer.on("download-progress", onModDownloadProgress);
