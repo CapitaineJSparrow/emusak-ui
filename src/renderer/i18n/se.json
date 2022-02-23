@@ -3,6 +3,9 @@
   "shadersCheck": "Then you will have to run your game into Ryujinx so emusak can check that everything is working as expected for anyone.",
   "shadersSharing": "Sharing Shaders ...",
   "shadersShared": "Your shaders have been submitted! You can find them in <code>#ryu-shaders</code> channel. Once approved they will be shared to everyone!",
+  "gamebananaModsTitle": "Gamebanana mods (up to 20 most downloaded mods on GameBanana)",
+  "gamebananaNoMods": "Cannot find any mods on Gamebanana",
+  "gameBananaLoading": "Loading mods from Gamebanana ...",
 
   "emusak": "EmuSAK",
   "tos": "Genom att använda EmuSAK samtycker du till att <i>aldrig</i> be om support eller prata om det i officiella emulatorkanaler (reddit, discord, etc...). Emusak är som Fight Club, du känner redan till regel #1. Använd discord-länken uppe till höger om du behöver hjälp istället",
