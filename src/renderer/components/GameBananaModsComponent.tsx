@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GameBananaMod } from "../../types";
 import { ipcRenderer } from "electron";
-import { Alert, Box, Divider, Grid, Typography } from "@mui/material";
+import { Alert, Box, Divider, Grid, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import useTranslation from "../i18n/I18nService";
@@ -29,7 +29,8 @@ const Label = styled(Paper)(({ theme }) => ({
 const GameBanaCover = styled(Box)(() => ({
   width: "100%",
   aspectRatio: "16 / 9",
-  backgroundSize: "contain"
+  background: "no-repeat center center",
+  backgroundSize: "cover"
 }));
 
 type Props = {
@@ -59,10 +60,12 @@ const GameBananaModsComponent = ({ title }: Props) => {
             {
               (gameBananaMods).map(mod => (
                 <Grid key={mod.name} item xs={2}>
-                  <a style={{ textDecoration: "none", color: "#FFF" }} href={mod.url} className="no-blank-icon" target="_blank">
-                    <Label title={mod.name}>{mod.name}</Label>
-                    <GameBanaCover style={{ background: `url(${ mod.cover }) no-repeat center center` }} />
-                  </a>
+                  <Tooltip title={mod.name} placement="top">
+                    <a style={{ textDecoration: "none", color: "#FFF" }} href={mod.url} className="no-blank-icon" target="_blank">
+                      <Label title={mod.name}>{mod.name}</Label>
+                      <GameBanaCover style={{ backgroundImage: `url(${ mod.cover })` }} />
+                    </a>
+                  </Tooltip>
                 </Grid>
               ))
             }

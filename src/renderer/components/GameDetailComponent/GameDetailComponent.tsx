@@ -153,7 +153,15 @@ const GameDetailComponent = (props: IGameDetailProps) => {
       </Box>
 
       {
-        (compat !== null) && renderCompatibilityData()
+        currentEmu === "ryu" && (
+          <div style={{ height: 70 }}>
+            {
+              (compat !== null)
+                ? renderCompatibilityData()
+                : (<Alert severity="info">Loading ...</Alert>)
+            }
+          </div>
+        )
       }
 
       <Grid container mt={0}>
