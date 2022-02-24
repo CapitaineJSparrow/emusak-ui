@@ -121,8 +121,12 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                       .sort((a, b) => a.title.localeCompare(b.title))
                       .map((item, index) => (
                         <Grid item xs={2} onClick={() => setCurrentGameAction(item.titleId)} style={{ cursor: "pointer" }} key={index}>
-                          <Label title={item.title}>{item.title}</Label>
-                          <Cover style={{ backgroundImage: `url(${item.img.length > 0 ? item.img : defaultIcon})` }} />
+                          <Tooltip arrow placement="top" title={item.title}>
+                            <div>
+                              <Label>{item.title}</Label>
+                              <Cover style={{ backgroundImage: `url(${item.img.length > 0 ? item.img : defaultIcon})` }} />
+                            </div>
+                          </Tooltip>
                         </Grid>
                       ))
                   }

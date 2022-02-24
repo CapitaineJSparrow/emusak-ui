@@ -20,6 +20,7 @@ import defaultIcon from "../../resources/default_icon.jpg";
 import { styled } from "@mui/material/styles";
 import MuiGrid from "@mui/material/Grid";
 import GameBananaModsComponent from "../GameBananaModsComponent";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface IGameDetailProps {
   titleId: string;
@@ -53,7 +54,9 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     ryujinxShaders,
     downloadShadersAction,
     needRefreshShaders,
-    shareShaders
+    shareShaders,
+    deleteGameAction,
+    deletedGame
   ] = useStore(state => [
     state.clearCurrentGameAction,
     state.currentEmu,
@@ -64,12 +67,18 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     state.ryujinxShaders,
     state.downloadShadersAction,
     state.needRefreshShaders,
-    state.shareShaders
+    state.shareShaders,
+    state.deleteGameAction,
+    state.deletedGame,
   ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
   const [localShadersCount, setLocalShadersCount] = useState(0);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    deletedGame && clearCurrentGameAction();
+  }, [deletedGame]);
 
   const extractCompatibilityLabels = (response: GithubIssue) => {
     // Probably non 200 response from GitHub, so leave it as default value (null)
@@ -143,14 +152,26 @@ const GameDetailComponent = (props: IGameDetailProps) => {
 
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Button onClick={clearCurrentGameAction} size="small" variant="outlined"><ArrowBackIcon /></Button>
         {
           metaData && (
-            <h3 style={{ marginLeft: 12 }}>{metaData.title} (<small>{metaData.titleId}</small>)</h3>
+            <h3 style={{ marginLeft: 12 }}>{metaData.title} <code>{metaData.titleId}</code></h3>
           )
         }
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => deleteGameAction(metaData.titleId.toUpperCase(), dataPath)}
+          startIcon={<DeleteIcon />}
+        >
+          {t("deleteGame")}
+        </Button>
       </Box>
+
+      <Divider />
+      <br />
+
 
       {
         currentEmu === "ryu" && (
@@ -200,7 +221,8 @@ const GameDetailComponent = (props: IGameDetailProps) => {
               onClick={() => setCurrentModAction(metaData.titleId, dataPath)}
             >
               {t(hasMods ? "dlMods": "noMods")}
-            </Button></p>
+            </Button>
+          </p>
           <p>
             <Button
               variant="contained"

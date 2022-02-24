@@ -25,12 +25,11 @@ const Label = styled(Paper)(({ theme }) => ({
   textAlign: "center"
 }));
 
-
 const GameBanaCover = styled(Box)(() => ({
   width: "100%",
   aspectRatio: "16 / 9",
   background: "no-repeat center center",
-  backgroundSize: "cover"
+  backgroundSize: "contain"
 }));
 
 type Props = {

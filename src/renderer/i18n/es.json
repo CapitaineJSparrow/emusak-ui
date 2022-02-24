@@ -1,4 +1,9 @@
 {
+  "continue": "Continue",
+  "cancel": "Cancel",
+  "deleteGame": "Delete game",
+  "areYouSure": "Are you sure ?",
+  "deleteGameNotice": "This option will delete shader cache, CPU cache and mods folder for this game. This action cannot be undone.",
   "customDns": "Use custom DNS resolver (CloudFlare) instead system provided. This may fix infinite load issues when emusak status is up.",
   "shadersCheck": "Then you will have to run your game into Ryujinx so emusak can check that everything is working as expected for anyone.",
   "shadersSharing": "Sharing Shaders ...",

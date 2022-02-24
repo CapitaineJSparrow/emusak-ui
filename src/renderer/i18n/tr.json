@@ -1,4 +1,9 @@
 {
+  "continue": "Continue",
+  "cancel": "Cancel",
+  "deleteGame": "Delete game",
+  "areYouSure": "Are you sure ?",
+  "deleteGameNotice": "This option will delete shader cache, CPU cache and mods folder for this game. This action cannot be undone.",
   "customDns": "Yerel DNS çözümleyicisi yerine özel DNS çözümleyicisi kullan (CloudFlare). Özel DNS kullanımı Emusak'ın ağ durumunda sorun olmamasına rağmen yaşanan sonsuz yükleme sorununu çözebilir.",
   "shadersCheck": "Sonra Emusak'ın her şeyin herkes için sorunsuz çalıştığını kontrol edebilmesi için oyununuzu Ryujinx'te açmanız gerek.",
   "shadersSharing": "Shader paylaşılıyor ...",

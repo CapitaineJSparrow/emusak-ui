@@ -1,22 +1,23 @@
 import path from "path";
-import * as fs from "fs/promises";
 import { app, dialog } from "electron";
 import { EmusakEmulatorGames, EmusakEmulatorMode, EmusakEmulatorsKind } from "../../types";
 import customDatabase from "../../assets/custom_database.json";
 import tinfoilDatabase from "../../assets/tinfoildb.json";
 import getEshopData from "../services/eshopData";
+import { getModPathForTitleId } from "./modsDownload";
+import fs from "fs-extra";
 
-const tfDb: { [key: string]: string } = tinfoilDatabase;
-const csDb: { [key: string]: string } = customDatabase;
+const tfDb: typeof tinfoilDatabase = tinfoilDatabase;
+const csDb: typeof customDatabase = customDatabase;
 
-const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
+export const getRyujinxMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
   const fitgirlDataPath = path.resolve(binaryPath, "..", "..", "data", "games");
   const isFitgirlRepack = await fs.stat(fitgirlDataPath).then(() => true).catch(() => false);
 
   if (isFitgirlRepack) {
     dialog.showMessageBox({
       title: "Fitgirl strikes again",
-      message: "EmuSAK does not support Fitgirl repacks, please setup Ryujinx yourself.",
+      message: "EmuSAK does not support Fitgirl repacks, please setup Ryujinx yourself and delete this configuration.",
       type: "error",
       buttons: ["Ok"],
     });
@@ -57,7 +58,7 @@ const getYuzuMode = async (binaryPath: string): Promise<EmusakEmulatorMode> => {
   };
 };
 
-const systemScanIpc = async (kind: EmusakEmulatorsKind, binaryPath: string): Promise<EmusakEmulatorMode> => {
+export const emulatorFilesystem = async (kind: EmusakEmulatorsKind, binaryPath: string): Promise<EmusakEmulatorMode> => {
   if (kind === "yuzu") {
     return getYuzuMode(binaryPath);
   }
@@ -65,7 +66,7 @@ const systemScanIpc = async (kind: EmusakEmulatorsKind, binaryPath: string): Pro
   return getRyujinxMode(binaryPath);
 };
 
-const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): Promise<EmusakEmulatorGames> => {
+export const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): Promise<EmusakEmulatorGames> => {
   try {
     if (emu === "yuzu") {
       const windowsPath = path.join(dataPath, "cache", "game_list");
@@ -80,11 +81,11 @@ const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsKind): P
   }
 };
 
-const buildMetadataForTitleId = async (titleId: string) => {
+export const buildMetadataForTitleId = async (titleId: string) => {
   const eData = await getEshopData();
   const keys = Object.keys(eData);
   const eshopEntry = keys.find((key) => eData[key]?.id?.toLowerCase() === titleId.toLowerCase());
-  const id = titleId.toUpperCase();
+  const id = titleId.toUpperCase() as keyof typeof tfDb & keyof typeof csDb ;
 
   if (eshopEntry) {
     return {
@@ -96,14 +97,31 @@ const buildMetadataForTitleId = async (titleId: string) => {
 
   return {
     // Use custom database in priority, then database from tinfoil and fallback by returning only title ID in case game does not exists in eshop
-    title: csDb[id.toUpperCase()] || tfDb[id.toUpperCase()] || titleId.toUpperCase(),
+    title: csDb[id] || tfDb[id] || titleId.toUpperCase(),
     img: "",
     titleId: titleId.toUpperCase(),
   };
 };
 
-export {
-  systemScanIpc,
-  scanGamesForConfig,
-  buildMetadataForTitleId
+export type deleteGameProps = [string, string, EmusakEmulatorsKind];
+
+export const deleteGame = async (...args: deleteGameProps) => {
+  const [titleId, dataPath, emulator] = args;
+  const pathsToRemove: string[] = [];
+
+  if (emulator === "ryu") {
+    pathsToRemove.push(getModPathForTitleId(titleId, dataPath));
+    pathsToRemove.push(path.resolve(dataPath, "games", titleId.toLowerCase()));
+  } else {
+    pathsToRemove.push(path.resolve(dataPath, "load", titleId.toUpperCase()));
+    pathsToRemove.push(path.resolve(dataPath, "cache", "game_list", `${titleId.toLowerCase()}.pv.txt`));
+    pathsToRemove.push(path.resolve(dataPath, "cache", "games", titleId.toLowerCase()));
+    pathsToRemove.push(path.resolve(dataPath, "cache", "games", titleId.toUpperCase()));
+    pathsToRemove.push(path.resolve(dataPath, "shader", titleId.toLocaleLowerCase()));
+  }
+
+  // Do this sequentially, in my experience FS does not like concurrent actions
+  for (const path of pathsToRemove) {
+    await fs.remove(path).catch(() => null);
+  }
 };
