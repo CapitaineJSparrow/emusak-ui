@@ -22,6 +22,8 @@ export const getModsListForVersion = async (...args: getModsListForVersionProps)
   return HttpService.getModsForVersion(titleId, modName);
 };
 
+export const getModPathForTitleId = (id: string, dataPath: string) => path.resolve(dataPath, "mods", "contents", id.toLocaleLowerCase());
+
 export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadModProps): Promise<string> => {
   const [titleId, version, modName, dataPath, emulator] = args;
   const { modName: name, url } = await HttpService.getModName(titleId, version, modName);
@@ -29,7 +31,7 @@ export const downloadMod = async (mainWindow: BrowserWindow, ...args: downloadMo
 
   switch (emulator) {
     case "ryu":
-      destPath = path.resolve(dataPath, "mods", "contents", titleId.toLocaleLowerCase());
+      destPath = getModPathForTitleId(titleId, dataPath);
       break;
     case "yuzu":
       destPath = path.resolve(dataPath, "load",titleId.toUpperCase());

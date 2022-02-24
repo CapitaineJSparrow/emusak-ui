@@ -3,7 +3,7 @@ import path from "path";
 import zip from "adm-zip";
 import HttpService, { HTTP_PATHS } from "../services/HttpService";
 import { BrowserWindow, dialog, app } from "electron";
-import { buildMetadataForTitleId } from "./systemScan.ipc";
+import { buildMetadataForTitleId } from "./emulatorFilesystem";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import FormData from "form-data";
 import https from "https";
