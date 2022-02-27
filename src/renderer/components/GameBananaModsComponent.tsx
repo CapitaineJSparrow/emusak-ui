@@ -59,7 +59,7 @@ const GameBananaModsComponent = ({ title }: Props) => {
             {
               (gameBananaMods).map(mod => (
                 <Grid key={mod.name} item xs={2}>
-                  <Tooltip title={mod.name} placement="top">
+                  <Tooltip arrow title={mod.name} placement="top">
                     <a style={{ textDecoration: "none", color: "#FFF" }} href={mod.url} className="no-blank-icon" target="_blank">
                       <Label title={mod.name}>{mod.name}</Label>
                       <GameBanaCover style={{ backgroundImage: `url(${ mod.cover })` }} />
