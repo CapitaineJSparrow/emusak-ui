@@ -73,6 +73,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
   ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
+  const [_compatMode, setCompatMode] = useState<GithubIssue["mode"]>(null);
   const [localShadersCount, setLocalShadersCount] = useState(0);
   const { t } = useTranslation();
 
@@ -85,6 +86,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     if (!response.items) return;
 
     const item = (response.items).find(i => i.state === "open");
+    setCompatMode(response.mode);
     return setCompat(item ? item.labels : []);
   };
 
@@ -98,7 +100,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     });
 
     return shell.openExternal(compat.length > 0
-      ? `https://github.com/Ryujinx/Ryujinx-Games-List/issues?q=is%3Aissue+is%3Aopen+${metaData.titleId}`
+      ? `https://github.com/Ryujinx/Ryujinx-Games-List/issues?q=is%3Aissue+is%3Aopen+${_compatMode === "name" ? metaData.title : metaData.titleId}`
       : "https://github.com/Ryujinx/Ryujinx-Games-List/issues/new"
     );
   };

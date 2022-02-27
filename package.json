@@ -1,7 +1,7 @@
 {
   "name": "EmuSAK",
   "productName": "EmuSAK",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "This is a tool to manage your switch emulators, such as downloading saves or mods",
   "repository": "https://github.com/CapitaineJSparrow/emusak-ui",
   "main": ".webpack/main",

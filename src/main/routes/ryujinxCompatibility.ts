@@ -1,4 +1,6 @@
 import HttpService from "../services/HttpService";
+import { buildMetadataForTitleId } from "./emulatorFilesystem";
+import { GithubIssue } from "../../types";
 
 export type ryujinxCompatibilityProps = [string];
 
@@ -12,10 +14,16 @@ const ryujinxCompatibility = async (...args: ryujinxCompatibilityProps) => {
     return memoryDb[titleId];
   }
 
-  const compatData = await HttpService.getRyujinxCompatibility(titleId).catch(() => null);
+  let compatData = <GithubIssue> (await HttpService.getRyujinxCompatibility(titleId).catch(() => null));
+  compatData.mode = "id";
 
-  if (!compatData) {
-    return [];
+  // In case there is no compatibility found, try a search by name instead titleId
+  if (compatData.items.length === 0) {
+    const metadata = await buildMetadataForTitleId(titleId);
+    compatData = <GithubIssue> (await HttpService.getRyujinxCompatibility(metadata.title).catch(() => null));
+    if (compatData.items.length > 0) {
+      compatData.mode = "name";
+    }
   }
 
   memoryDb[titleId] = compatData;

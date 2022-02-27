@@ -161,9 +161,9 @@ class HttpService {
     return this._fetch("https://github.com/blawar/titledb/blob/master/US.en.json?raw=true");
   }
 
-  public async getRyujinxCompatibility(id: string) {
+  public async getRyujinxCompatibility(term: string) {
     // do not use this._fetch because we do not want exponential backoff strategy since GitHub api is limited to 10 requests per minute for unauthenticated requests
-    return fetch(`https://api.github.com/search/issues?q=${id}%20repo:Ryujinx/Ryujinx-Games-List`, {
+    return fetch(`https://api.github.com/search/issues?q=${term}%20repo:Ryujinx/Ryujinx-Games-List`, {
       agent: staticDnsAgent("https")
     }).then(r => r.json());
   }
