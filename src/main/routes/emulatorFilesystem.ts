@@ -81,28 +81,6 @@ export const scanGamesForConfig = async (dataPath: string, emu: EmusakEmulatorsK
   }
 };
 
-export const buildMetadataForTitleId = async (titleId: string) => {
-  const eData = await getEshopData();
-  const keys = Object.keys(eData);
-  const eshopEntry = keys.find((key) => eData[key]?.id?.toLowerCase() === titleId.toLowerCase());
-  const id = titleId.toUpperCase() as keyof typeof tfDb & keyof typeof csDb ;
-
-  if (eshopEntry) {
-    return {
-      title: eData[eshopEntry].name.split("").filter(c => c !== "™").join(""),
-      img: eData[eshopEntry].iconUrl,
-      titleId: titleId.toUpperCase(),
-    };
-  }
-
-  return {
-    // Use custom database in priority, then database from tinfoil and fallback by returning only title ID in case game does not exists in eshop
-    title: csDb[id] || tfDb[id] || titleId.toUpperCase(),
-    img: "",
-    titleId: titleId.toUpperCase(),
-  };
-};
-
 export type deleteGameProps = [string, string, EmusakEmulatorsKind];
 
 export const deleteGame = async (...args: deleteGameProps) => {
@@ -124,4 +102,41 @@ export const deleteGame = async (...args: deleteGameProps) => {
   for (const path of pathsToRemove) {
     await fs.remove(path).catch(() => null);
   }
+};
+
+export const buildMetadataForTitleId = async (titleId: string): Promise<{ title: string, img: string, titleId: string }> => {
+  const eData = await getEshopData();
+  const keys = Object.keys(eData);
+  const eshopEntry = keys.find((key) => eData[key]?.id?.toLowerCase() === titleId.toLowerCase());
+  const id = <keyof typeof customDatabase & keyof typeof tinfoilDatabase> titleId.toUpperCase();
+
+  if (eshopEntry) {
+    return {
+      title: eData[eshopEntry].name.replace("™", ""),
+      img: eData[eshopEntry].iconUrl,
+      titleId: titleId.toUpperCase(),
+    };
+  }
+
+  const nonEshopData = {
+    // Use custom database in priority, then database from tinfoil and fallback by returning only title ID in case game does not exists in eshop
+    title: (csDb[id]) || tfDb[id] || titleId.toUpperCase(),
+    img: "",
+    titleId: titleId.toUpperCase(),
+  };
+
+  // Try to perform a search by name instead title ID in case it's not found
+  if (!eshopEntry) {
+    const eshopEntryByName = keys.find((key) => eData[key]?.name?.toLowerCase().replace("™", "").includes(nonEshopData.title.toLowerCase()));
+
+    if (eshopEntryByName) {
+      return {
+        title: nonEshopData.title.toLowerCase(),
+        img: eData[eshopEntryByName].iconUrl,
+        titleId: titleId.toUpperCase(),
+      };
+    }
+  }
+
+  return nonEshopData;
 };
