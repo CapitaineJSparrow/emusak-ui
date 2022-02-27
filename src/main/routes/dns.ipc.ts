@@ -1,10 +1,10 @@
 import fs from "fs-extra";
 import { dialog } from "electron";
-import { dnsFile, hasDnsFile } from "../../index";
+import { dnsFile } from "../../index";
 
 export const toggleCustomDnsResolver = async () => {
-  if (hasDnsFile) {
-    await fs.unlink(dnsFile);
+  if (await fs.pathExists(dnsFile)) {
+    await fs.unlink(dnsFile).catch(() => null);
   } else {
     await fs.writeFile(dnsFile, "", "utf-8");
   }

@@ -103,7 +103,7 @@ const App = () => {
         <DownloadSaveComponent />
         <DownloadModComponent />
         <UpdateComponent state={downloadState} />
-        { !isAppInitialized ? <BootstrapComponent /> : <RootComponent /> }
+        { isAppInitialized ? <BootstrapComponent /> : <RootComponent /> }
         <TOSComponent />
       </CssBaseline>
     </ThemeProvider>

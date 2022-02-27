@@ -57,6 +57,7 @@ export type GithubIssue = {
     state: string;
     labels: GithubLabel[];
   }[];
+  mode?: "id" | "name";
 };
 
 export type GameBananaMod = {

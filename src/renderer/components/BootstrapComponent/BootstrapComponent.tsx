@@ -23,7 +23,7 @@ const BootstrapComponent = () => {
       <FormGroup>
         <FormControlLabel
           control={<Checkbox checked={hasDns} />}
-          onChange={() => ipcRenderer.invoke("toggle-custom-dns")}
+          onChange={() => ipcRenderer.invoke("toggle-custom-dns") && setHasDns(!hasDns)}
           label={t("customDns")}
         />
       </FormGroup>
