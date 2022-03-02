@@ -3,7 +3,7 @@
   "cancel": "Annulla",
   "deleteGame": "Cancella gioco",
   "areYouSure": "Sei sicuro/a ?",
-  "deleteGameNotice": " Questa opzione cancellerà  la tua shader cache, cache della CPU e la cartella dei per questo gioco. Questa azione non potrà essere annulata.",
+  "deleteGameNotice": " Questa opzione cancellerà  la tua shader cache, cache della CPU e la cartella dei mods per questo gioco. Questa azione non potrà essere annulata.",
   "customDns": "Use custom DNS resolver (CloudFlare) instead system provided. Potrebbe risolvere problemi di tempi di caricamento infiniti quando i server di emusak sono accesi.",
   "shadersCheck": "Poi devi aprire il tuo gioco in Ryujinx per permettere a emusak di verificare che tutto funzioni come si deve per tutti.",
   "shadersSharing": "Condividendo i Shaders ...",
