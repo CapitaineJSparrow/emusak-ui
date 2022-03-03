@@ -24,7 +24,7 @@ export enum LS_KEYS {
   CONFIG = "v2-emulators-bin",
   TOS = "v2-tos",
   TAB = "v2-tab",
-  ESHOP_UPDATE = "emusak-eshop-update-date",
+  ESHOP_UPDATE = "emusak-eshop-update-date-2",
   LOCALE = "emusak-locale"
 }
 
