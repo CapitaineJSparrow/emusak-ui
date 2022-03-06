@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, session, autoUpdater, ipcMain } from "electron";
+import { app, BrowserWindow, shell, session, autoUpdater, ipcMain, screen } from "electron";
 import isDev from "electron-is-dev";
 import makeIpcRoutes from "./main/routes/index";
 import path from "path";
@@ -91,12 +91,12 @@ if (handleStartupEvent()) {
 const createWindow = (): void => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    minHeight: 860,
-    minWidth: 1280,
     resizable: true,
     autoHideMenuBar: true,
     show: false,
     frame: false,
+    minHeight: 680,
+    minWidth: 920,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -106,7 +106,10 @@ const createWindow = (): void => {
   makeIpcRoutes(mainWindow);
 
   mainWindow.webContents.on("did-finish-load", function () {
-    mainWindow.setSize(1280, 860);
+    const displays = screen.getAllDisplays();
+    const display = displays.find((d) => d.bounds.x !== 0 || d.bounds.y !== 0) || displays[0];
+
+    mainWindow.setSize(Math.min(display.bounds.width, 1280), Math.min(display.bounds.width, 860));
     mainWindow.center();
     mainWindow.show();
 

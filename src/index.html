@@ -3,9 +3,83 @@
   <head>
     <meta charset="UTF-8">
     <title>EmuSAK</title>
-
   </head>
   <body>
     <span id="app"></span>
+  <script>
+    /**
+     * Script to handle controller navigation, probably handle only Xinput devices and xbox controller (like DS + DS4Windows to convert controller to xinput)
+     * https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
+     * For now, it's support only browsing games in library and manage navigation with A and B
+     */
+    window.addEventListener('gamepadconnected', () => {
+      document.body.classList.add('controller');
+      let currentIndex = -1;
+      let lastUpdate = null;
+
+      const isThrottled = (duration = 150) => !((+new Date() - lastUpdate) >= duration)
+
+      const handleControllerButtonPressed = (pressedButtonIndex) => {
+        if (typeof pressedButtonIndex !== "number") return;
+        lastUpdate = +new Date();
+        currentIndex = -1;
+
+        switch (pressedButtonIndex) {
+          case 1: // Supposed to be "B"
+            history.back()
+            break;
+          case 0: // Supposed to be "A"
+            document.activeElement.click();
+            break;
+        }
+      }
+
+      const DIRECTIONS = {
+        RIGHT: 1,
+        LEFT: -1,
+        NONE: 0
+      }
+
+      const update = () => {
+        const gamesElements = document.querySelectorAll(".game")
+        if (isThrottled()) return requestAnimationFrame(update);
+
+        for (const gamepad of navigator.getGamepads()) {
+          if (!gamepad || isThrottled()) continue;
+
+          let pressedButtonIndex = Object.keys(gamepad.buttons).findIndex(index => gamepad.buttons[index].pressed);
+          const [gamePadXAxis] = gamepad.axes.entries();
+          const [_, axisValue] = gamePadXAxis;
+
+          pressedButtonIndex = pressedButtonIndex === -1 ? null : pressedButtonIndex;
+          handleControllerButtonPressed(pressedButtonIndex);
+
+          const value = axisValue * 0.5 + 0.5;
+          let direction = DIRECTIONS.NONE;
+          if (value >= 0.8) direction = DIRECTIONS.RIGHT;
+          if (value <= 0.2) direction = DIRECTIONS.LEFT;
+
+          if (direction === DIRECTIONS.NONE) break;
+
+          const gameElement = gamesElements[currentIndex + direction];
+          const gamesLength = gamesElements.length
+
+          if (gameElement) {
+            gameElement.focus();
+            currentIndex = currentIndex + direction;
+            lastUpdate = +new Date();
+            return requestAnimationFrame(update);
+          }
+
+          // begin or end reached, go back to end or start depending on direction
+          currentIndex = direction === 1 ? -1 : gamesLength;
+        }
+
+        requestAnimationFrame(update);
+      };
+
+      update();
+    });
+  </script>
   </body>
 </html>
