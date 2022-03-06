@@ -6,6 +6,7 @@ import i18n, { use } from "i18next";
 import { initReactI18next } from "react-i18next";
 import Swal from "sweetalert2";
 import "./styles/swal.dark.css";
+import { HashRouter , Routes, Route } from "react-router-dom";
 
 import BootstrapComponent from "./components/BootstrapComponent/BootstrapComponent";
 import useStore from "./actions/state";
@@ -38,6 +39,7 @@ import UpdateComponent from "./components/UpdateComponent/UpdateComponent";
 import { LS_KEYS } from "../types";
 import DownloadSaveComponent from "./components/DownloadSaveComponent/DownloadSaveComponent";
 import DownloadModComponent from "./components/DownloadModComponent/DownloadModComponent";
+import GameDetailComponent from "./components/GameDetailComponent/GameDetailComponent";
 
 const darkTheme = createTheme({
   palette: {
@@ -94,19 +96,30 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline>
-        <TitleBarComponent />
-        <NavBarComponent />
-        <AlertComponent />
-        <DownloadManagerComponent />
-        <DownloadSaveComponent />
-        <DownloadModComponent />
-        <UpdateComponent state={downloadState} />
-        { !isAppInitialized ? <BootstrapComponent /> : <RootComponent /> }
-        <TOSComponent />
-      </CssBaseline>
-    </ThemeProvider>
+    <HashRouter>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline>
+          <TitleBarComponent />
+
+          <NavBarComponent />
+          <AlertComponent />
+          <DownloadManagerComponent />
+          <DownloadSaveComponent />
+          <DownloadModComponent />
+          <UpdateComponent state={downloadState} />
+          { !isAppInitialized
+            ? <BootstrapComponent />
+            : (
+              <Routes>
+                <Route path="/" element={<RootComponent />} />
+                <Route path="/detail" element={(<GameDetailComponent />)} />
+              </Routes>
+            )
+          }
+          <TOSComponent />
+        </CssBaseline>
+      </ThemeProvider>
+    </HashRouter>
   );
 };
 

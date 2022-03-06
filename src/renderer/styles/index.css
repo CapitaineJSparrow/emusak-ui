@@ -135,3 +135,17 @@ code {
 .slider > a:focus {
   background: #000;
 }
+
+.controller .game {
+  transition: 0.3s;
+}
+
+.controller .game:focus {
+  outline: none;
+  filter: brightness(1.35);
+  transform: translateY(-15px)
+}
+
+.controller *:not(.game):focus {
+  outline: 2px solid blue !important;
+}

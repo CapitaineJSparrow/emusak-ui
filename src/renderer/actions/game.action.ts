@@ -7,17 +7,11 @@ import useStore from "./state";
 const { t } = useTranslation();
 
 export interface IGameAction {
-  currentGame?: string,
-  setCurrentGameAction: (id: string) => void,
-  clearCurrentGameAction: () => void,
   deleteGameAction: (titleId: string, dataPath: string) => void,
   deletedGame?: string,
 }
 
 const createGameSlice = (set: SetState<IGameAction>): IGameAction => ({
-  currentGame: null,
-  setCurrentGameAction: (currentGame: string) => set({ currentGame }),
-  clearCurrentGameAction: () => set({ currentGame: null, deletedGame: null }),
   deleteGameAction: async (titleId, dataPath) => {
     const state = useStore.getState();
     const { isConfirmed } = await Swal.fire({

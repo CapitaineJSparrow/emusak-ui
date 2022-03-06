@@ -16,7 +16,6 @@ import {
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { EmusakEmulatorMode } from "../../types";
 import useTranslation from "../i18n/I18nService";
-import GameDetailComponent from "./GameDetailComponent/GameDetailComponent";
 
 const RootComponent = () => {
   const { t } = useTranslation();
@@ -34,7 +33,6 @@ const RootComponent = () => {
     installFirmwareAction,
     firmwareVersion,
     downloadKeysAction,
-    currentGame,
   ] = useStore(state => [
     state.emulatorBinariesPath,
     state.removeEmulatorConfigAction,
@@ -47,7 +45,6 @@ const RootComponent = () => {
     state.installFirmwareAction,
     state.firmwareVersion,
     state.downloadKeysAction,
-    state.currentGame,
   ]);
 
   const filteredConfig = emulatorBinariesPath.filter(c => c.emulator === currentEmu);
@@ -93,7 +90,7 @@ const RootComponent = () => {
 
   const renderEmulatorPathSelector = () => (
     <Grid container spacing={2}>
-      <Grid item xs={4}>
+      <Grid item xs={5}>
         <FormControl fullWidth>
           <InputLabel id="emulator-select-path-label">{ t("configuration") }</InputLabel>
           <Select
@@ -128,17 +125,13 @@ const RootComponent = () => {
       <br />
       <Stack spacing={2}>
         <Grid container spacing={2}>
+          <Grid item xs={5} lg={6}>
+            { renderEmulatorPathSelector() }
+          </Grid>
           {
-            !currentGame && (
-              <Grid item xs={6}>
-                { renderEmulatorPathSelector() }
-              </Grid>
-            )
-          }
-          {
-            (selectedConfig && mode && !currentGame) && (
+            (selectedConfig && mode) && (
               <>
-                <Grid item style={{ lineHeight: "52px" }} xs={3}>
+                <Grid item style={{ lineHeight: "52px" }} xs={4} lg={3}>
                   <Button onClick={() => installFirmwareAction(mode.dataPath) } fullWidth variant="contained">{ t("dl_firmware") } { firmwareVersion }</Button>
                 </Grid>
                 <Grid item style={{ lineHeight: "52px" }} xs={3}>
@@ -149,16 +142,11 @@ const RootComponent = () => {
           }
         </Grid>
 
+        { mode && <EmulatorContainer key={mode.dataPath} mode={mode} config={selectedConfig} /> }
         {
-          (selectedConfig && mode) && (
-            <div>
-              {
-                currentGame
-                  ? <GameDetailComponent dataPath={mode.dataPath} titleId={currentGame} />
-                  : <EmulatorContainer key={mode.dataPath} mode={mode} config={selectedConfig} />
-              }
-            </div>
-          )
+          /**
+           * <GameDetailComponent dataPath={mode.dataPath} titleId={currentGame} />
+           */
         }
       </Stack>
     </Container>

@@ -12,6 +12,7 @@ import jackSober from "../../resources/jack_sober.png";
 import defaultIcon from "../../resources/default_icon.jpg";
 import useTranslation from "../../i18n/I18nService";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { useNavigate } from "react-router-dom";
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;
@@ -44,7 +45,8 @@ const Cover = styled(Box)(() => ({
 
 const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   const { t } = useTranslation();
-  const [currentEmu, setCurrentGameAction, openAlertAction] = useStore(s => [s.currentEmu, s.setCurrentGameAction, s.openAlertAction]);
+  const navigate = useNavigate();
+  const [currentEmu, openAlertAction] = useStore(s => [s.currentEmu, s.openAlertAction]);
   const [games, setGames] = useState<{ title: string, img: string, titleId: string }[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -91,6 +93,10 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
     return renderJackSober();
   }
 
+  const onGameDetailClick = (titleId: string) => {
+    navigate("/detail", { state: { titleId, dataPath: mode.dataPath } });
+  };
+
   return (
     <>
       {
@@ -120,7 +126,7 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
                     filteredGames
                       .sort((a, b) => a.title.localeCompare(b.title))
                       .map((item, index) => (
-                        <Grid item xs={2} onClick={() => setCurrentGameAction(item.titleId)} style={{ cursor: "pointer" }} key={index}>
+                        <Grid tabIndex={index} className="game" item xs={2} onClick={() => onGameDetailClick(item.titleId)} style={{ cursor: "pointer" }} key={index}>
                           <Tooltip arrow placement="top" title={item.title}>
                             <div>
                               <Label>{item.title}</Label>

@@ -37,7 +37,7 @@ const createTitleBarSlice = (set: SetState<ITitleBar & IEmulatorConfig & IGameAc
   },
   switchEmuAction: (currentEmu) => {
     localStorage.setItem(LS_KEYS.TAB, currentEmu);
-    return set({ currentEmu, selectedConfig: null, currentGame: null });
+    return set({ currentEmu, selectedConfig: null });
   },
   switchLanguageAction: async (locale) => {
     localStorage.setItem(LS_KEYS.LOCALE, locale);

@@ -21,6 +21,7 @@ import { styled } from "@mui/material/styles";
 import MuiGrid from "@mui/material/Grid";
 import GameBananaModsComponent from "../GameBananaModsComponent";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface IGameDetailProps {
   titleId: string;
@@ -42,10 +43,10 @@ const TwoLinesTitle = styled(Typography)(() => ({
   overflow: "hidden"
 }));
 
-const GameDetailComponent = (props: IGameDetailProps) => {
-  const { titleId, dataPath } = props;
+const GameDetailComponent = () => {
+  const { state } = useLocation();
+  const { titleId, dataPath } = state as IGameDetailProps;
   const [
-    clearCurrentGameAction,
     currentEmu,
     saves,
     setCurrentSaveDownloadAction,
@@ -58,7 +59,6 @@ const GameDetailComponent = (props: IGameDetailProps) => {
     deleteGameAction,
     deletedGame
   ] = useStore(state => [
-    state.clearCurrentGameAction,
     state.currentEmu,
     state.saves,
     state.setCurrentSaveDownloadAction,
@@ -76,9 +76,10 @@ const GameDetailComponent = (props: IGameDetailProps) => {
   const [_compatMode, setCompatMode] = useState<GithubIssue["mode"]>(null);
   const [localShadersCount, setLocalShadersCount] = useState(0);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    deletedGame && clearCurrentGameAction();
+    deletedGame && navigate(-1);
   }, [deletedGame]);
 
   const extractCompatibilityLabels = (response: GithubIssue) => {
@@ -153,9 +154,9 @@ const GameDetailComponent = (props: IGameDetailProps) => {
   const emusakShadersCount = ryujinxShaders[metaData.titleId.toUpperCase()] || 0;
 
   return (
-    <>
+    <Box p={3}>
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <Button onClick={clearCurrentGameAction} size="small" variant="outlined"><ArrowBackIcon /></Button>
+        <Button onClick={() => navigate(-1)} size="small" variant="outlined"><ArrowBackIcon /></Button>
         {
           metaData && (
             <h3 style={{ marginLeft: 12 }}>{metaData.title} <code>{metaData.titleId}</code></h3>
@@ -173,7 +174,6 @@ const GameDetailComponent = (props: IGameDetailProps) => {
 
       <Divider />
       <br />
-
 
       {
         currentEmu === "ryu" && (
@@ -327,7 +327,7 @@ const GameDetailComponent = (props: IGameDetailProps) => {
           <GameBananaModsComponent title={metaData?.title} />
         </Grid>
       </Grid>
-    </>
+    </Box>
   );
 };
 
