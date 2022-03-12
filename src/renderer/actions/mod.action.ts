@@ -4,6 +4,7 @@ import { ipcRenderer } from "electron";
 import Swal from "sweetalert2";
 import useTranslation from "../i18n/I18nService";
 import pirate from "../resources/pirate.gif";
+import { invokeIpc } from "../utils";
 
 const { t } = useTranslation();
 
@@ -32,7 +33,7 @@ const createDownloadModSlice = (set: SetState<ISaveAction>): ISaveAction => ({
 
     ipcRenderer.on("download-progress", onModDownloadProgress);
 
-    const result = await ipcRenderer.invoke("download-mod", currentMod, version, pickedMod, dataPath, state.currentEmu).catch(() => null);
+    const result = await invokeIpc("download-mod", currentMod, version, pickedMod, dataPath, state.currentEmu).catch(() => null);
     ipcRenderer.removeListener("download-progress", onModDownloadProgress);
     state.removeFileAction(pickedMod);
 

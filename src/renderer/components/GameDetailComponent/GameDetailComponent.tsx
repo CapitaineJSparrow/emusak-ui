@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useStore from "../../actions/state";
-import { ipcRenderer , shell } from "electron";
+import { shell } from "electron";
 import useTranslation from "../../i18n/I18nService";
 import { GithubIssue, GithubLabel } from "../../../types";
 import Swal from "sweetalert2";
@@ -22,6 +22,7 @@ import MuiGrid from "@mui/material/Grid";
 import GameBananaModsComponent from "../GameBananaModsComponent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useLocation, useNavigate } from "react-router-dom";
+import { invokeIpc } from "../../utils";
 
 interface IGameDetailProps {
   titleId: string;
@@ -107,10 +108,10 @@ const GameDetailComponent = () => {
   };
 
   useEffect(() => {
-    ipcRenderer.invoke("build-metadata-from-titleId", titleId).then(d => setMetaData(d));
+    invokeIpc("build-metadata-from-titleId", titleId).then(d => setMetaData(d));
     if (currentEmu === "ryu") {
-      ipcRenderer.invoke("getRyujinxCompatibility", titleId).then(extractCompatibilityLabels);
-      ipcRenderer.invoke("count-shaders", titleId, dataPath).then(setLocalShadersCount);
+      invokeIpc("getRyujinxCompatibility", titleId).then(extractCompatibilityLabels);
+      invokeIpc("count-shaders", titleId, dataPath).then(setLocalShadersCount);
     }
   }, [titleId, needRefreshShaders]);
 
@@ -199,7 +200,7 @@ const GameDetailComponent = () => {
         <Grid item xs={4} p={1} pl={2}>
           <p style={{ marginTop: 0 }}>
             <Button
-              onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "shaders", dataPath, currentEmu)}
+              onClick={() => invokeIpc("openFolderForGame", titleId, "shaders", dataPath, currentEmu)}
               variant="contained"
               fullWidth
             >
@@ -208,7 +209,7 @@ const GameDetailComponent = () => {
           </p>
           <p>
             <Button
-              onClick={() => ipcRenderer.invoke("openFolderForGame", titleId, "mods", dataPath, currentEmu)}
+              onClick={() => invokeIpc("openFolderForGame", titleId, "mods", dataPath, currentEmu)}
               variant="contained"
               fullWidth
             >

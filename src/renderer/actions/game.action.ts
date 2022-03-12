@@ -1,8 +1,8 @@
 import { SetState } from "zustand/vanilla";
 import Swal from "sweetalert2";
 import useTranslation from "../i18n/I18nService";
-import { ipcRenderer } from "electron";
 import useStore from "./state";
+import { invokeIpc } from "../utils";
 
 const { t } = useTranslation();
 
@@ -27,7 +27,7 @@ const createGameSlice = (set: SetState<IGameAction>): IGameAction => ({
       return;
     }
 
-    await ipcRenderer.invoke("delete-game", titleId, dataPath, state.currentEmu);
+    await invokeIpc("delete-game", titleId, dataPath, state.currentEmu);
     return set({ deletedGame: titleId });
   }
 });

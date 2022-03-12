@@ -6,6 +6,7 @@ import pirate from "../resources/pirate.gif";
 import useStore from "./state";
 import { IAlert } from "./alert.action";
 import useTranslation, { I18nKeys } from "../i18n/I18nService";
+import { invokeIpc } from "../utils";
 
 const { t } = useTranslation();
 const firmwareFileName = "firmware.zip";
@@ -17,14 +18,10 @@ const onFirmwareProgressEvent = (_: unknown, filename: string, percentage: numbe
 const createEmulatorFilesSLice = (_set: SetState<{ }>, get: GetState<Partial<ITitleBar & IAlert>>) => ({
   installFirmwareAction: async (dataPath: string) => {
     ipcRenderer.on("download-progress", onFirmwareProgressEvent);
-    const extractPath: { error: boolean, code: string } | string | false = await ipcRenderer.invoke("install-firmware", get().currentEmu, dataPath);
+    const extractPath = await invokeIpc("install-firmware", get().currentEmu, dataPath);
 
     useStore.getState().removeFileAction(firmwareFileName);
     ipcRenderer.removeListener("download-progress", onFirmwareProgressEvent);
-
-    if (extractPath === false) {
-      return;
-    }
 
     if (typeof extractPath === "object") {
       get().closeAlertAction();
@@ -41,7 +38,7 @@ const createEmulatorFilesSLice = (_set: SetState<{ }>, get: GetState<Partial<ITi
     });
   },
   downloadKeysAction: async (dataPath: string) => {
-    const result = await ipcRenderer.invoke("install-keys", dataPath, get().currentEmu);
+    const result = await invokeIpc("install-keys", dataPath, get().currentEmu);
     Swal.fire({
       imageUrl: pirate,
       html: `${t("keysLocation")} : <code>${result}</code>`

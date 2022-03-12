@@ -1,8 +1,8 @@
 import { GetState, SetState } from "zustand/vanilla";
-import { ipcRenderer } from "electron";
 import { EmusakMods, EmusakSaves, EmusakShaders, LS_KEYS } from "../../types";
 import { IDownloadManager } from "./downloadManager.action";
 import useTranslation from "../i18n/I18nService";
+import { invokeIpc } from "../utils";
 
 const { t } = useTranslation();
 
@@ -35,7 +35,7 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
       latestVersion,
       currentVersion,
       mods
-    ] = await ipcRenderer.invoke("load-components", process.env.EMUSAK_CDN);
+    ] = await invokeIpc("load-components", process.env.EMUSAK_CDN);
 
     const dayInMilliseconds = 1000 * 60 * 60 * 24;
     const tomorrow = new Date();
@@ -51,7 +51,7 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
         downloadSpeed: Infinity
       });
 
-      ipcRenderer.invoke("update-eshop-data").then((res) => {
+      invokeIpc("update-eshop-data").then((res) => {
 
         if (res === true) {
           localStorage.setItem(LS_KEYS.ESHOP_UPDATE, `${new Date().getTime()}`);
@@ -63,7 +63,7 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
 
     return set({
       isAppInitialized: true,
-      saves,
+      saves: saves,
       ryujinxShaders,
       firmwareVersion,
       latestVersion,
