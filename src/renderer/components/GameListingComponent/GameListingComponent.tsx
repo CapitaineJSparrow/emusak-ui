@@ -7,12 +7,12 @@ import { EmusakEmulatorConfig, EmusakEmulatorMode } from "../../../types";
 import useStore from "../../actions/state";
 import { Box, Button, Chip, Divider, Grid, IconButton, TextField, Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import { ipcRenderer } from "electron";
 import jackSober from "../../resources/jack_sober.png";
 import defaultIcon from "../../resources/default_icon.jpg";
 import useTranslation from "../../i18n/I18nService";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { useNavigate } from "react-router-dom";
+import { invokeIpc } from "../../utils";
 
 interface IEmulatorContainer {
   config: EmusakEmulatorConfig;
@@ -55,8 +55,8 @@ const GameListingComponent = ({ config, mode }: IEmulatorContainer) => {
   // 1. Scan games on user system
   // 2. Build metadata from eshop with titleId as argument
   const createLibrary = async () => {
-    const titleIds = await ipcRenderer.invoke("scan-games", mode.dataPath, currentEmu);
-    const gamesCollection: { title: string, img: string, titleId: string }[]  = await Promise.all(titleIds.map(async (i: string) => ipcRenderer.invoke("build-metadata-from-titleId", i)));
+    const titleIds = await invokeIpc("scan-games", mode.dataPath, currentEmu);
+    const gamesCollection: { title: string, img: string, titleId: string }[]  = await Promise.all(titleIds.map(async (i: string) => invokeIpc("build-metadata-from-titleId", i)));
     setGames(gamesCollection.filter(i => i.title !== "0000000000000000")); // Homebrew app
   };
 

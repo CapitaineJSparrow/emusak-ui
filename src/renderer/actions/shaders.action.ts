@@ -4,6 +4,7 @@ import useStore from "./state";
 import useTranslation from "../i18n/I18nService";
 import { SetState } from "zustand/vanilla";
 import pirate from "../resources/pirate.gif";
+import { invokeIpc } from "../utils";
 
 export interface IShaders {
   needRefreshShaders: boolean,
@@ -29,7 +30,7 @@ const createShadersSlice = (set: SetState<IShaders>): IShaders => ({
     };
 
     ipcRenderer.on("download-progress", onShaderDownloadProgress);
-    const result = await ipcRenderer.invoke("install-shaders", titleId, dataPath).catch(() => null);
+    const result = await invokeIpc("install-shaders", titleId, dataPath).catch(() => null);
     state.removeFileAction(titleId);
     ipcRenderer.removeListener("download-progress", onShaderDownloadProgress);
 
@@ -76,7 +77,7 @@ const createShadersSlice = (set: SetState<IShaders>): IShaders => ({
 
     ipcRenderer.on("download-progress", onShadersShareProgress);
 
-    const result: { error: boolean, code: string } | true = await ipcRenderer.invoke("share-shaders", titleId, dataPath, localShaderCount, emusakCount);
+    const result = await invokeIpc("share-shaders", titleId, dataPath, localShaderCount, emusakCount);
     state.removeFileAction(dlManagerFilename);
     ipcRenderer.removeListener("download-progress", onShadersShareProgress);
 

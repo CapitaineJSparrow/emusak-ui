@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import "./bootstrap.css";
 import useTranslation from "../../i18n/I18nService";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import { ipcRenderer } from "electron";
+import { invokeIpc } from "../../utils";
 
 const BootstrapComponent = () => {
   const { t } = useTranslation();
   const [hasDns, setHasDns] = useState(false);
 
   useEffect(() => {
-    ipcRenderer.invoke("has-dns-file").then(setHasDns);
+    invokeIpc("has-dns-file").then(setHasDns);
   }, []);
 
   return (
@@ -23,7 +23,7 @@ const BootstrapComponent = () => {
       <FormGroup>
         <FormControlLabel
           control={<Checkbox checked={hasDns} />}
-          onChange={() => ipcRenderer.invoke("toggle-custom-dns") && setHasDns(!hasDns)}
+          onChange={() => invokeIpc("toggle-custom-dns") && setHasDns(!hasDns)}
           label={t("customDns")}
         />
       </FormGroup>

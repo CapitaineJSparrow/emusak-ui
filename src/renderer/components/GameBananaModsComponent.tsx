@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { GameBananaMod } from "../../types";
-import { ipcRenderer } from "electron";
 import { Alert, Box, Divider, Grid, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import useTranslation from "../i18n/I18nService";
+import { invokeIpc } from "../utils";
 
 const Label = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -43,7 +43,7 @@ const GameBananaModsComponent = ({ title }: Props) => {
 
   useEffect(() => {
     if (title) {
-      ipcRenderer.invoke("search-gamebanana", title).then(d => {
+      invokeIpc("search-gamebanana", title).then(d => {
         setGameBananaMods(d || []);
         setIpcPending(false);
       });

@@ -1,8 +1,8 @@
 import { SetState } from "zustand/vanilla";
 import { IDownloadManager } from "./downloadManager.action";
 import useStore from "./state";
-import { ipcRenderer } from "electron";
 import Swal from "sweetalert2";
+import { invokeIpc } from "../utils";
 
 export interface ISaveAction {
   currentSaveDownload?: string,
@@ -22,7 +22,7 @@ const createDownloadSaveSlice = (set: SetState<ISaveAction & IDownloadManager>):
       downloadSpeed: Infinity,
       progress: Infinity
     });
-    await ipcRenderer.invoke("downloadSave", state.currentSaveDownload, index, filename);
+    await invokeIpc("downloadSave", state.currentSaveDownload, index, filename);
     state.removeFileAction(state.currentSaveDownload);
     Swal.fire({
       icon: "success",

@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import useTranslation from "../../i18n/I18nService";
-import { ipcRenderer } from "electron";
 import useStore from "../../actions/state";
+import { invokeIpc } from "../../utils";
 
 const style = {
   position: "absolute",
@@ -47,10 +47,10 @@ const DownloadModComponent = () => {
   useEffect(() => {
     switch (state) {
       case "VERSION":
-        ipcRenderer.invoke("get-mods-versions", currentMod).then(setItems);
+        invokeIpc("get-mods-versions", currentMod).then(d => setItems(d as any));
       break;
       case "MOD":
-        ipcRenderer.invoke("get-mods-list-for-version", currentMod, version).then(setItems);
+        invokeIpc("get-mods-list-for-version", currentMod, version).then(d => setItems(d as any));
       break;
       case "DOWNLOAD":
         downloadModAction(currentMod, version, pickedMod, dataPath);

@@ -1,10 +1,10 @@
 import { GetState, SetState } from "zustand/vanilla";
-import { ipcRenderer } from "electron";
 import { IAlert } from "./alert.action";
 import { EmusakEmulatorConfig, EmusakEmulatorGame, EmusakEmulatorMode, LS_KEYS } from "../../types";
 import Swal from "sweetalert2";
 import { i18n } from "../app";
 import { ITitleBar } from "./titleBar.actions";
+import { invokeIpc } from "../utils";
 
 export interface IEmulatorConfig {
   addNewEmulatorConfigAction: () => void;
@@ -37,7 +37,7 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
       text: get().currentEmu === "ryu" ? i18n.t("pickRyuBin") : i18n.t("pickYuzuBin")
     });
 
-    const response: { error: boolean, code: string } | string = await ipcRenderer.invoke("add-emulator-folder", get().currentEmu);
+    const response = await invokeIpc("add-emulator-folder", get().currentEmu);
 
     if (typeof response === "object") {
       get().openAlertAction("error", response.code);
@@ -87,10 +87,10 @@ const emulatorConfig = (set: SetState<IEmulatorConfig>, get: GetState<Partial<IA
     return set({ emulatorBinariesPath: configs, selectedConfig: configs.filter(c => c.emulator === get().currentEmu)[0] });
   },
   getModeForBinary: async (path): Promise<EmusakEmulatorMode> => {
-    return ipcRenderer.invoke("system-scan-for-config", get().currentEmu, path);
+    return invokeIpc("system-scan-for-config", get().currentEmu, path);
   },
   createDefaultConfig: async () => {
-    let config = await ipcRenderer.invoke("build-default-emu-config", get().currentEmu);
+    let config = await invokeIpc("build-default-emu-config", get().currentEmu);
     config = { ...config, ...{ isDefault: true, name: config.emulator === "yuzu" ? i18n.t("yuzuDefault"): i18n.t("ryuDefault") }  };
     const configs = get().emulatorBinariesPath;
 

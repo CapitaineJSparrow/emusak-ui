@@ -29,6 +29,33 @@ import { toggleCustomDnsResolver } from "./dns.ipc";
 import { hasDnsFile } from "../../index";
 import { searchGameBana, searchProps } from "./gamebanana";
 
+export type IPCCalls = {
+  "load-components": Promise<ReturnType<typeof loadComponentIpcHandler>>,
+  "get-app-version": Promise<string>,
+  "title-bar-action": Promise<ReturnType<typeof titleBarIpc>>,
+  "add-emulator-folder": Promise<ReturnType<typeof addEmulatorConfigurationIpc>>,
+  "system-scan-for-config": Promise<ReturnType<typeof emulatorFilesystem>>,
+  "build-default-emu-config": Promise<ReturnType<typeof createDefaultConfigActionForEmu>>,
+  "scan-games": Promise<ReturnType<typeof scanGamesForConfig>>,
+  "build-metadata-from-titleId": Promise<ReturnType<typeof buildMetadataForTitleId>>,
+  "install-firmware": Promise<ReturnType<typeof installFirmware>>,
+  "install-keys": Promise<ReturnType<typeof installKeys>>,
+  "update-eshop-data": ReturnType<typeof updateEshopData>,
+  "openFolderForGame": ReturnType<typeof openFolderForGame>,
+  "getRyujinxCompatibility": ReturnType<typeof ryujinxCompatibility>,
+  "downloadSave": ReturnType<typeof savesDownloads>,
+  "get-mods-versions": ReturnType<typeof getModsVersions>,
+  "get-mods-list-for-version": ReturnType<typeof getModsListForVersion>,
+  "download-mod": ReturnType<typeof downloadMod>,
+  "count-shaders": ReturnType<typeof countShaders>,
+  "install-shaders": ReturnType<typeof installShaders>,
+  "share-shaders": ReturnType<typeof shareShaders>,
+  "toggle-custom-dns": ReturnType<typeof toggleCustomDnsResolver>,
+  "has-dns-file": Promise<boolean>,
+  "search-gamebanana": ReturnType<typeof searchGameBana>,
+  "delete-game": ReturnType<typeof deleteGame>,
+};
+
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("load-components", async (_, ...args: loadComponentsProps) => loadComponentIpcHandler(...args));
   ipcMain.handle("get-app-version", async () => app.getVersion());
