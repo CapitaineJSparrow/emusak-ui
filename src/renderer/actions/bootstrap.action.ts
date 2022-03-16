@@ -15,6 +15,7 @@ interface IBootstrap {
   firmwareVersion: string;
   latestVersion?: string;
   currentVersion?: string;
+  threshold?: number;
 }
 
 const lastEshopUpdate = localStorage.getItem(LS_KEYS.ESHOP_UPDATE) ? +localStorage.getItem(LS_KEYS.ESHOP_UPDATE) : null;
@@ -34,7 +35,8 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
       firmwareVersion,
       latestVersion,
       currentVersion,
-      mods
+      mods,
+      threshold
     ] = await invokeIpc("load-components", process.env.EMUSAK_CDN);
 
     const dayInMilliseconds = 1000 * 60 * 60 * 24;
@@ -68,7 +70,8 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
       firmwareVersion,
       latestVersion,
       currentVersion,
-      mods
+      mods,
+      threshold
     });
   }
 });

@@ -58,7 +58,8 @@ const GameDetailComponent = () => {
     needRefreshShaders,
     shareShaders,
     deleteGameAction,
-    deletedGame
+    deletedGame,
+    threshold
   ] = useStore(state => [
     state.currentEmu,
     state.saves,
@@ -71,6 +72,7 @@ const GameDetailComponent = () => {
     state.shareShaders,
     state.deleteGameAction,
     state.deletedGame,
+    state.threshold
   ]);
   const [metaData, setMetaData]: [{ img: string, title: string, titleId: string }, Function] = useState(null);
   const [compat, setCompat] = useState<GithubLabel[]>(null);
@@ -239,7 +241,7 @@ const GameDetailComponent = () => {
         </Grid>
         <Grid item xs={6} pl={3} pr={3} style={{ position: "relative", top: -10 }}>
           <Grid container>
-            <Grid item xs={6}>
+            <Grid item xs={3}>
               <h3 style={{ margin: "0 auto" }}>
                 <Tooltip placement="right" title={(<div dangerouslySetInnerHTML={{ __html: t("shaderInfo") }} />)}>
                   <IconButton style={{ position: "relative", top: -3 }} size="small" color="primary">
@@ -249,9 +251,10 @@ const GameDetailComponent = () => {
                 {t("shaders")}
               </h3>
             </Grid>
+
             {
               currentEmu === "ryu" && (
-                <Grid item xs={6}>
+                <Grid item xs={9}>
 
                   <h3 style={{ margin: "0 auto", textAlign: "right" }}>
                     {t("threshold")}
@@ -260,7 +263,7 @@ const GameDetailComponent = () => {
                         <InfoIcon />
                       </IconButton>
                     </Tooltip>
-                    <code style={{ position: "relative", top: -3 }}>50</code>
+                    <code style={{ position: "relative", top: -3 }}>{threshold > 1E6 ? "Disabled temporary" : threshold}</code>
                   </h3>
                 </Grid>
               )
@@ -282,7 +285,7 @@ const GameDetailComponent = () => {
                       <Button
                         variant="contained"
                         fullWidth
-                        disabled={(emusakShadersCount + 50) >= localShadersCount}
+                        disabled={(emusakShadersCount + threshold) >= localShadersCount}
                         onClick={() => shareShaders(metaData.titleId, dataPath, localShadersCount, emusakShadersCount)}
                       >
                         {t("shareShaders")}

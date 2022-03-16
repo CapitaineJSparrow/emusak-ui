@@ -139,6 +139,10 @@ class HttpService {
     return this._fetch(HTTP_PATHS.MODS_LIST);
   }
 
+  public async getThreshold() {
+    return +(await this._fetch(GITHUB_PATHS.THRESHOLD, "TXT"));
+  }
+
   public async getFirmwareVersion() {
     return this._fetch(GITHUB_PATHS.FIRMWARE_VERSION, "TXT");
   }
