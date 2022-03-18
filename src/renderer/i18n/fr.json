@@ -61,7 +61,7 @@
   "shareShaders": "Partager shaders",
   "shaders": "Shaders",
   "threshold": "Limite",
-  "refresh": "Actualisé",
+  "refresh": "Actualiser",
   "shadersYuzu": "Le partage et le téléchargement de shaders sont pour l'instant exclusifs à Ryujinx. La plupart des jeux fonctionnent mieux avec l'API Vulkan et même si ce cache est transférable, il n'est \"caché\" que <i>partiellement</i>, ce qui signifie que vous devez toujours créer des shaders si vous les téléchargez de quelqu'un d'autre. Cependant, les stutter causé par les shaders sont vraiment minimes avec Vulkan, alors utilisez Vulkan au lieu d'OpenGL à moins que Vulkan ne cause des problèmes pour un jeu spécifique.",
 
   "OPERATION_CANCELED": "Vous avez annulé l'opération.",
