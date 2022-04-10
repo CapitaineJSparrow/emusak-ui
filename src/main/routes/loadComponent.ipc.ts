@@ -14,6 +14,7 @@ const loadComponentIpcHandler = async (...args: loadComponentsProps) => {
     HttpService.getLatestApplicationVersion(),
     electron.app.getVersion(),
     <Promise<EmusakMods>> (<unknown> HttpService.downloadMods()),
+    <Promise<number>> (<unknown> HttpService.getThreshold().catch(() => 1E7))
   ]);
 };
 

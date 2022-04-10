@@ -36,7 +36,7 @@ const asyncReadRyujinxProcess = async (ryuBinPath: string): Promise<any> => new 
   } catch(e) {
     dialog.showMessageBox({
       title: "Error",
-      message: "Cannot launch Ryujinx, please redo the same but launch Emusak as admin. Probably antivirus prevent emusak to launch Ryujinx",
+      message: "Cannot launch Ryujinx, please redo the same but launch Emusak as admin. Probably antivirus is preventing EmuSAK to launch Ryujinx.",
       type: "error",
       buttons: ["Ok"],
     });
@@ -75,37 +75,41 @@ const asyncReadRyujinxProcess = async (ryuBinPath: string): Promise<any> => new 
 });
 
 export const packShaders = async (dataPath: string, titleID: string): Promise<any> => {
-  const shaderZipPath = path.resolve(dataPath, "games", titleID.toLowerCase(), "cache", "shader", "guest", "program", "cache.zip");
-  const shaderInfoPath = path.resolve(dataPath, "games", titleID.toLowerCase(), "cache", "shader", "guest", "program", "cache.info");
+  const guestData = path.resolve(dataPath, "games", titleID.toLowerCase(), "cache", "shader", "guest.data");
   const archive = new zip();
-  archive.addLocalFile(shaderZipPath);
-  archive.addLocalFile(shaderInfoPath);
+  archive.addLocalFile(guestData);
+  archive.addLocalFile(path.resolve(dataPath, "games", titleID.toLowerCase(), "cache", "shader", "guest.toc"));
+  archive.addLocalFile(path.resolve(dataPath, "games", titleID.toLowerCase(), "cache", "shader", "shared.data"));
+  archive.addLocalFile(path.resolve(dataPath, "games", titleID.toLowerCase(), "cache", "shader", "shared.toc"));
 
-  const zipPath = path.resolve(shaderInfoPath, "..", "upload.zip");
+  const zipPath = path.resolve(guestData, "..", "upload.zip");
   await asyncZipWrite(archive, zipPath);
 
   return zipPath;
 };
 
-
 export const countShaders = async (...args: countShadersProps): Promise<number> => {
   const [titleId, dataPath] = args;
+  const shaderTocFile = path.resolve(dataPath, "games", titleId.toLocaleLowerCase(), "cache", "shader", "shared.toc");
+  const shaderExists = await fs.pathExists(shaderTocFile);
   const shaderZipPath = path.resolve(dataPath, "games", titleId.toLocaleLowerCase(), "cache", "shader", "guest", "program", "cache.zip");
-  const shaderExists = await fs
-    .access(shaderZipPath)
-    .then(() => true)
-    .catch(() => false);
+  const shaderZipExists = await fs.pathExists(shaderZipPath);
 
   if (!shaderExists) {
+    if (shaderZipExists) {
+      try {
+        const archive = new zip(shaderZipPath);
+        return archive.getEntries().length;
+      } catch(e) {
+        return 0;
+      }
+    }
+
     return 0;
   }
 
-  try {
-    const archive = new zip(shaderZipPath);
-    return archive.getEntries().length;
-  } catch(e) {
-    return 0;
-  }
+  const stat = await fs.stat(shaderTocFile);
+  return +((stat.size - 32) / 8);
 };
 
 export const installShaders = async (mainWindow: BrowserWindow, ...args: installShadersProps): Promise<boolean> => {
@@ -176,9 +180,11 @@ export const shareShaders = async (mainWindow: BrowserWindow, ...args: shareShad
     return { error: true, code: `You shared the wrong titleID, you had to run ${metadata.title || metadata.titleId} in Ryujinx` };
   }
 
+  /**
   if (result.compiledShadersCount !== localCount) {
     return { error: true, code: `You have ${localCount} on your cache but Ryujinx compiled ${result.compiledShadersCount}. That means that some shaders are either corrupted or rejected. This probably isn't your fault, it probably means you build shaders a longer time ago and Ryujinx chose to reject them because they changed something in their code. The game probably run fine, but because we share shaders to everyone, we chose to reject your submission to avoid any conflict as we aren't 100% sure if this will cause issue to anyone.` };
   }
+   */
 
   const shadersPath = await packShaders(dataPath, titleId);
   const size = fs.lstatSync(shadersPath).size;
