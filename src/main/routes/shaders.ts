@@ -166,8 +166,6 @@ export const shareShaders = async (mainWindow: BrowserWindow, ...args: shareShad
     return { error: true, code: "SHADER_CACHE_V1" };
   }
 
-  console.log("EXISTS");
-
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ["openFile"] });
 
   if (canceled) {
