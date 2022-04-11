@@ -84,7 +84,7 @@ const createShadersSlice = (set: SetState<IShaders>): IShaders => ({
     if (result !== true) {
       return Swal.fire({
         icon: "error",
-        text: result.code
+        text: result.code === "SHADER_CACHE_V1" ? t(result.code) : result.code
       });
     }
 

@@ -159,6 +159,15 @@ export const installShaders = async (mainWindow: BrowserWindow, ...args: install
 
 export const shareShaders = async (mainWindow: BrowserWindow, ...args: shareShaders) => {
   const [titleId, dataPath, localCount, emusakCount] = args;
+
+  const guestTocFile = path.resolve(dataPath, "games", titleId.toLowerCase(), "cache", "shader", "guest.toc");
+
+  if (!await fs.pathExists(guestTocFile)) {
+    return { error: true, code: "SHADER_CACHE_V1" };
+  }
+
+  console.log("EXISTS");
+
   const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, { properties: ["openFile"] });
 
   if (canceled) {
