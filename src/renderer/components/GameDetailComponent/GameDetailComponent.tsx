@@ -288,7 +288,7 @@ const GameDetailComponent = () => {
                         disabled={(emusakShadersCount + threshold) >= localShadersCount}
                         onClick={() => shareShaders(metaData.titleId, dataPath, localShadersCount, emusakShadersCount)}
                       >
-                        {t("shareShaders")}
+                        {threshold >= 1E6 ? "Sharing shaders disabled" : t("shareShaders")}
                       </Button>
                     </p>
                   </Box>

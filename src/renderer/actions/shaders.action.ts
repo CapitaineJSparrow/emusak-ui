@@ -49,6 +49,17 @@ const createShadersSlice = (set: SetState<IShaders>): IShaders => ({
     return set({ needRefreshShaders: !state.needRefreshShaders });
   },
   shareShaders: async (titleId, dataPath, localShaderCount, emusakCount) => {
+    const key = `ryu-share-${titleId}-${localShaderCount}`;
+
+    if (localStorage.getItem(key)) {
+      Swal.fire({
+        icon: "error",
+        title: "error",
+        text: "You already shared those shaders, thanks!"
+      });
+      return false;
+    }
+
     await Swal.fire({
       icon: "info",
       text: `${t("pickRyuBin")}. ${t("shadersCheck")}`,
@@ -84,9 +95,11 @@ const createShadersSlice = (set: SetState<IShaders>): IShaders => ({
     if (result !== true) {
       return Swal.fire({
         icon: "error",
-        text: result.code
+        text: result.code === "SHADER_CACHE_V1" ? t(result.code) : result.code
       });
     }
+
+    localStorage.setItem(key, "true");
 
     return Swal.fire({
       imageUrl: pirate,
