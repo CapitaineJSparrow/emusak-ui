@@ -1,4 +1,5 @@
 {
+  "SHADER_CACHE_V1": "EmuSAK detected you are using Ryujinx V1 shader cache. The emulator developers created a new version of this shader cache with tons of improvement. Before sharing shaders, launch the game in Ryujinx, the emulator will convert old cache to new one automatically then reopen EmuSAK.",
   "continue": "Devam et",
   "cancel": "İptal",
   "deleteGame": "Oyunu sil",

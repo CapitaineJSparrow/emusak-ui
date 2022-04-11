@@ -285,7 +285,6 @@ const GameDetailComponent = () => {
                       <Button
                         variant="contained"
                         fullWidth
-                        disabled={(emusakShadersCount + threshold) >= localShadersCount}
                         onClick={() => shareShaders(metaData.titleId, dataPath, localShadersCount, emusakShadersCount)}
                       >
                         {t("shareShaders")}
