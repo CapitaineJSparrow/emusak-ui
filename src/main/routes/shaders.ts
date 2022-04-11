@@ -142,7 +142,17 @@ export const installShaders = async (mainWindow: BrowserWindow, ...args: install
     return null;
   }
 
-  await fs.emptyDir(path.resolve(dataPath, "games", titleId.toLowerCase(), "cache", "shader", "opengl"));
+  const archive = new zip(shaderDestPath);
+  const sharedTocFiles = archive.getEntries().map(e => e.name).filter(name => name.toLocaleLowerCase() === "shared.toc");
+
+  // New shader cache system, unzip it a proper location then clean useless paths
+  if (sharedTocFiles.length !== 0) {
+    const rootShaderPath = path.resolve(shaderDestPath, "..", "..", "..");
+    await fs.emptyDir(rootShaderPath);
+    archive.extractAllTo(rootShaderPath, true);
+  } else {
+    await fs.emptyDir(path.resolve(dataPath, "games", titleId.toLowerCase(), "cache", "shader", "opengl"));
+  }
 
   return true;
 };
@@ -179,12 +189,6 @@ export const shareShaders = async (mainWindow: BrowserWindow, ...args: shareShad
   if (result.ranTitleId.toLowerCase() !== titleId.toLowerCase()) {
     return { error: true, code: `You shared the wrong titleID, you had to run ${metadata.title || metadata.titleId} in Ryujinx` };
   }
-
-  /**
-  if (result.compiledShadersCount !== localCount) {
-    return { error: true, code: `You have ${localCount} on your cache but Ryujinx compiled ${result.compiledShadersCount}. That means that some shaders are either corrupted or rejected. This probably isn't your fault, it probably means you build shaders a longer time ago and Ryujinx chose to reject them because they changed something in their code. The game probably run fine, but because we share shaders to everyone, we chose to reject your submission to avoid any conflict as we aren't 100% sure if this will cause issue to anyone.` };
-  }
-   */
 
   const shadersPath = await packShaders(dataPath, titleId);
   const size = fs.lstatSync(shadersPath).size;
