@@ -243,8 +243,6 @@ export const shareShaders = async (mainWindow: BrowserWindow, ...args: shareShad
   }
 
   const message = `Hey there, I'm sharing my shaders using EmuSAK v${app.getVersion()} for **${metadata.title || metadata.titleId}** v${result.ranTitleVersion} (${titleId.toUpperCase()}). I have ${localCount} shaders while EmuSAK has ${emusakCount} shaders. Download them from here : \`${Buffer.from((res as any).data.file.url.short).toString("base64")}\``;
-  console.log(message);
-  return true;
   await HttpService.postMessage(message);
   return true;
 };
