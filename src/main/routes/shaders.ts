@@ -8,6 +8,7 @@ import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import FormData from "form-data";
 import https from "https";
 import fetch from "node-fetch";
+import { Buffer } from "buffer";
 
 export type countShadersProps = [string, string];
 
@@ -44,14 +45,12 @@ const asyncReadRyujinxProcess = async (ryuBinPath: string): Promise<any> => new 
   }
   let fullData = "";
   let ranTitleId: string;
-  let compiledShadersCount: number;
   let ranTitleVersion: string;
 
   child.on("exit", () => resolve(false));
   child.stdout.on("data", (data: string) => {
     fullData += data;
     const titleIdMatch = /for Title (.+)/gi.exec(fullData);
-    const shaderCountMatch = /Shader cache loaded (\d+) entries/gi.exec(fullData);
     const titleVersionMatch = /v([\d+.]+) \[/.exec(fullData);
 
     if (titleVersionMatch && titleVersionMatch.length >= 2) {
@@ -62,12 +61,8 @@ const asyncReadRyujinxProcess = async (ryuBinPath: string): Promise<any> => new 
       ranTitleId = titleIdMatch[1].trim();
     }
 
-    if (shaderCountMatch && shaderCountMatch.length >= 2) {
-      compiledShadersCount = parseInt(shaderCountMatch[1].trim());
-    }
-
-    if (ranTitleId && (compiledShadersCount || compiledShadersCount === 0)) {
-      resolve({ ranTitleId, compiledShadersCount, ranTitleVersion });
+    if (ranTitleId && fullData.toLowerCase().includes("cache loaded")) {
+      resolve({ ranTitleId, compiledShadersCount: 0, ranTitleVersion });
       child.kill();
     }
   });
@@ -108,8 +103,20 @@ export const countShaders = async (...args: countShadersProps): Promise<number> 
     return 0;
   }
 
+  // First, check cache version to ensure it will be accepted by Ryujinx
+  const fd = await fs.open(shaderTocFile, "r+");
+  const buffer = Buffer.alloc(8);
+  await fs.read(fd, buffer, 0, 8, 4);
+  const cacheVersion = buffer.readBigUInt64LE();
+  await fs.close(fd);
+
+  if (cacheVersion < 65537) {
+    return 0;
+  }
+
+  // If cache version is accepted by Ryujinx, computer shader count
   const stat = await fs.stat(shaderTocFile);
-  return +((stat.size - 32) / 8);
+  return Math.max(+((stat.size - 32) / 8), 0);
 };
 
 export const installShaders = async (mainWindow: BrowserWindow, ...args: installShadersProps): Promise<boolean> => {
@@ -197,6 +204,12 @@ export const shareShaders = async (mainWindow: BrowserWindow, ...args: shareShad
     return { error: true, code: `You shared the wrong titleID, you had to run ${metadata.title || metadata.titleId} in Ryujinx` };
   }
 
+  /**
+   if (result.compiledShadersCount !== localCount) {
+    return { error: true, code: `You have ${localCount} on your cache but Ryujinx compiled ${result.compiledShadersCount}. That means that some shaders are either corrupted or rejected. This probably isn't your fault, it probably means you build shaders a longer time ago and Ryujinx chose to reject them because they changed something in their code. The game probably run fine, but because we share shaders to everyone, we chose to reject your submission to avoid any conflict as we aren't 100% sure if this will cause issue to anyone.` };
+  }
+   */
+
   const shadersPath = await packShaders(dataPath, titleId);
   const size = fs.lstatSync(shadersPath).size;
   let bytes = 0;
@@ -230,6 +243,8 @@ export const shareShaders = async (mainWindow: BrowserWindow, ...args: shareShad
   }
 
   const message = `Hey there, I'm sharing my shaders using EmuSAK v${app.getVersion()} for **${metadata.title || metadata.titleId}** v${result.ranTitleVersion} (${titleId.toUpperCase()}). I have ${localCount} shaders while EmuSAK has ${emusakCount} shaders. Download them from here : \`${Buffer.from((res as any).data.file.url.short).toString("base64")}\``;
+  console.log(message);
+  return true;
   await HttpService.postMessage(message);
   return true;
 };
