@@ -308,7 +308,7 @@ const GameDetailComponent = () => {
                       <Button
                         variant="contained"
                         fullWidth
-                        disabled={emusakShadersCount === 0 || localShadersCount >= emusakShadersCount}
+                        disabled={emusakShadersCount === 0}
                         onClick={() => downloadShadersAction(metaData.titleId, dataPath)}
                       >
                         {t("dlShaders")}
@@ -325,6 +325,11 @@ const GameDetailComponent = () => {
                 </Box>
               )
           }
+        </Grid>
+
+        <Grid item xs={12}>
+          <Alert severity="warning">Due to Ryujinx changes, shaders does not work anymore with LDN build. There is a backup of working shaders in Discord, <code>emusak</code> channel. If you see EmuSAK has a lower shader count than you locally, I suggest to download again shaders from EmuSAK.</Alert>
+          <Divider />
         </Grid>
 
         <Grid item xs={12}>
