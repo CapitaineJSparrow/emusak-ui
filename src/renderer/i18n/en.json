@@ -6,7 +6,7 @@
   "areYouSure": "Are you sure?",
   "deleteGameNotice": "This option will delete the shader cache, CPU cache and mods folder for this game. This action cannot be undone.",
   "customDns": "Use custom DNS resolver (CloudFlare) instead of the system provided one. This may fix infinite loading issues that occur even though emusak status is up.",
-  "shadersCheck": "Then you will have to run your game with Ryujinx so emusak can check that everything is working as expected for everyone.",
+  "shadersCheck": "Then you will have to run your game with Ryujinx so emusak can check that everything is working as expected for everyone. If you have been using the vulkan PR, don't attempt to share the shaders as it won't work as of now... ",
   "shadersSharing": "Sharing Shaders...",
   "shadersShared": "Your shaders have been submitted! You can find them in the <code>#ryu-shaders</code> channel. Once approved, they will be shared to everyone to be downloaded!",
   "gamebananaModsTitle": "Gamebanana mods (up to 20 most downloaded mods on GameBanana)",
