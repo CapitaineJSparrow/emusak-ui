@@ -40,24 +40,15 @@ Download the `.AppImage` file, then mark it as executable and run it.
 
 ### Features
 
-* Add one or multiple Ryujinx folders (where `Ryujinx.exe` is located) to manage mainline, portable and LDN build if any
+* Add one or multiple Ryujinx folders (where `Ryujinx.exe` is located) to manage different builds (such as mainline, portable, LDN, etc.) 
 * List your game library
 * Display your local shaders count & EmuSAK shaders count (to download them if you have fewer shaders)
 * Update firmware
 * Update production keys
-* Download save for specific game
-* Download shaders for specific game
-* Downloads mods for specific game
+* Download saves for a specific game
+* Download shaders for a specific game
+* Downloads mods for a specific game
 * You can share shaders in just one click if you have more shaders than EmuSAK
-
-Todo :
-
-- [ ] Add shaders download for yuzu
-- [ ] Add cloud saves using Google drive if possible
-- [ ] Add ryujinx PTC sharing
-- [ ] Amiibos for yuzu
-- [ ] Notify when there is a game update
-- [ ] Add PPA for Ubuntu users
 
 ### Contributing
 
@@ -82,7 +73,7 @@ yarn start
 
 ### Thanks
 
-* Sin for creating a nice community and init the ideas
-* Niwu for testing, suggestions and help me to match Switch title IDs to game name
+* Sin for creating a nice community and inspiring the project
+* Niwu for testing, suggestions and helping me match Switch title IDs to game names
 * Joshi for updating the backend to create a nice software
-* LiveLM for putting some love to Arch Linux users
+* LiveLM for showing some love to Arch Linux users
