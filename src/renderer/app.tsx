@@ -73,6 +73,11 @@ const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const shouldUseNativeMenuBar = searchParams.get("useNativeMenuBar");
 
+  if (shouldUseNativeMenuBar) {
+    // Set the native class when using the native bar for css
+    document.querySelector("body").classList.add("native");
+  }
+
   const [isAppInitialized, bootstrapAppAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction]);
   const [downloadState, setDownloadState] = useState(null);
 
