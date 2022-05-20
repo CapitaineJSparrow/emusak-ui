@@ -70,6 +70,14 @@ use(initReactI18next)
 export const LANGUAGES = Object.keys(resources);
 
 const App = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const shouldUseNativeMenuBar = searchParams.get("useNativeMenuBar");
+
+  if (shouldUseNativeMenuBar) {
+    // Set the native class when using the native bar for css
+    document.querySelector("body").classList.add("native");
+  }
+
   const [isAppInitialized, bootstrapAppAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction]);
   const [downloadState, setDownloadState] = useState(null);
 
@@ -96,35 +104,35 @@ const App = () => {
   }, []);
 
   return (
-    <HashRouter>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline>
-          <TitleBarComponent />
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline>
+        {!shouldUseNativeMenuBar && (<TitleBarComponent />)}
 
-          <NavBarComponent />
-          <AlertComponent />
-          <DownloadManagerComponent />
-          <DownloadSaveComponent />
-          <DownloadModComponent />
-          <UpdateComponent state={downloadState} />
-          { !isAppInitialized
-            ? <BootstrapComponent />
-            : (
-              <Routes>
-                <Route path="/" element={<RootComponent />} />
-                <Route path="/detail" element={(<GameDetailComponent />)} />
-              </Routes>
-            )
-          }
-          <TOSComponent />
-        </CssBaseline>
-      </ThemeProvider>
-    </HashRouter>
+        <NavBarComponent />
+        <AlertComponent />
+        <DownloadManagerComponent />
+        <DownloadSaveComponent />
+        <DownloadModComponent />
+        <UpdateComponent state={downloadState} />
+        { !isAppInitialized
+          ? <BootstrapComponent />
+          : (
+            <Routes>
+              <Route path="/" element={<RootComponent />} />
+              <Route path="/detail" element={(<GameDetailComponent />)} />
+            </Routes>
+          )
+        }
+        <TOSComponent />
+      </CssBaseline>
+    </ThemeProvider>
   );
 };
 
 ReactDOM.render(
-  <App />,
+  <HashRouter>
+    <App />
+  </HashRouter>,
   document.querySelector("#app")
 );
 

@@ -3,7 +3,7 @@
   --title-bar-buttons-width: 185px;
 }
 
-body {
+body:not(.native) {
   padding-top: var(--title-bar-height)
 }
 
