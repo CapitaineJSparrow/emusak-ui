@@ -88,11 +88,13 @@ if (handleStartupEvent()) {
   process.exit(0);
 }
 
+const shouldUseNativeMenuBar = app.commandLine.hasSwitch("native-menu-bar");
+
 const createWindow = (): void => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     resizable: true,
-    autoHideMenuBar: true,
+    autoHideMenuBar: !shouldUseNativeMenuBar,
     show: false,
     frame: false,
     minHeight: 680,
@@ -104,6 +106,11 @@ const createWindow = (): void => {
   });
 
   makeIpcRoutes(mainWindow);
+
+  mainWindow.webContents.on("dom-ready", () => {
+    console.log("SENDING EVENT: native-menu-bar");
+    mainWindow.webContents.send("native-menu-bar", shouldUseNativeMenuBar);
+  });
 
   mainWindow.webContents.on("did-finish-load", function () {
     const displays = screen.getAllDisplays();

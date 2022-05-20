@@ -72,6 +72,7 @@ export const LANGUAGES = Object.keys(resources);
 const App = () => {
   const [isAppInitialized, bootstrapAppAction] = useStore(state => [state.isAppInitialized, state.bootstrapAppAction]);
   const [downloadState, setDownloadState] = useState(null);
+  const [shouldUseNativeMenuBar, setShouldUseNativeMenuBar] = useState(false);
 
   // Hack, due to tree checking, if Swal is not present the theme is not applied for further calls, need better solution
   // eslint-disable-next-line no-constant-condition
@@ -81,16 +82,22 @@ const App = () => {
 
   const onUpdateAvailable = () => setDownloadState("downloading");
   const onUpdateDownloaded = () => () => setDownloadState("downloaded");
+  const onNativeMenuBar = () => (useNativeBar: boolean) => {
+    console.log("onNativeMenuBar");
+    setShouldUseNativeMenuBar(useNativeBar);
+  };
 
   useEffect(() => {
     bootstrapAppAction();
     ipcRenderer.on("update-available", onUpdateAvailable);
     ipcRenderer.on("update-downloaded", onUpdateDownloaded);
+    ipcRenderer.on("native-menu-bar", onNativeMenuBar);
     const t = setInterval(() => ipcRenderer.invoke("check-status").then(r => r ? setDownloadState("downloaded") : undefined),5000);
 
     return () => {
       ipcRenderer.removeListener("update-available", onUpdateAvailable);
       ipcRenderer.removeListener("update-downloaded", onUpdateDownloaded);
+      ipcRenderer.removeListener("native-menu-bar", onNativeMenuBar);
       clearInterval(t);
     };
   }, []);
@@ -99,7 +106,7 @@ const App = () => {
     <HashRouter>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline>
-          <TitleBarComponent />
+          {!shouldUseNativeMenuBar && (<TitleBarComponent />)}
 
           <NavBarComponent />
           <AlertComponent />
