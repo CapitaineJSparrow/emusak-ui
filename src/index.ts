@@ -107,11 +107,6 @@ const createWindow = (): void => {
 
   makeIpcRoutes(mainWindow);
 
-  mainWindow.webContents.on("dom-ready", () => {
-    console.log("SENDING EVENT: native-menu-bar");
-    mainWindow.webContents.send("native-menu-bar", shouldUseNativeMenuBar);
-  });
-
   mainWindow.webContents.on("did-finish-load", function () {
     const displays = screen.getAllDisplays();
     const display = displays.find((d) => d.bounds.x !== 0 || d.bounds.y !== 0) || displays[0];
@@ -156,7 +151,8 @@ const createWindow = (): void => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  const url = MAIN_WINDOW_WEBPACK_ENTRY + `?useNativeMenuBar=${shouldUseNativeMenuBar}`;
+  mainWindow.loadURL(url);
 
   let cspHeader = "default-src 'self' https://fonts.googleapis.com/ https://fonts.gstatic.com/ 'unsafe-inline'; img-src 'self' data: https://*;";
 
