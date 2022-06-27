@@ -71,7 +71,7 @@ export const LANGUAGES = Object.keys(resources);
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
-  const shouldUseNativeMenuBar = searchParams.get("useNativeMenuBar");
+  const shouldUseNativeMenuBar = searchParams.get("useNativeMenuBar") === "true";
 
   if (shouldUseNativeMenuBar) {
     // Set the native class when using the native bar for css

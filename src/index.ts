@@ -88,15 +88,15 @@ if (handleStartupEvent()) {
   process.exit(0);
 }
 
-const shouldUseNativeMenuBar = app.commandLine.hasSwitch("native-menu-bar");
+const shouldUseNativeMenuBar = !app.commandLine.hasSwitch("native-menu-bar");
 
 const createWindow = (): void => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     resizable: true,
-    autoHideMenuBar: !shouldUseNativeMenuBar,
+    autoHideMenuBar: true,
     show: false,
-    frame: false,
+    frame: !shouldUseNativeMenuBar,
     minHeight: 680,
     minWidth: 920,
     webPreferences: {
@@ -151,7 +151,7 @@ const createWindow = (): void => {
   });
 
   // and load the index.html of the app.
-  const url = MAIN_WINDOW_WEBPACK_ENTRY + `?useNativeMenuBar=${shouldUseNativeMenuBar}`;
+  const url = MAIN_WINDOW_WEBPACK_ENTRY + `?useNativeMenuBar=${shouldUseNativeMenuBar ? "false" : "true"}`;
   mainWindow.loadURL(url);
 
   let cspHeader = "default-src 'self' https://fonts.googleapis.com/ https://fonts.gstatic.com/ 'unsafe-inline'; img-src 'self' data: https://*;";
