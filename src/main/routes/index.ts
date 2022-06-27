@@ -28,6 +28,7 @@ import { countShaders, countShadersProps, installShaders, installShadersProps, s
 import { toggleCustomDnsResolver } from "./dns.ipc";
 import { hasDnsFile } from "../../index";
 import { searchGameBana, searchProps } from "./gamebanana";
+import { setProxy } from "./settings.ipc";
 
 export type IPCCalls = {
   "load-components": Promise<ReturnType<typeof loadComponentIpcHandler>>,
@@ -54,6 +55,7 @@ export type IPCCalls = {
   "has-dns-file": Promise<boolean>,
   "search-gamebanana": ReturnType<typeof searchGameBana>,
   "delete-game": ReturnType<typeof deleteGame>,
+  "set-proxy": ReturnType<typeof setProxy>,
 };
 
 const makeIpcRoutes = (mainWindow: BrowserWindow) => {
@@ -81,6 +83,7 @@ const makeIpcRoutes = (mainWindow: BrowserWindow) => {
   ipcMain.handle("has-dns-file", async () => hasDnsFile);
   ipcMain.handle("search-gamebanana", async (_, ...args: searchProps) => searchGameBana(...args));
   ipcMain.handle("delete-game", (_, ...args: deleteGameProps) => deleteGame(...args));
+  ipcMain.handle("set-proxy", async (_, proxy: string) => setProxy(proxy));
 };
 
 export default makeIpcRoutes;

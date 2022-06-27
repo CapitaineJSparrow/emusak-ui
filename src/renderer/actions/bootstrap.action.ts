@@ -1,5 +1,5 @@
 import { GetState, SetState } from "zustand/vanilla";
-import { EmusakMods, EmusakSaves, EmusakShaders, LS_KEYS } from "../../types";
+import { EmusakMods, EmusakSaves, EmusakShaders, LS_KEYS, Settings } from "../../types";
 import { IDownloadManager } from "./downloadManager.action";
 import useTranslation from "../i18n/I18nService";
 import { invokeIpc } from "../utils";
@@ -16,6 +16,7 @@ interface IBootstrap {
   latestVersion?: string;
   currentVersion?: string;
   threshold?: number;
+  settings: Settings;
 }
 
 const lastEshopUpdate = localStorage.getItem(LS_KEYS.ESHOP_UPDATE) ? +localStorage.getItem(LS_KEYS.ESHOP_UPDATE) : null;
@@ -28,8 +29,10 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
   latestVersion: null,
   currentVersion: null,
   mods: [],
+  settings: {},
   bootstrapAppAction: async () => {
     const [
+      settings,
       ryujinxShaders,
       saves,
       firmwareVersion,
@@ -64,6 +67,7 @@ const createBootstrapSlice = (set: SetState<IBootstrap>, get: GetState<IDownload
     }
 
     return set({
+      settings,
       isAppInitialized: true,
       saves: saves,
       ryujinxShaders,

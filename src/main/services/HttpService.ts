@@ -1,5 +1,6 @@
 import { URL } from "url";
-import fetch, { Response } from "node-fetch";
+import { Response } from "node-fetch";
+import fetch from "./fetchProxy";
 import pRetry from "p-retry";
 import { app, BrowserWindow, ipcMain } from "electron";
 import http from "http";
