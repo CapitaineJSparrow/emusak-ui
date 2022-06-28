@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import { proxyFile, SYS_SETTINGS } from "../../index";
 
-export const setProxy = async (proxy: string = "") => {
+export const setProxy = async (proxy = "") => {
   if (SYS_SETTINGS.proxy === proxy) return;
   SYS_SETTINGS.proxy = proxy;
   try {
@@ -10,4 +10,4 @@ export const setProxy = async (proxy: string = "") => {
   } catch (e) {
     return false;
   }
-}
+};

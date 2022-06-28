@@ -1,11 +1,11 @@
 import "./setting.css";
-import React, { useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import React, { useState, useEffect } from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import useTranslation from "../../i18n/I18nService";
 import { invokeIpc } from "../../utils";
 import useStore from "../../actions/state";
@@ -24,7 +24,7 @@ const SettingComponent = () => {
   };
 
   const handleSave = async () => {
-    await invokeIpc('set-proxy', proxy);
+    await invokeIpc("set-proxy", proxy);
     setOpen(false);
   };
 
@@ -38,24 +38,24 @@ const SettingComponent = () => {
       </Button>
       {
         <Dialog open={open} fullWidth onClose={handleClose} className="setting-dialog">
-          <DialogTitle>{ t("settings") }</DialogTitle>
+          <DialogTitle>{t("settings")}</DialogTitle>
           <DialogContent>
             <TextField
               fullWidth
-              label={ t("proxy") }
+              label={t("proxy")}
               variant="standard"
               value={proxy}
               onChange={(e) => setProxy(e.target.value)}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>{ t("cancel") }</Button>
-            <Button onClick={handleSave} variant="contained">{ t("save") }</Button>
+            <Button onClick={handleClose}>{t("cancel")}</Button>
+            <Button onClick={handleSave} variant="contained">{t("save")}</Button>
           </DialogActions>
         </Dialog>
       }
     </div>
   );
-}
+};
 
 export default SettingComponent;
