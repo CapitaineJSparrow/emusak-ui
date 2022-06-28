@@ -25,6 +25,7 @@ const SettingComponent = () => {
 
   const handleSave = async () => {
     await invokeIpc("set-proxy", proxy);
+    alert("You need to restart EmuSAK to apply changes");
     setOpen(false);
   };
 
@@ -45,6 +46,7 @@ const SettingComponent = () => {
               label={t("proxy")}
               variant="standard"
               value={proxy}
+              placeholder={"Example: http://localhost:3000"}
               onChange={(e) => setProxy(e.target.value)}
             />
           </DialogContent>
