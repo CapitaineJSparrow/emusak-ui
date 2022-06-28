@@ -14,7 +14,19 @@ export const hasPortableFile = fs.existsSync(path.resolve(app.getPath("exe"), ".
 export const cacheDir = hasPortableFile ? path.resolve(app.getPath("exe"), "..", "electron_cache") : path.join(app.getPath("userData"));
 export const dnsFile = path.resolve(cacheDir, "dns");
 export const hasDnsFile = fs.pathExistsSync(dnsFile);
+export const proxyFile = path.resolve(cacheDir, "proxy");
+export const SYS_SETTINGS = {
+  proxy: readFile(proxyFile),
+};
 let updateDownloaded = false;
+
+function readFile(path: string) : string {
+  try {
+    return fs.readFileSync(path, "utf-8");
+  } catch (e) {
+    return "";
+  }
+}
 
 ipcMain.handle("check-status", () => updateDownloaded);
 

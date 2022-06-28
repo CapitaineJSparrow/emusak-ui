@@ -11,6 +11,7 @@ import { Button, IconButton, MenuItem, Select, SelectChangeEvent } from "@mui/ma
 import useStore from "../../actions/state";
 import { LS_KEYS } from "../../../types";
 import { LANGUAGES } from "../../app";
+import SettingComponent from "../SettingComponent/SettingComponent";
 
 const NavBarComponent = () => {
   const { t } = useTranslation();
@@ -72,6 +73,9 @@ const NavBarComponent = () => {
                 <img height={40} src={discord_logo} alt=""/>
               </IconButton>
             </a>
+          </Box>
+          <Box style={{ flex: "0 0 50px" }}>
+            <SettingComponent />
           </Box>
         </Toolbar>
       </AppBar>

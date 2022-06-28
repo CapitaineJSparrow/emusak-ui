@@ -28,6 +28,7 @@ import it from "./i18n/it.json";
 import es from "./i18n/es.json";
 import se from "./i18n/se.json";
 import tr from "./i18n/tr.json";
+import zhcn from "./i18n/zh-CN.json";
 
 import TitleBarComponent from "./components/TitleBarComponent/TitleBarComponent";
 import NavBarComponent from "./components/NavBarComponent/NavBarComponent";
@@ -52,7 +53,7 @@ const darkTheme = createTheme({
 
 const lng = localStorage.getItem(LS_KEYS.LOCALE) ?? "en";
 
-const resources = { en, ru, br, de, it, es, se, tr };
+const resources = { en, ru, br, de, it, es, se, tr, zhcn };
 type localesType = keyof typeof resources;
 
 use(initReactI18next)

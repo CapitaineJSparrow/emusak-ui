@@ -65,3 +65,7 @@ export type GameBananaMod = {
   url: string,
   cover: string,
 };
+
+export type Settings = {
+  proxy?: string,
+};

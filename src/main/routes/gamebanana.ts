@@ -1,5 +1,5 @@
 import HttpService from "../services/HttpService";
-import fetch from "node-fetch";
+import fetch from "../services/fetchProxy";
 import cheerio from "cheerio";
 import { GameBananaMod } from "../../types";
 
