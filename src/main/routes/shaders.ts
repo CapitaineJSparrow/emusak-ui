@@ -7,7 +7,7 @@ import { buildMetadataForTitleId } from "./emulatorFilesystem";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 import FormData from "form-data";
 import https from "https";
-import fetch from "../services/fetchProxy";
+import fetch from "node-fetch";
 import { Buffer } from "buffer";
 
 export type countShadersProps = [string, string];
