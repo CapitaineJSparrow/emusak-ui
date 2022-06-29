@@ -69,3 +69,8 @@ export type GameBananaMod = {
 export type Settings = {
   proxy?: string,
 };
+
+export type CheckProxy = [
+  string,
+  string | undefined,
+];
