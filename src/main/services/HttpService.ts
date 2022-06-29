@@ -47,8 +47,8 @@ const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
   cb(null, ips[0], 4);
 };
 
-const staticDnsAgent = (hasClashProxy: boolean, scheme: "http" | "https") => {
-  const proxy = hasClashProxy ? "http://127.0.0.1:7890": SYS_SETTINGS.proxy;
+const staticDnsAgent = (proxy: string, scheme: "http" | "https") => {
+  proxy = proxy || SYS_SETTINGS.proxy;
 
   if (proxy) {
     console.log({ proxy });
@@ -63,7 +63,7 @@ class HttpService {
 
   public url: string = process.env.EMUSAK_CDN;
 
-  public hasClashProxy = false;
+  public proxy = "";
 
   // Trigger HTTP request using an exponential backoff strategy
   public _fetch(path: string, type: "JSON" | "TXT" | "BUFFER" = "JSON", host: string = this.url, defaultValue = {}, retries = 5) {
@@ -73,7 +73,7 @@ class HttpService {
         const response = await fetch(url.href, {
           ...defaultValue,
           ...{
-            agent: staticDnsAgent(this.hasClashProxy, url.href.includes("http:") ? "http" : "https")
+            agent: staticDnsAgent(this.proxy, url.href.includes("http:") ? "http" : "https")
           }
         });
 
@@ -102,7 +102,7 @@ class HttpService {
 
     const response = await fetch(url.href, {
       signal: controller.signal,
-      agent: staticDnsAgent(this.hasClashProxy, this.url.includes("http:") ? "http" : "https")
+      agent: staticDnsAgent(this.proxy, this.url.includes("http:") ? "http" : "https")
     });
 
     let chunkLength = 0;
@@ -178,7 +178,7 @@ class HttpService {
   public async getRyujinxCompatibility(term: string) {
     // do not use this._fetch because we do not want exponential backoff strategy since GitHub api is limited to 10 requests per minute for unauthenticated requests
     return fetch(`https://api.github.com/search/issues?q=${term}%20repo:Ryujinx/Ryujinx-Games-List`, {
-      agent: staticDnsAgent(this.hasClashProxy, "https")
+      agent: staticDnsAgent(this.proxy, "https")
     }).then(r => r.json());
   }
 
