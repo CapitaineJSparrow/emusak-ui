@@ -1,13 +1,13 @@
 import { URL } from "url";
-import { Response } from "node-fetch";
-import fetch from "./fetchProxy";
+import fetch, { Response } from "node-fetch";
 import pRetry from "p-retry";
 import { app, BrowserWindow, ipcMain } from "electron";
 import http from "http";
 import https from "https";
 import dns from "dns/promises";
 import fs from "fs-extra";
-import { hasDnsFile } from "../../index";
+import { hasDnsFile, SYS_SETTINGS } from "../../index";
+import httpsProxyAgent from "https-proxy-agent";
 
 export enum HTTP_PATHS {
   RYUJINX_SHADERS_LIST = "/v2/shaders/ryujinx/count",
@@ -47,7 +47,14 @@ const staticLookup = () => async (hostname: string, _: null, cb: Function) => {
   cb(null, ips[0], 4);
 };
 
-const staticDnsAgent = (scheme: "http" | "https") => {
+const staticDnsAgent = (proxy: string, scheme: "http" | "https") => {
+  proxy = proxy || SYS_SETTINGS.proxy;
+
+  if (proxy) {
+    console.log({ proxy });
+    return httpsProxyAgent(proxy);
+  }
+
   const httpModule = scheme === "http" ? http : https;
   return new httpModule.Agent({ lookup: hasDnsFile ? staticLookup() : undefined, rejectUnauthorized: false });
 };
@@ -56,15 +63,17 @@ class HttpService {
 
   public url: string = process.env.EMUSAK_CDN;
 
+  public proxy = "";
+
   // Trigger HTTP request using an exponential backoff strategy
-  protected _fetch(path: string, type: "JSON" | "TXT" | "BUFFER" = "JSON", host: string = this.url, defaultValue = {}, retries = 5) {
+  public _fetch(path: string, type: "JSON" | "TXT" | "BUFFER" = "JSON", host: string = this.url, defaultValue = {}, retries = 5) {
     const url = new URL(path, host);
     return pRetry(
       async () => {
         const response = await fetch(url.href, {
           ...defaultValue,
           ...{
-            agent: staticDnsAgent(url.href.includes("http:") ? "http" : "https")
+            agent: staticDnsAgent(this.proxy, url.href.includes("http:") ? "http" : "https")
           }
         });
 
@@ -93,7 +102,7 @@ class HttpService {
 
     const response = await fetch(url.href, {
       signal: controller.signal,
-      agent: staticDnsAgent(this.url.includes("http:") ? "http" : "https")
+      agent: staticDnsAgent(this.proxy, this.url.includes("http:") ? "http" : "https")
     });
 
     let chunkLength = 0;
@@ -169,7 +178,7 @@ class HttpService {
   public async getRyujinxCompatibility(term: string) {
     // do not use this._fetch because we do not want exponential backoff strategy since GitHub api is limited to 10 requests per minute for unauthenticated requests
     return fetch(`https://api.github.com/search/issues?q=${term}%20repo:Ryujinx/Ryujinx-Games-List`, {
-      agent: staticDnsAgent("https")
+      agent: staticDnsAgent(this.proxy, "https")
     }).then(r => r.json());
   }
 

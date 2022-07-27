@@ -1,5 +1,4 @@
 import HttpService from "../services/HttpService";
-import fetch from "../services/fetchProxy";
 import cheerio from "cheerio";
 import { GameBananaMod } from "../../types";
 
@@ -13,8 +12,7 @@ export const searchGameBana = async (...args: searchProps): Promise<GameBananaMo
     return;
   }
 
-  const url = `https://gamebanana.com/mods/games/${res[0]._idRow}?mid=SubmissionsList&vl[preset]=most_dld&vl%5Border%5D=downloads`;
-  const modPageContent = await fetch(url).then(r => r.text()).catch(() => null);
+  const modPageContent = await HttpService._fetch(`/mods/games/${res[0]._idRow}?mid=SubmissionsList&vl[preset]=most_dld&vl%5Border%5D=downloads`, "TXT", "https://gamebanana.com") as unknown as string;
 
   if (!modPageContent) {
     return [];
