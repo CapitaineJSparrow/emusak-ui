@@ -1,5 +1,7 @@
 # EmuSAK UI
 
+**EmuSAK is archived and will stop work 29th september 2022, I suggest to uninstall the app and [join discord server](https://discord.gg/sinscove) instead to find resources**
+
 ![showDownloads](https://img.shields.io/github/downloads/stromcon/emusak-ui/total?style=for-the-badge)
 ![showVersion](https://img.shields.io/github/package-json/v/stromcon/emusak-ui?style=for-the-badge)
 ![showLatestCommit](https://img.shields.io/github/last-commit/stromcon/emusak-ui/main?style=for-the-badge)
